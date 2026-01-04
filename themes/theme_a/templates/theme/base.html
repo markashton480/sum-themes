@@ -1,0 +1,75 @@
+{% load static wagtailcore_tags branding_tags wagtailimages_tags analytics_tags seo_tags %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% get_site_settings as site_settings %}
+    {% wagtail_site as current_site %}
+    {% analytics_head %}
+    {% if page %}
+      {% render_meta page %}
+      {% render_og page %}
+      {% render_schema page %}
+    {% endif %}
+    {% firstof site_settings.company_name current_site.site_name WAGTAIL_SITE_NAME as site_name %}
+    {% if site_settings.favicon %}
+      {% image site_settings.favicon fill-32x32 as favicon_rendition %}
+      <link rel="icon" href="{{ favicon_rendition.url }}" />
+    {% endif %}
+
+    <!-- Google Fonts: Sage & Stone Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Branding Fonts (client overrides) -->
+    {% branding_fonts %}
+
+    <!-- Theme A CSS -->
+    <link rel="stylesheet" href="{% static 'theme_a/css/main.css' %}" />
+
+    <!-- Branding Variables (Must load AFTER main.css to override defaults) -->
+    {% branding_css %}
+
+    {# Expose consent version for cookie_consent.js #}
+    {% if site_settings.cookie_banner_enabled %}
+      <meta name="sum:cookie-consent-version" content="{{ site_settings.cookie_consent_version }}">
+    {% endif %}
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body id="body" class="antialiased font-body text-sage-black selection:bg-sage-terra selection:text-white relative">
+    <!-- Skip Link (Accessibility) -->
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[70] focus:bg-sage-terra focus:text-white focus:px-6 focus:py-3 focus:font-bold focus:shadow-lg focus:outline-none">
+      Skip to main content
+    </a>
+
+    <!-- Theme A Marker (for verification) -->
+    <!-- THEME: theme_a -->
+
+    {% analytics_body %}
+    {% include "theme/includes/header.html" with has_hero=page.has_hero_block %}
+
+    <main id="main" class="{% block main_class %}{% if not page.has_hero_block %}pt-24{% endif %}{% endblock %}">{% block content %}{% endblock %}</main>
+
+    {% include "sum_core/includes/cookie_banner.html" %}
+
+    {% include "theme/includes/footer.html" %}
+
+    <!-- Sticky CTA (Mobile) -->
+    {% include "theme/includes/sticky_cta.html" %}
+
+    <!-- Core JS -->
+    <script src="{% static 'sum_core/js/cookie_consent.js' %}" defer></script>
+    {% if site_settings.gtm_container_id or site_settings.ga_measurement_id %}
+      <script src="{% static 'sum_core/js/analytics_loader.js' %}" defer></script>
+    {% endif %}
+    <script src="{% static 'sum_core/js/event_tracking.js' %}" defer></script>
+    <script src="{% static 'sum_core/js/main.js' %}"></script>
+    <script src="{% static 'sum_core/js/navigation.js' %}"></script>
+
+    <!-- Theme A JS (Sage & Stone interactions) -->
+    <script src="{% static 'theme_a/js/main.js' %}"></script>
+    {% block extra_body %}{% endblock %}
+  </body>
+</html>

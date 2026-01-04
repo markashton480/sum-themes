@@ -1,0 +1,94 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+
+{# THEME-012: Strict Wireframe Implementation #}
+<div class="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden bg-sage-black group">
+
+    {# Background Container #}
+    <div class="absolute inset-0 z-0 select-none">
+        {% image self.image original as hero_img %}
+        <img src="{{ hero_img.url }}"
+             alt="{{ self.image_alt }}"
+             class="w-full h-[120%] object-cover object-center -translate-y-10" />
+
+        {# Overlay Mapping: none/light/medium/strong #}
+        {% if self.overlay_opacity == 'none' %}
+            <div class="absolute inset-0 bg-black/0"></div>
+        {% elif self.overlay_opacity == 'light' %}
+            <div class="absolute inset-0 bg-black/30"></div>
+        {% elif self.overlay_opacity == 'medium' %}
+            <div class="absolute inset-0 bg-black/60"></div>
+        {% elif self.overlay_opacity == 'strong' %}
+            <div class="absolute inset-0 bg-black/75"></div>
+        {% else %}
+             {# Fallback default to medium/60 if unknown #}
+            <div class="absolute inset-0 bg-black/60"></div>
+        {% endif %}
+    </div>
+
+    {# Content Wrapper #}
+    <div class="relative z-10 text-center max-w-5xl mt-20 px-4">
+
+        {# Status / Eyebrow #}
+        {% if self.status %}
+            <p class="font-accent text-sage-oat text-xl italic mb-4">
+                {{ self.status }}
+            </p>
+        {% endif %}
+
+        {# Headline #}
+        <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-sage-linen mb-6">
+            {{ self.headline|richtext }}
+        </h1>
+
+        {# Subheadline #}
+        {% if self.subheadline %}
+            <p class="text-sage-linen max-w-lg mx-auto text-base md:text-lg mb-10">
+                {{ self.subheadline }}
+            </p>
+        {% endif %}
+
+        {# CTAs (Max 2) #}
+        {% if self.ctas %}
+            <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                {% for cta in self.ctas %}
+                    {# Logic: If style is set, use it. If not, CTA[0]=Primary, CTA[1]=Secondary #}
+                    {# But wireframe implies specific classes for Primary vs Secondary visually #}
+                    {# We map 'primary' or 'first item' to the solid style #}
+                    {# We map 'secondary' or 'outline' or 'second item' to the border style #}
+
+                    {% if cta.style == 'primary' or not cta.style and forloop.first %}
+                        {# Primary Style #}
+                        <a href="{{ cta.url }}"
+                           class="btn btn-primary"
+                           {% if cta.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                            {{ cta.label }}
+                        </a>
+                    {% else %}
+                        {# Secondary/Outline Style #}
+                        <a href="{{ cta.url }}"
+                           class="btn btn-outline-inverse"
+                           {% if cta.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                            <span>{{ cta.label }}</span>
+                            <svg class="btn__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    {# Floating Card (Only if both label and value exist) #}
+    {% if self.floating_card_label and self.floating_card_value %}
+        <div class="hidden lg:block absolute bottom-24 right-24 bg-white/10 backdrop-blur-md border border-white/20 p-6 max-w-xs text-left">
+            <p class="text-sage-oat text-sm uppercase tracking-wider mb-1">
+                {{ self.floating_card_label }}
+            </p>
+            <p class="text-white font-display text-4xl">
+                {{ self.floating_card_value }}
+            </p>
+        </div>
+    {% endif %}
+
+</div>

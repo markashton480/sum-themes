@@ -1,0 +1,71 @@
+{% extends "theme/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block main_class %}{% if page.featured_image %}pt-0{% else %}pt-24{% endif %}{% endblock %}
+
+{% block content %}
+  {% if page.featured_image %}
+    <section class="relative">
+      <div class="absolute inset-0 bg-gradient-to-b from-sage-black/10 via-transparent to-sage-linen pointer-events-none"></div>
+      {% image page.featured_image fill-1600x900 format-webp as hero_img %}
+      <img
+        src="{{ hero_img.url }}"
+        alt="{{ hero_img.alt|default:page.title }}"
+        width="{{ hero_img.width }}"
+        height="{{ hero_img.height }}"
+        decoding="async"
+        class="w-full h-[260px] md:h-[420px] object-cover"
+      />
+    </section>
+  {% endif %}
+
+  <article class="section">
+    <div class="container mx-auto px-6">
+      <header class="max-w-3xl mx-auto">
+        {% if page.category %}
+          <a
+            href="{% pageurl page.get_parent %}?category={{ page.category.slug }}"
+            class="inline-flex items-center px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/15 text-sage-black bg-sage-oat/60 hover:bg-sage-terra/10 hover:text-sage-black transition"
+          >
+            {{ page.category.name }}
+          </a>
+        {% endif %}
+
+        <h1 class="font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-sage-black tracking-tight mt-6">
+          {{ page.title }}
+        </h1>
+
+        {% with published_date=page.published_date|default:page.first_published_at %}
+          <div class="mt-6 flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.2em] text-sage-meta">
+            {% if published_date %}
+              <time datetime="{{ published_date|date:'c' }}">{{ published_date|date:"F j, Y" }}</time>
+            {% endif %}
+            {% if page.reading_time %}
+              <span>{{ page.reading_time }} min read</span>
+            {% endif %}
+            {% if page.author_name %}
+              <span>By {{ page.author_name }}</span>
+            {% endif %}
+          </div>
+        {% endwith %}
+      </header>
+    </div>
+  </article>
+
+  {% if page.body %}
+    {% for block in page.body %}
+      {% include_block block %}
+    {% endfor %}
+  {% endif %}
+
+  <section class="section">
+    <div class="container mx-auto px-6">
+      <div class="border-t border-sage-black/10 pt-8">
+        <a href="{% pageurl page.get_parent %}" class="btn btn--link">
+          <span aria-hidden="true">&larr;</span>
+          Back to all posts
+        </a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

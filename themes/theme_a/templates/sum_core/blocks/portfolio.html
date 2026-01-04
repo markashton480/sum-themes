@@ -1,0 +1,77 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section id="portfolio-{{ block.id }}" data-block-id="{{ block.id }}" class="py-24 bg-sage-linen">
+    <div class="max-w-7xl mx-auto px-6 mb-12 flex justify-between items-end flex-col md:flex-row md:items-end gap-6">
+        <div>
+            {% if self.eyebrow %}
+                <span class="text-sage-terra font-accent italic text-2xl block mb-2">{{ self.eyebrow }}</span>
+            {% endif %}
+            <h2 class="font-display text-4xl text-sage-black">{{ self.heading|richtext }}</h2>
+            {% if categories|length >= 2 %}
+                <nav class="mt-6 flex flex-wrap gap-3 text-xs font-bold uppercase tracking-widest">
+                    <a href="{{ request.path }}" class="px-4 py-2 border border-sage-black/20 transition-colors {% if not active_category %}bg-sage-black text-sage-linen{% else %}text-sage-black hover:border-sage-terra hover:text-sage-terra{% endif %}">All</a>
+                    {% for category in categories %}
+                        {% with category_slug=category|slugify %}
+                            <a href="{{ request.path }}?category={{ category_slug }}" class="px-4 py-2 border border-sage-black/20 transition-colors {% if active_category == category_slug %}bg-sage-black text-sage-linen{% else %}text-sage-black hover:border-sage-terra hover:text-sage-terra{% endif %}">{{ category }}</a>
+                        {% endwith %}
+                    {% endfor %}
+                </nav>
+            {% endif %}
+        </div>
+        {% if self.view_all_link and self.view_all_label %}
+            <a href="{{ self.view_all_link }}" class="hidden md:block text-xs font-bold uppercase tracking-widest border-b border-sage-black/20 pb-1 hover:border-sage-terra transition-colors py-2">{{ self.view_all_label }}</a>
+        {% endif %}
+    </div>
+
+    <div class="relative">
+        <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-sage-linen to-transparent pointer-events-none md:hidden z-10"></div>
+
+        <div class="flex overflow-x-auto md:grid md:grid-cols-3 gap-8 px-6 md:px-0 md:max-w-7xl md:mx-auto pb-8 md:pb-0 no-scrollbar snap-x snap-mandatory">
+
+            {% for item in filtered_items %}
+                {% if item.link_url %}
+                <a href="{{ item.link_url }}" class="portfolio-card block min-w-[85vw] md:min-w-0 relative group/card cursor-pointer snap-center reveal {% if forloop.counter == 2 %}delay-100{% elif forloop.counter == 3 %}delay-200{% endif %} focus:outline-none focus:ring-4 focus:ring-sage-terra">
+                {% else %}
+                <div class="portfolio-card block min-w-[85vw] md:min-w-0 relative group/card snap-center reveal {% if forloop.counter == 2 %}delay-100{% elif forloop.counter == 3 %}delay-200{% endif %}">
+                {% endif %}
+
+                    <div class="aspect-[4/3] overflow-hidden bg-sage-oat mb-6">
+                        {% if item.image %}
+                            {% image item.image fill-1200x900 class="portfolio-card__image w-full h-full object-cover transform !group-hover/card:scale-105" alt=item.alt_text %}
+                        {% endif %}
+                    </div>
+                    <div class="border-t border-sage-black/20 pt-4">
+                        <h3 class="portfolio-card__title font-display text-2xl text-sage-black mb-2 !group-hover/card:text-sage-terra">{{ item.title }}</h3>
+                        <div class="grid grid-cols-2 gap-y-2 gap-x-4 text-xs font-display text-sage-black/70">
+                            {% if item.constraint or item.material or item.outcome %}
+                                {% if item.constraint %}
+                                    <span>Constraint:</span> <span class="text-sage-black">{{ item.constraint }}</span>
+                                {% endif %}
+                                {% if item.material %}
+                                    <span>Material:</span> <span class="text-sage-black">{{ item.material }}</span>
+                                {% endif %}
+                                {% if item.outcome %}
+                                    <span>Outcome:</span> <span class="text-sage-black">{{ item.outcome }}</span>
+                                {% endif %}
+                            {% else %}
+                                {# Fallback #}
+                                {% if item.location %}
+                                    <span>Location:</span> <span class="text-sage-black">{{ item.location }}</span>
+                                {% endif %}
+                                {% if item.services %}
+                                    <span>Services:</span> <span class="text-sage-black">{{ item.services }}</span>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                {% if item.link_url %}
+                </a>
+                {% else %}
+                </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+</section>

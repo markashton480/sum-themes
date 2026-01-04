@@ -1,0 +1,577 @@
+/**
+ * Name: Theme A Tailwind Input
+ * Path: core/sum_core/themes/theme_a/static/theme_a/css/input.css
+ * Purpose: Tailwind CSS source file for Theme A (Sage & Stone).
+ *          This is compiled to main.css by maintainers; sites never need Node.
+ * Family: Theme A
+ * Dependencies: Tailwind (authoring only)
+ */
+
+/* =============================================================
+   TAILWIND DIRECTIVES
+   ============================================================= */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================================
+   SECTION 1: CSS VARIABLE DEFAULTS (Branding Override Points)
+   These are the default values; SiteSettings branding overrides
+   can change these at runtime WITHOUT requiring a CSS rebuild.
+   ============================================================= */
+:root {
+  /* Sage & Stone brand colours (default values) */
+  --color-sage-black: 26 47 35; /* #1A2F23 Obsidian Green */
+  --color-sage-linen: 247 245 241; /* #F7F5F1 Warm Linen */
+  --color-sage-oat: 227 222 212; /* #E3DED4 Oat */
+  --color-sage-moss: 85 111 97; /* #556F61 Moss */
+  --color-sage-terra: 160 86 59; /* #A0563B Terra */
+  --color-sage-stone: 143 141 136; /* #8F8D88 Stone */
+  --color-sage-darkmoss: 74 99 80;
+  --color-sage-label: 74 93 80;
+  --color-sage-meta: 90 110 95;
+  --color-sage-footer-primary: 209 217 212;
+  --color-sage-footer-secondary: 163 176 168;
+
+  /* Semantic colour aliases */
+  --color-primary: 160 86 59; /* Terra accent */
+  --color-secondary: 85 111 97; /* Moss secondary */
+  --color-accent: 160 86 59; /* Terra accent */
+}
+
+/* =============================================================
+   SECTION 2: BASE LAYER
+   ============================================================= */
+@layer base {
+  body {
+    background-color: theme("colors.sage.linen");
+    color: theme("colors.sage.black");
+  }
+
+  /* Custom scrollbar for Theme A */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: theme("colors.sage.linen");
+  }
+  ::-webkit-scrollbar-thumb {
+    background: theme("colors.sage.oat");
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme("colors.sage.stone");
+  }
+
+  /* Focus indicators */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 3px solid theme("colors.primary"); /* sage-terra */
+    outline-offset: 2px;
+    border-color: theme("colors.primary");
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid theme("colors.primary");
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* Invalid form states */
+  input[aria-invalid="true"],
+  textarea[aria-invalid="true"],
+  select[aria-invalid="true"] {
+    border-color: theme("colors.primary");
+    border-width: 2px;
+    background-color: #fff5f5;
+  }
+}
+
+/* =============================================================
+   SECTION 3: COMPONENTS LAYER
+   ============================================================= */
+@layer components {
+  /* Banner Grid Wrapper (for smooth height transition) */
+  .banner-grid-wrapper {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .banner-grid-wrapper.closed {
+    grid-template-rows: 0fr;
+  }
+  .banner-inner {
+    overflow: hidden;
+  }
+
+  /* Mega Menu Panel */
+  .mega-panel {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-10px);
+    width: 100vw;
+    max-width: 80rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease-out,
+      transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 100;
+    padding-top: 1.5rem; /* Bridge: invisible padding connects trigger to content */
+  }
+  .mega-panel[data-open="true"] {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Header Scrolled State */
+  #main-header.scrolled {
+    @apply bg-sage-linen/95 backdrop-blur-md shadow-sm py-4 border-sage-black/10;
+  }
+  #main-header.scrolled .nav-link {
+    @apply text-sage-black;
+  }
+  #main-header.scrolled .header-logo-text {
+    @apply text-sage-black;
+  }
+
+  /* =========================================================
+       Theme A semantic component classes
+       These classes are referenced by Theme A templates / core blocks
+       and must always be present in compiled CSS.
+       ========================================================= */
+
+  /* Portfolio cards */
+  .portfolio-card__image {
+    transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+  }
+  .portfolio-card__title {
+    transition: color 0.2s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .portfolio-card:hover .portfolio-card__image {
+      transform: scale(1.05);
+    }
+    .portfolio-card:hover .portfolio-card__title {
+      color: theme("colors.sage.terra");
+    }
+  }
+
+  /* Layout primitives */
+  .section {
+    @apply py-12 md:py-16;
+  }
+  .section--hero {
+    @apply pt-20 md:pt-28;
+  }
+  .section__header {
+    @apply mb-10;
+  }
+  .section__heading {
+    @apply max-w-3xl;
+  }
+  .section__intro {
+    @apply mt-6;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-3 px-8 py-4 rounded-none font-body font-bold text-sm uppercase tracking-[0.2em] transition-all duration-300 ease-expo-out;
+    @apply border border-transparent no-underline;
+    @apply focus:outline-none;
+  }
+  .btn-primary {
+    @apply bg-sage-terra text-white border-sage-terra px-12 py-5 text-base shadow-lg;
+  }
+  .btn-primary:hover {
+    @apply bg-sage-black border-sage-black text-white;
+  }
+  .btn-outline,
+  .btn-secondary {
+    @apply bg-transparent text-sage-black border-sage-black/20;
+  }
+  .btn-outline:hover,
+  .btn-secondary:hover {
+    @apply bg-sage-black text-sage-linen border-sage-black;
+  }
+  .btn-outline-inverse {
+    @apply bg-transparent text-sage-linen border-sage-linen/30 backdrop-blur-sm;
+  }
+  .btn-outline-inverse:hover {
+    @apply bg-sage-linen text-sage-black border-sage-linen;
+  }
+  .btn__icon {
+    @apply w-5 h-5 transition-transform duration-300;
+  }
+  .btn-outline:hover .btn__icon,
+  .btn-outline-inverse:hover .btn__icon {
+    transform: translateX(4px);
+  }
+  .btn-header {
+    @apply tracking-widest;
+  }
+  .btn-header--compact {
+    @apply px-5 py-3 text-xs;
+  }
+
+  #main-header.scrolled .btn-header {
+    @apply text-sage-black border-sage-black/30 bg-transparent;
+  }
+  #main-header.scrolled .btn-header:hover {
+    @apply bg-sage-black text-sage-linen border-sage-black;
+  }
+  .btn--link {
+    @apply inline-flex items-center gap-3 p-0 border-0 bg-transparent rounded-none;
+    @apply font-body font-bold text-[11px] uppercase tracking-[0.2em] text-sage-moss;
+    @apply transition-all duration-300 ease-expo-out;
+  }
+  .btn--link:hover {
+    @apply text-sage-darkmoss;
+  }
+  .btn--link span {
+    @apply inline-block transition-transform duration-300 ease-expo-out;
+  }
+  .btn--link:hover span {
+    transform: translateX(6px);
+  }
+
+  /* Typography primitives */
+  .heading-xl {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-sage-black tracking-tight;
+  }
+  .text-body {
+    @apply text-sage-black/70 text-lg leading-relaxed font-body;
+  }
+
+  /* Prose Overrides */
+  .prose-sage {
+    --tw-prose-body: theme("colors.sage.black / 80%");
+    --tw-prose-headings: theme("colors.sage.black");
+    --tw-prose-lead: theme("colors.sage.black / 70%");
+    --tw-prose-links: theme("colors.sage.moss");
+    --tw-prose-bold: theme("colors.sage.black");
+    --tw-prose-counters: theme("colors.sage.moss");
+    --tw-prose-bullets: theme("colors.sage.moss");
+    --tw-prose-hr: theme("colors.sage.black / 10%");
+    --tw-prose-quotes: theme("colors.sage.black");
+    --tw-prose-quote-borders: theme("colors.sage.moss / 30%");
+    --tw-prose-captions: theme("colors.sage.label");
+    --tw-prose-code: theme("colors.sage.black");
+    --tw-prose-pre-code: theme("colors.sage.linen");
+    --tw-prose-pre-bg: theme("colors.sage.darkmoss");
+    --tw-prose-th-borders: theme("colors.sage.black / 20%");
+    --tw-prose-td-borders: theme("colors.sage.black / 10%");
+  }
+
+  .prose blockquote p:first-of-type::before {
+    content: none;
+  }
+  .prose blockquote p:last-of-type::after {
+    content: none;
+  }
+
+  /* Hero gradient block */
+  .hero {
+    @apply relative overflow-hidden;
+  }
+  .hero--gradient {
+    @apply bg-sage-linen;
+  }
+  .hero--gradient .hero-grid {
+    @apply grid grid-cols-1 gap-8 max-w-3xl mx-auto text-center;
+  }
+  .hero--gradient .hero-actions {
+    @apply flex flex-wrap justify-center gap-4 mt-8;
+  }
+  .hero--gradient .hero-desc {
+    @apply max-w-2xl mx-auto;
+  }
+
+  .hero--gradient-primary {
+    background: radial-gradient(
+        circle at top right,
+        rgb(var(--color-primary, 160 86 59) / 0.14),
+        transparent 60%
+      ),
+      radial-gradient(
+        circle at bottom left,
+        rgb(var(--color-primary, 160 86 59) / 0.08),
+        transparent 60%
+      );
+  }
+
+  .hero--gradient-secondary {
+    background: radial-gradient(
+        circle at top right,
+        rgb(var(--color-secondary, 85 111 97) / 0.1),
+        transparent 60%
+      ),
+      linear-gradient(
+        to bottom,
+        rgb(var(--color-sage-linen, 247 245 241) / 1),
+        rgb(var(--color-sage-oat, 227 222 212) / 1)
+      );
+  }
+
+  .hero--gradient-accent {
+    background: radial-gradient(
+        circle at top right,
+        rgb(var(--color-accent, 160 86 59) / 0.14),
+        transparent 60%
+      ),
+      radial-gradient(
+        circle at bottom left,
+        rgb(var(--color-primary, 160 86 59) / 0.06),
+        transparent 60%
+      );
+  }
+
+  /* Services (ServiceIndexPage) */
+  .services__grid {
+    @apply grid gap-6 md:grid-cols-2 lg:grid-cols-3;
+  }
+  .services__card {
+    @apply bg-sage-linen rounded-xl border border-sage-black/10 shadow-sm;
+    @apply transition-shadow duration-200 ease-expo-out;
+  }
+  .services__card:hover {
+    @apply shadow-md;
+  }
+  .card__body {
+    @apply p-8;
+  }
+  .services__icon-wrapper {
+    @apply flex items-center justify-between mb-6;
+  }
+  .services__icon {
+    @apply w-16 h-16 rounded-xl bg-sage-oat text-sage-black;
+    @apply flex items-center justify-center;
+  }
+  .services__icon--image {
+    @apply overflow-hidden;
+  }
+  .services__icon-image {
+    @apply w-full h-full object-cover;
+  }
+  .services__index {
+    @apply font-mono text-sm text-sage-black/40;
+  }
+  .services__card-title {
+    @apply font-display text-2xl leading-snug text-sage-black;
+  }
+  .services__card-description {
+    @apply mt-3 text-sage-black/80 text-base leading-relaxed;
+  }
+  .services__card-link {
+    @apply mt-6;
+  }
+
+  /* Footer */
+  .footer {
+    @apply bg-sage-black text-sage-linen pt-20 pb-10 border-t border-sage-moss/20;
+  }
+  .footer__grid {
+    @apply grid grid-cols-1 md:grid-cols-4 gap-12 mb-16;
+  }
+  .footer__brand {
+    @apply md:col-span-1;
+  }
+  .footer__brand-name {
+    @apply font-display text-2xl font-bold tracking-tight text-white mb-6;
+  }
+  .footer__tagline {
+    @apply text-sage-footer-primary text-sm font-light leading-relaxed mb-6;
+  }
+  .footer__social {
+    @apply flex space-x-4;
+  }
+  .footer__social-link {
+    @apply text-sage-footer-primary hover:text-white transition-colors p-2;
+  }
+  .footer__section {
+    @apply md:col-span-1;
+  }
+  .footer__section-title {
+    @apply text-white text-xs uppercase tracking-widest mb-6;
+  }
+  .footer__link-list {
+    @apply space-y-3 text-sm text-sage-footer-primary;
+  }
+  .footer__text {
+    @apply text-sage-footer-primary text-sm;
+  }
+  .footer__text--spaced {
+    @apply mb-6;
+  }
+  .footer__text--address {
+    @apply not-italic space-y-2;
+  }
+  .footer__link {
+    @apply hover:text-sage-terra transition-colors py-1 block;
+  }
+  .footer__contact-link {
+    @apply hover:text-white transition-colors py-1 inline-block;
+  }
+  .footer__bottom {
+    @apply border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-sage-footer-secondary;
+  }
+  .footer__copyright {
+    @apply text-xs text-sage-footer-secondary;
+  }
+
+  /* Sticky CTA */
+  .sticky-cta {
+    @apply fixed bottom-8 right-8 z-50 flex items-stretch;
+    @apply rounded-sm overflow-hidden;
+    @apply bg-sage-linen border border-sage-black/5 shadow-2xl;
+    @apply transition-transform duration-500 ease-expo-out;
+  }
+  .sticky-cta:hover {
+    @apply -translate-y-1;
+  }
+  .sticky-cta__phone {
+    @apply flex items-center gap-3 px-6 py-4 text-sage-black border-r border-sage-black/5;
+    @apply transition-colors duration-300 ease-expo-out;
+  }
+  .sticky-cta__phone:hover {
+    @apply bg-sage-oat;
+  }
+  .sticky-cta__icon {
+    @apply text-sage-moss;
+  }
+  .sticky-cta__phone-text {
+    @apply font-bold text-[11px] uppercase tracking-widest;
+  }
+  .sticky-cta__button.btn {
+    @apply rounded-none border-0 py-4 px-8;
+  }
+
+  /* Accordion / FAQ physics */
+  .accordion-grid-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .accordion-grid-wrapper.open {
+    grid-template-rows: 1fr;
+  }
+  .accordion-inner {
+    overflow: hidden !important;
+    min-height: 0 !important;
+    visibility: hidden;
+    transition: visibility 0.5s;
+  }
+  .accordion-grid-wrapper.open .accordion-inner {
+    visibility: visible;
+  }
+
+  /* Mobile menu */
+  .menu-level {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Hover effects (desktop only) */
+  @media (hover: hover) and (pointer: fine) {
+    .img-zoom-container img {
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .group:hover .img-zoom-container img {
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* =============================================================
+   SECTION 4: UTILITIES LAYER
+   ============================================================= */
+@layer utilities {
+  /* Screen-reader only utility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Hide scrollbar utility */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Reveal Animations */
+  .reveal {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-ready .reveal {
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+  }
+  .reveal-ready .reveal.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Staggered reveal delays */
+  .delay-100 {
+    transition-delay: 100ms;
+  }
+  .delay-200 {
+    transition-delay: 200ms;
+  }
+  .delay-300 {
+    transition-delay: 300ms;
+  }
+  .delay-400 {
+    transition-delay: 400ms;
+  }
+  .delay-500 {
+    transition-delay: 500ms;
+  }
+
+  /* Parallax helper for hero media */
+  .attachment-fixed {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      transition: none;
+      opacity: 1;
+      transform: none;
+    }
+
+    .img-zoom-container img {
+      transition: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

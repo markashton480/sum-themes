@@ -1,0 +1,18 @@
+{% load wagtailcore_tags %}
+{% with alignment=self.align|default:"center" %}
+<section class="section section--hero relative overflow-hidden bg-sage-black text-sage-linen">
+  <div class="absolute inset-0 bg-gradient-to-b from-transparent to-sage-black/40 pointer-events-none"></div>
+  <div class="max-w-6xl mx-auto px-6 relative z-10">
+    <div class="space-y-4 md:space-y-6 {% if alignment == 'center' %}text-center max-w-3xl mx-auto{% else %}text-left max-w-4xl{% endif %}">
+      {% if self.eyebrow %}
+        <span class="block text-sage-terra font-accent italic text-lg md:text-xl reveal">
+          {{ self.eyebrow }}
+        </span>
+      {% endif %}
+      <div class="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight reveal delay-100">
+        {{ self.heading|richtext }}
+      </div>
+    </div>
+  </div>
+</section>
+{% endwith %}

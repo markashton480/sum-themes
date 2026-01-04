@@ -1,0 +1,51 @@
+{% if page_obj and page_obj.has_other_pages %}
+  <nav class="mt-12 flex flex-col items-center gap-6" aria-label="Pagination">
+    <div class="flex flex-wrap items-center justify-center gap-2">
+      {% if page_obj.has_previous %}
+        <a
+          href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}"
+          class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/15 text-sage-black bg-sage-linen/80 hover:bg-sage-black hover:text-sage-linen transition"
+        >
+          &larr; Prev
+        </a>
+      {% else %}
+        <span class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/10 text-sage-black/30 bg-sage-linen/50 cursor-not-allowed">
+          &larr; Prev
+        </span>
+      {% endif %}
+
+      <div class="flex items-center gap-2">
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <span
+              class="inline-flex items-center justify-center w-10 h-10 text-[11px] font-bold uppercase tracking-[0.2em] bg-sage-black text-sage-linen"
+              aria-current="page"
+            >
+              {{ num }}
+            </span>
+          {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
+            <a
+              href="?page={{ num }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}"
+              class="inline-flex items-center justify-center w-10 h-10 text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/15 text-sage-black bg-sage-linen/80 hover:bg-sage-black hover:text-sage-linen transition"
+            >
+              {{ num }}
+            </a>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if page_obj.has_next %}
+        <a
+          href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}"
+          class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/15 text-sage-black bg-sage-linen/80 hover:bg-sage-black hover:text-sage-linen transition"
+        >
+          Next &rarr;
+        </a>
+      {% else %}
+        <span class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/10 text-sage-black/30 bg-sage-linen/50 cursor-not-allowed">
+          Next &rarr;
+        </span>
+      {% endif %}
+    </div>
+  </nav>
+{% endif %}

@@ -1,0 +1,61 @@
+{% load wagtailcore_tags %}
+
+<section class="py-24 md:py-32 bg-sage-linen relative" data-faq-block data-allow-multiple="{{ self.allow_multiple_open|yesno:'true,false' }}" data-faq-allow-multiple="{{ self.allow_multiple_open|yesno:'true,false' }}">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b-2 border-sage-black/10 pb-6 reveal">
+            <div>
+                {% if self.eyebrow %}
+                    <span class="font-accent italic text-2xl text-sage-terra mb-2 block">{{ self.eyebrow }}</span>
+                {% endif %}
+                <div class="font-display text-4xl md:text-5xl text-sage-black">
+                    {{ self.heading|richtext }}
+                </div>
+            </div>
+            {% if self.intro %}
+                <div class="mt-4 md:mt-0 md:text-right text-sage-black/40 font-mono text-xs uppercase tracking-widest max-w-xs">
+                    {{ self.intro|richtext }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="divide-y divide-sage-black/10 border-b border-sage-black/10">
+            {% for item in self.items %}
+                <div class="group reveal accordion-item" data-faq-item>
+                    <button class="w-full text-left flex items-start justify-between py-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-inset"
+                            id="btn-faq-{{ page.pk|default:'0' }}-{{ block.id|default:'0' }}-{{ forloop.counter }}"
+                            aria-controls="faq-ans-{{ page.pk|default:'0' }}-{{ block.id|default:'0' }}-{{ forloop.counter }}"
+                            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+                            type="button"
+                            data-faq-trigger>
+                        <div class="flex items-baseline gap-6 md:gap-10">
+                            <span class="font-mono text-xs text-sage-terra font-bold shrink-0">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}.</span>
+                            <span class="font-display text-2xl md:text-3xl text-sage-black group-hover:text-sage-terra transition-colors pr-4">{{ item.question }}</span>
+                        </div>
+                        <span class="accordion-icon font-display text-3xl font-light text-sage-black/30 transition-all duration-500 shrink-0 origin-center"
+                              aria-hidden="true"
+                              data-faq-icon>+</span>
+                    </button>
+
+                    <div id="faq-ans-{{ page.pk|default:'0' }}-{{ block.id|default:'0' }}-{{ forloop.counter }}"
+                         class="accordion-grid-wrapper{% if forloop.first %} open{% endif %}"
+                         role="region"
+                         aria-labelledby="btn-faq-{{ page.pk|default:'0' }}-{{ block.id|default:'0' }}-{{ forloop.counter }}"
+                         aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+                         data-faq-content>
+                        <div class="accordion-inner pl-0 md:pl-[4.5rem]">
+                            <div class="pb-8 font-accent text-xl text-sage-label leading-relaxed italic max-w-2xl">
+                                {{ item.answer|richtext }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% if faq_schema_json %}
+    <script type="application/ld+json">
+        {{ faq_schema_json|safe }}
+    </script>
+{% endif %}

@@ -1,0 +1,58 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<article class="group flex flex-col h-full bg-sage-linen/80 border border-sage-black/10 shadow-sm hover:shadow-lg transition-shadow duration-500 reveal">
+  <div class="relative overflow-hidden">
+    {% if post.featured_image %}
+      {% image post.featured_image fill-720x480 format-webp as card_img %}
+      <a href="{% pageurl post %}" class="block">
+        <img
+          src="{{ card_img.url }}"
+          alt="{{ post.title }}"
+          width="{{ card_img.width }}"
+          height="{{ card_img.height }}"
+          decoding="async"
+          {% if lazy_load %}loading="lazy"{% endif %}
+          class="w-full aspect-[4/3] object-cover transition-transform duration-700 ease-smooth group-hover:scale-[1.02]"
+        />
+      </a>
+    {% else %}
+      <div class="w-full aspect-[4/3] bg-sage-oat/70 flex items-center justify-center text-[11px] font-bold uppercase tracking-[0.2em] text-sage-moss">
+        No image
+      </div>
+    {% endif %}
+
+    {% if post.category %}
+      <div class="absolute top-4 left-4">
+        <a
+          href="{% pageurl post.get_parent %}?category={{ post.category.slug }}"
+          class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] bg-sage-linen/90 text-sage-black border border-sage-black/10 hover:bg-sage-terra/10 transition"
+        >
+          {{ post.category.name }}
+        </a>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="flex flex-1 flex-col gap-4 p-6">
+    <header>
+      <h3 class="font-display text-2xl leading-snug text-sage-black line-clamp-2">
+        <a href="{% pageurl post %}" class="hover:text-sage-terra transition-colors">
+          {{ post.title }}
+        </a>
+      </h3>
+    </header>
+
+    <p class="text-sage-black/70 text-sm leading-relaxed line-clamp-3">
+      {{ post.get_excerpt }}
+    </p>
+
+    <div class="mt-auto flex items-center justify-between text-[11px] uppercase tracking-[0.2em] text-sage-meta">
+      {% if post.published_date %}
+        <time datetime="{{ post.published_date|date:'c' }}">{{ post.published_date|date:"M j, Y" }}</time>
+      {% endif %}
+      {% if post.reading_time %}
+        <span>{{ post.reading_time }} min read</span>
+      {% endif %}
+    </div>
+  </div>
+</article>

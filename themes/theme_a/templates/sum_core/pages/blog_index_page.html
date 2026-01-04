@@ -1,0 +1,47 @@
+{% extends "theme/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+  <section class="section section--hero relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-sage-linen via-sage-oat/50 to-transparent"></div>
+    <div class="absolute inset-0 opacity-[0.08] pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;24&quot; height=&quot;24&quot; viewBox=&quot;0 0 24 24&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;%231A2F23&quot; fill-opacity=&quot;1&quot;%3E%3Ccircle cx=&quot;2&quot; cy=&quot;2&quot; r=&quot;1&quot;/%3E%3C/g%3E%3C/svg%3E');"></div>
+    <div class="container mx-auto px-6 relative z-10">
+      <div class="max-w-3xl">
+        <h1 class="heading-xl">{{ page.title }}</h1>
+        {% if page.intro %}
+          <div class="mt-6 text-body">
+            {{ page.intro|richtext }}
+          </div>
+        {% elif page.search_description %}
+          <p class="mt-6 text-body">{{ page.search_description }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {% include "sum_core/includes/_category_filter.html" %}
+
+  <section class="section">
+    <div class="container mx-auto px-6">
+      {% if posts %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {% for post in posts %}
+            {% if forloop.counter > 3 %}
+              {% include "sum_core/includes/_post_card.html" with post=post lazy_load=True %}
+            {% else %}
+              {% include "sum_core/includes/_post_card.html" with post=post %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="py-16 text-center">
+          <p class="text-sage-black/60 text-lg">No blog posts found.</p>
+        </div>
+      {% endif %}
+
+      {% if posts.has_other_pages %}
+        {% include "sum_core/includes/_pagination.html" with page_obj=posts %}
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

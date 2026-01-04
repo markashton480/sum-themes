@@ -1,0 +1,24 @@
+{% load wagtailcore_tags %}
+<section class="section bg-sage-oat/30">
+  <div class="container max-w-6xl mx-auto px-6">
+    <figure class="relative border-l-2 border-sage-moss/30 pl-8 md:pl-12">
+      <span class="absolute -top-8 left-2 text-6xl md:text-7xl text-sage-moss/15 font-display leading-none pointer-events-none" aria-hidden="true">“</span>
+      <blockquote class="font-display text-3xl md:text-4xl leading-relaxed text-sage-black italic reveal">
+        {{ self.quote|linebreaksbr }}
+      </blockquote>
+      {% if self.author or self.role %}
+      <figcaption class="mt-6 flex flex-wrap items-center gap-2 text-sage-black/70 font-body reveal delay-100">
+        <span class="text-sage-black/50" aria-hidden="true">—</span>
+        {% if self.author %}
+        <cite class="not-italic font-semibold text-sage-black">{{ self.author }}</cite>
+        {% endif %}
+        {% if self.role %}
+        <span class="text-sm uppercase tracking-[0.2em] text-sage-label/60 {% if self.author %}ml-1{% endif %}">
+          {{ self.role }}
+        </span>
+        {% endif %}
+      </figcaption>
+      {% endif %}
+    </figure>
+  </div>
+</section>

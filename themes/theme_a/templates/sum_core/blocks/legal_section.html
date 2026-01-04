@@ -1,0 +1,18 @@
+{% load wagtailcore_tags %}
+<section
+  id="{{ self.anchor|slugify }}"
+  class="py-12 lg:py-16 border-b border-sage-black/10 last:border-b-0 scroll-mt-24 lg:scroll-mt-32"
+>
+  <div class="max-w-4xl mx-auto">
+    <div class="flex items-center gap-2 text-sage-black/50 text-xs font-bold uppercase tracking-[0.18em] mb-4">
+      <span class="inline-block w-1.5 h-1.5 rounded-full bg-sage-terra/70" aria-hidden="true"></span>
+      <span>{{ self.anchor }}</span>
+    </div>
+    <h2 class="font-display text-3xl md:text-4xl text-sage-black leading-tight mb-6">
+      {{ self.heading }}
+    </h2>
+    <div class="prose prose-lg max-w-none text-sage-label font-light leading-relaxed prose-headings:font-display prose-headings:text-2xl prose-a:text-sage-terra prose-strong:text-sage-black prose-li:mb-2">
+      {{ self.body|richtext }}
+    </div>
+  </div>
+</section>

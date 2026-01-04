@@ -1,0 +1,55 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="py-24 bg-sage-linen">
+  <div class="max-w-7xl mx-auto px-6">
+
+    {% if self.heading or self.eyebrow or self.intro %}
+    <header class="mb-12 reveal">
+      <div class="max-w-3xl">
+        {% if self.eyebrow %}
+          <span class="text-sage-terra font-accent italic text-2xl block mb-2">
+            {{ self.eyebrow }}
+          </span>
+        {% endif %}
+        {% if self.heading %}
+          <div class="font-display text-4xl md:text-5xl text-sage-black">
+            {{ self.heading|richtext }}
+          </div>
+        {% endif %}
+        {% if self.intro %}
+          <p class="mt-4 text-lg text-sage-black/70 leading-relaxed font-body">
+            {{ self.intro }}
+          </p>
+        {% endif %}
+      </div>
+    </header>
+    {% endif %}
+
+    {% if self.images %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for item in self.images %}
+      <figure class="group reveal delay-{{ forloop.counter0|add:1 }}00">
+        <div class="relative overflow-hidden bg-sage-oat aspect-[4/3]">
+          {% image item.image fill-1200x900 as rendition %}
+          <img
+            src="{{ rendition.url }}"
+            width="{{ rendition.width }}"
+            height="{{ rendition.height }}"
+            alt="{{ item.alt_text|default:item.image.title }}"
+            class="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-sage-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        </div>
+        {% if item.caption %}
+        <figcaption class="mt-4 text-[11px] font-bold uppercase tracking-widest text-sage-black/60 border-l border-sage-black/20 pl-3">
+          {{ item.caption }}
+        </figcaption>
+        {% endif %}
+      </figure>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+  </div>
+</section>

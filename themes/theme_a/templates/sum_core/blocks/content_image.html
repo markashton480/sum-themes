@@ -1,0 +1,13 @@
+{% load wagtailimages_tags %}
+<section class="section">
+  <div class="max-w-6xl mx-auto px-6">
+    <figure class="reveal {% if self.full_width %}-mx-6 md:-mx-12 lg:mx-0{% else %}max-w-3xl mx-auto{% endif %}">
+      {% image self.image width-2400 alt=self.alt_text class="w-full h-auto rounded-sm shadow-2xl object-cover" %}
+      {% if self.caption %}
+      <figcaption class="reveal delay-100 text-center mt-4 text-xs font-bold uppercase tracking-widest text-sage-black/50">
+        {{ self.caption }}
+      </figcaption>
+      {% endif %}
+    </figure>
+  </div>
+</section>

@@ -1,0 +1,28 @@
+<div class="dynamic-form-modal">
+  <button type="button"
+          class="btn btn-primary"
+          data-dynamic-form-modal-open
+          aria-haspopup="dialog">
+    {{ self.cta_button_text|default:"Open form" }}
+  </button>
+
+  <div class="fixed inset-0 z-50 hidden items-center justify-center bg-sage-black/60 p-6"
+       data-dynamic-form-modal
+       aria-hidden="true">
+    <div class="relative w-full max-w-2xl bg-sage-linen rounded-2xl p-8 md:p-10 shadow-2xl">
+      <button type="button"
+              class="absolute right-4 top-4 text-sage-black/60 hover:text-sage-black"
+              data-dynamic-form-modal-close
+              aria-label="Close form">
+        <span class="text-2xl" aria-hidden="true">&times;</span>
+      </button>
+
+      <div class="mb-8">
+        <h2 class="font-display text-3xl md:text-4xl text-sage-black">{{ form_definition.name }}</h2>
+        <p class="text-sm text-sage-black/60 mt-2">Complete the form and we will be in touch.</p>
+      </div>
+
+      {% include 'sum_core/forms/_dynamic_form_fields.html' %}
+    </div>
+  </div>
+</div>
