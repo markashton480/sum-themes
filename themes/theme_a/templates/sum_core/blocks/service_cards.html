@@ -1,0 +1,115 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="py-20 bg-sage-oat/30">
+    <div class="max-w-7xl mx-auto px-6">
+        {# Header Area - Only render if content exists #}
+        {% if self.eyebrow or self.heading or self.intro %}
+        <div class="mb-12 max-w-3xl">
+            {% if self.eyebrow %}
+                <span class="block text-xs font-bold uppercase tracking-widest text-sage-moss mb-4">{{ self.eyebrow }}</span>
+            {% endif %}
+
+            {% if self.heading %}
+                <div class="font-display text-4xl md:text-5xl text-sage-black mb-6 leading-tight">
+                    {{ self.heading|richtext }}
+                </div>
+            {% endif %}
+
+            {% if self.intro %}
+                <p class="text-sage-black font-light leading-relaxed text-lg">{{ self.intro }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {# Cards Grid #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-sage-black/10">
+
+            {% for card in self.cards %}
+                {% if forloop.first %}
+                    {# Featured Card (First Item) - spans 2 cols #}
+                    <div class="md:col-span-2 group relative border-b md:border-b-0 md:border-r border-sage-black/10 flex flex-col justify-between p-12 hover:bg-white transition-colors duration-500 reveal min-h-[400px]">
+                        <div class="mb-8">
+                            <span class="block text-xs font-bold uppercase tracking-widest text-sage-moss mb-4">
+                                {% if card.icon %}{{ card.icon }} {% endif %}Featured Service
+                            </span>
+
+                            <h3 class="font-display text-4xl text-sage-black mb-2 group-hover:text-sage-terra transition-colors">
+                                {{ card.title }}
+                            </h3>
+
+                            {% if card.image %}
+                                <div class="mb-6 w-full aspect-video overflow-hidden bg-sage-black/5">
+                                    {% image card.image fill-800x450 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
+                                </div>
+                            {% endif %}
+
+                            {% if card.description %}
+                                <div class="text-sage-black font-light leading-relaxed text-lg max-w-xl prose prose-p:text-sage-black prose-a:text-sage-terra">
+                                    {{ card.description|richtext }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if card.link_url %}
+                                <a href="{{ card.link_url }}" class="inline-flex items-center text-xs font-bold uppercase tracking-widest border-b-2 border-sage-black/20 pb-2 hover:border-sage-terra hover:text-sage-terra transition-colors py-2">
+                                    {{ card.link_label|default:"Explore Process" }}
+                                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                </a>
+                            {% else %}
+                                <div class="inline-flex items-center text-xs font-bold uppercase tracking-widest border-b-2 border-transparent pb-2 text-sage-black/40 cursor-default">
+                                    {{ card.link_label|default:"Coming Soon" }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                {% else %}
+                    {# Standard Card - spans 1 col #}
+                    <div class="group relative border-b md:border-b-0 border-sage-black/10 flex flex-col justify-between p-12 hover:bg-white transition-colors duration-500 reveal min-h-[400px] {% if not forloop.last %}md:border-r{% endif %}">
+                        <div class="mb-8">
+                            <span class="block text-xs font-bold uppercase tracking-widest text-sage-meta mb-4">
+                                {{ forloop.counter0|stringformat:"02d" }}
+                            </span>
+
+                            <h3 class="font-display text-3xl text-sage-black mb-4 group-hover:text-sage-terra transition-colors">
+                                {{ card.title }}
+                            </h3>
+
+                            {% if card.image %}
+                                <div class="mb-6 w-full aspect-[4/3] overflow-hidden bg-sage-black/5">
+                                    {% image card.image fill-400x300 class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" %}
+                                </div>
+                            {% elif card.icon %}
+                                <div class="mb-4 text-3xl text-sage-terra">
+                                    {{ card.icon }}
+                                </div>
+                            {% endif %}
+
+                            {% if card.description %}
+                                <div class="text-sage-black font-light leading-relaxed prose prose-sm prose-p:text-sage-black prose-a:text-sage-terra">
+                                    {{ card.description|richtext }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if card.link_url %}
+                                <a href="{{ card.link_url }}" class="inline-block text-xs font-bold uppercase tracking-widest border-b border-sage-black/20 pb-1 group-hover:border-sage-terra transition-colors py-2">
+                                    {{ card.link_label|default:"Learn More" }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        {% if self.view_all_link %}
+            <div class="mt-12 text-center">
+                <a href="{{ self.view_all_link }}" class="inline-block text-xs font-bold uppercase tracking-widest border-b border-sage-black/20 pb-1 hover:border-sage-terra hover:text-sage-terra transition-colors py-2">
+                    {{ self.view_all_label|default:"View All Services" }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>

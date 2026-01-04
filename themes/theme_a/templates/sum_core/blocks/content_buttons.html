@@ -1,0 +1,13 @@
+{% load wagtailcore_tags %}
+<section class="section">
+  <div class="container max-w-6xl mx-auto px-6">
+    <div class="flex flex-wrap gap-4 {% if self.alignment == 'center' %}justify-center{% elif self.alignment == 'right' %}justify-end{% else %}justify-start{% endif %}">
+      {% for btn in self.buttons %}
+      <a href="{{ btn.url }}"
+         class="btn w-full sm:w-auto {% if btn.style == 'primary' %}btn-primary{% else %}btn-outline{% endif %}">
+        {{ btn.label }}
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>

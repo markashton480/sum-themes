@@ -1,0 +1,34 @@
+{% load wagtailcore_tags %}
+
+<div class="bg-sage-linen border-b border-sage-black/5 py-12 relative z-10">
+  <div class="max-w-7xl mx-auto px-6">
+    {% if self.eyebrow or self.intro %}
+    <div class="text-center mb-12">
+      {% if self.eyebrow %}
+      <span
+        class="block font-display text-xs text-sage-terra uppercase tracking-widest mb-2"
+        >{{ self.eyebrow }}</span
+      >
+      {% endif %} {% if self.intro %}
+      <div class="font-display text-xl text-sage-black max-w-3xl mx-auto">
+        {{ self.intro|linebreaksbr }}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      {% for item in self.items %}
+      <div class="space-y-2">
+        <span
+          class="block font-display text-xs text-sage-terra uppercase tracking-widest"
+          >{{ item.label }}</span
+        >
+        <span class="block font-display text-xl text-sage-black">
+          {% if item.prefix %}{{ item.prefix }}{% endif %}{{ item.value }}{% if item.suffix %}{{ item.suffix }}{% endif %}
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

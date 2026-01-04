@@ -1,0 +1,16 @@
+<section class="dynamic-form-inline py-16 md:py-24 bg-sage-linen/50">
+  <div class="container mx-auto px-6">
+    <div class="max-w-3xl">
+      <header class="mb-10">
+        <span class="block text-xs font-bold uppercase tracking-widest text-sage-moss">Form</span>
+        <h2 class="font-display text-4xl md:text-5xl text-sage-black mt-4">
+          {{ form_definition.name }}
+        </h2>
+      </header>
+
+      <div class="premium-form bg-white/60 border border-sage-black/10 rounded-2xl p-8 md:p-10 shadow-sm">
+        {% include 'sum_core/forms/_dynamic_form_fields.html' %}
+      </div>
+    </div>
+  </div>
+</section>

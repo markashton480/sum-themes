@@ -1,0 +1,173 @@
+{% extends "theme/base.html" %}
+{% load wagtailcore_tags %}
+
+{% block main_class %}pt-0{% endblock %}
+
+{% block content %}
+  <section class="bg-sage-black text-sage-linen pt-32 pb-20 lg:pt-40 lg:pb-24 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      {% if page.get_breadcrumbs %}
+        {% with breadcrumbs=page.get_breadcrumbs %}
+          {% if breadcrumbs %}
+            <nav aria-label="Breadcrumb" class="mb-8 text-sm text-sage-linen/60 font-mono tracking-wider uppercase">
+              <ol class="flex items-center gap-2">
+                {% for crumb in breadcrumbs %}
+                  <li>
+                    {% if crumb.is_current %}
+                      <span aria-current="page" class="text-sage-linen">{{ crumb.title }}</span>
+                    {% elif crumb.url %}
+                      <a href="{{ crumb.url }}" class="hover:text-sage-terra transition-colors focus:text-sage-terra rounded-sm">
+                        {{ crumb.title }}
+                      </a>
+                    {% else %}
+                      <span>{{ crumb.title }}</span>
+                    {% endif %}
+                  </li>
+                  {% if not forloop.last %}
+                    <li aria-hidden="true">/</li>
+                  {% endif %}
+                {% endfor %}
+              </ol>
+            </nav>
+          {% endif %}
+        {% endwith %}
+      {% endif %}
+
+      <div class="max-w-3xl">
+        <h1 class="font-display text-5xl md:text-6xl text-sage-linen mb-8 leading-tight">
+          {{ page.title }}
+        </h1>
+        {% if page.search_description %}
+          <p class="font-light text-lg md:text-xl leading-relaxed text-sage-linen/80">
+            {{ page.search_description }}
+          </p>
+        {% endif %}
+
+        <div class="mt-10 flex flex-wrap gap-6 items-center">
+          {% if page.last_updated %}
+            <span class="text-xs font-bold uppercase tracking-widest text-sage-linen/60">
+              Last Updated:
+              <time datetime="{{ page.last_updated|date:'Y-m-d' }}">{{ page.last_updated|date:"F Y" }}</time>
+            </span>
+          {% endif %}
+          <button
+            type="button"
+            onclick="window.print()"
+            class="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-sage-terra hover:text-white transition-colors border-b border-transparent hover:border-white pb-0.5 rounded-sm"
+            aria-label="Print this document"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 00-2 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+            </svg>
+            Print Document
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% if page.sections %}
+    <div class="lg:hidden sticky top-0 z-40 bg-sage-linen border-b border-sage-black/10 shadow-sm print:hidden">
+      <button
+        id="mobile-toc-toggle"
+        type="button"
+        class="w-full px-6 py-4 flex items-center justify-between text-sage-black hover:bg-sage-oat/30 transition-colors focus:bg-sage-oat/50 rounded-sm"
+        aria-expanded="false"
+        aria-controls="mobile-toc-menu"
+        aria-label="Toggle Table of Contents"
+      >
+        <span class="font-display text-lg">Jump to Section</span>
+        <svg id="mobile-toc-icon" class="w-5 h-5 text-sage-terra transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <nav id="mobile-toc-menu" class="bg-sage-oat/20 border-t border-sage-black/5" aria-label="Mobile Table of Contents" hidden>
+        <div>
+          {% for section in page.sections %}
+            {% with section_id=section.value.anchor|slugify %}
+              <a
+                href="#{{ section_id }}"
+                class="block px-6 py-4 text-sm font-bold uppercase tracking-widest text-sage-label hover:text-sage-terra hover:bg-sage-oat/50 border-b border-sage-black/5 transition-colors"
+              >
+                {{ forloop.counter }}. {{ section.value.heading }}
+              </a>
+            {% endwith %}
+          {% endfor %}
+        </div>
+      </nav>
+    </div>
+
+    <section class="max-w-7xl mx-auto px-6 py-12 lg:py-24">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 relative">
+        <aside class="hidden lg:block lg:col-span-3">
+          <div class="sticky top-32">
+            <span class="block text-xs font-bold uppercase tracking-widest text-sage-black/40 mb-6" aria-hidden="true">
+              Contents
+            </span>
+            <nav class="space-y-4 border-l border-sage-black/10" aria-label="Table of Contents">
+              {% for section in page.sections %}
+                {% with section_id=section.value.anchor|slugify %}
+                  <a
+                    href="#{{ section_id }}"
+                    class="block pl-4 text-sm text-sage-label hover:text-sage-terra transition-all border-l-2 border-transparent hover:border-sage-terra -ml-[2px] py-1 focus:text-sage-terra focus:font-bold rounded-sm"
+                  >
+                    {{ forloop.counter }}. {{ section.value.heading }}
+                  </a>
+                {% endwith %}
+              {% endfor %}
+            </nav>
+          </div>
+        </aside>
+
+        <div class="lg:col-span-8 lg:col-start-5">
+          {% for section in page.sections %}
+            {% with section_id=section.value.anchor|slugify %}
+              <article id="{{ section_id }}" class="mb-16 scroll-mt-24 lg:scroll-mt-32">
+                <h2 class="font-display text-3xl md:text-4xl text-sage-black leading-tight mb-6">
+                  {{ section.value.heading }}
+                </h2>
+                <div class="prose prose-lg max-w-none text-sage-label font-light leading-relaxed prose-headings:font-display prose-headings:text-2xl prose-a:text-sage-terra prose-strong:text-sage-black prose-li:mb-2">
+                  {{ section.value.body|richtext }}
+                </div>
+              </article>
+              {% if not forloop.last %}
+                <hr class="border-sage-black/10 mb-16" aria-hidden="true">
+              {% endif %}
+            {% endwith %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}
+
+{% block extra_body %}
+  {{ block.super }}
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggle = document.getElementById("mobile-toc-toggle");
+      const menu = document.getElementById("mobile-toc-menu");
+      const icon = document.getElementById("mobile-toc-icon");
+      if (!toggle || !menu) {
+        return;
+      }
+
+      const setExpanded = (expanded) => {
+        toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+        menu.hidden = !expanded;
+        menu.setAttribute("aria-hidden", expanded ? "false" : "true");
+        if (icon) {
+          icon.style.transform = expanded ? "rotate(180deg)" : "rotate(0deg)";
+        }
+      };
+
+      setExpanded(false);
+
+      toggle.addEventListener("click", () => {
+        const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+        setExpanded(!isExpanded);
+      });
+    });
+  </script>
+{% endblock %}

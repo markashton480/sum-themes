@@ -1,0 +1,24 @@
+{% extends "theme/base.html" %}
+{% load wagtailcore_tags %}
+
+{% block main_class %}{% if page.has_hero_block %}pt-0{% else %}pt-24{% endif %}{% endblock %}
+
+{% block content %}
+  {% if not page.has_hero_block %}
+    <section class="section">
+      <div class="container">
+        <header class="section__header">
+          <div class="section__heading">
+            <h1 class="heading-xl">{{ page.title }}</h1>
+          </div>
+        </header>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if page.body %}
+    {% for block in page.body %}
+      {% include_block block %}
+    {% endfor %}
+  {% endif %}
+{% endblock %}

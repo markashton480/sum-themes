@@ -1,0 +1,41 @@
+{% load wagtailcore_tags %}
+<section class="py-32 md:py-48 hero hero--gradient hero--gradient-{{ self.gradient_style }} relative overflow-hidden">
+    <!-- Subtle background texture or pattern could go here -->
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"%23000000\" fill-opacity=\"1\" fill-rule=\"evenodd\"%3E%3Ccircle cx=\"3\" cy=\"3\" r=\"0.5\"/%3E%3C/g%3E%3C/svg%3E');"></div>
+
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            {% if self.status %}
+                <div class="reveal mb-8">
+                    <span class="inline-flex items-center gap-3 px-4 py-1.5 rounded-sm bg-sage-moss/10 text-sage-moss text-[10px] font-bold uppercase tracking-[0.2em] border border-sage-moss/20">
+                        <span class="w-1.5 h-1.5 rounded-full bg-sage-moss animate-pulse"></span>
+                        {{ self.status }}
+                    </span>
+                </div>
+            {% endif %}
+
+            <div class="reveal delay-100">
+                <div class="font-display text-5xl md:text-6xl lg:text-7xl leading-[1.1] text-sage-black tracking-tight">
+                    {{ self.headline|richtext }}
+                </div>
+            </div>
+
+            {% if self.subheadline %}
+                <div class="reveal delay-200 mt-10 text-xl md:text-2xl text-sage-black/70 leading-relaxed font-body max-w-2xl mx-auto">
+                    {{ self.subheadline }}
+                </div>
+            {% endif %}
+
+            {% if self.ctas %}
+                <div class="flex flex-wrap justify-center gap-6 mt-12 reveal delay-300">
+                    {% for cta in self.ctas %}
+                        <a href="{{ cta.url }}" class="btn {% if cta.style == 'primary' %}btn-primary{% else %}btn-outline{% endif %}"
+                           {% if cta.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                            {{ cta.label }}
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>

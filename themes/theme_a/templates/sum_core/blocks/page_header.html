@@ -1,0 +1,53 @@
+{% load wagtailcore_tags %}
+<section class="py-24 md:py-32 bg-sage-linen">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="max-w-4xl mx-auto text-center space-y-4 md:space-y-6">
+      {% if page and page.get_breadcrumbs %}
+        {% with breadcrumbs=page.get_breadcrumbs %}
+          {% if breadcrumbs %}
+            <nav class="reveal" aria-label="Breadcrumb">
+              <ol class="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-sage-black/60">
+                {% for crumb in breadcrumbs %}
+                  <li class="flex items-center gap-3">
+                    {% if crumb.is_current %}
+                      <span aria-current="page" class="text-sage-black">{{ crumb.title }}</span>
+                    {% elif crumb.url %}
+                      <a href="{{ crumb.url }}" class="hover:text-sage-terra transition-colors">{{ crumb.title }}</a>
+                    {% else %}
+                      <span>{{ crumb.title }}</span>
+                    {% endif %}
+                    {% if not forloop.last %}
+                      <span aria-hidden="true" class="text-sage-black/30">/</span>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ol>
+            </nav>
+          {% endif %}
+        {% endwith %}
+      {% endif %}
+
+      {% if self.eyebrow %}
+        <span class="block text-sage-terra font-accent italic text-lg md:text-xl reveal">
+          {{ self.eyebrow }}
+        </span>
+      {% endif %}
+
+      {% if self.heading %}
+        <div class="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight text-sage-black reveal delay-100">
+          {{ self.heading|richtext }}
+        </div>
+      {% elif page %}
+        <h1 class="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight text-sage-black reveal delay-100">
+          {{ page.title }}
+        </h1>
+      {% endif %}
+
+      {% if self.intro %}
+        <p class="text-lg md:text-xl text-sage-black/70 font-body leading-relaxed reveal delay-200">
+          {{ self.intro }}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</section>

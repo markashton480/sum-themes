@@ -1,0 +1,66 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="section-featured-case-study py-24">
+    <div class="container mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-16 items-start">
+
+            {# Left Column: Image with overlay + Floating Stats #}
+            <div class="relative group">
+                {% if self.stats_label or self.stats_value %}
+                    <div class="stats-card bg-sage-terra text-white p-6 absolute top-8 right-8 z-20 shadow-lg min-w-[140px]">
+                        {% if self.stats_value %}
+                            <div class="text-3xl font-display font-medium mb-1">{{ self.stats_value }}</div>
+                        {% endif %}
+                        {% if self.stats_label %}
+                            <div class="text-sm text-white/90 uppercase tracking-widest font-heading">{{ self.stats_label }}</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <div class="aspect-[4/5] relative overflow-hidden w-full">
+                    {% image self.image original as img %}
+                    <img src="{{ img.url }}" alt="{{ self.image_alt }}" class="w-full h-full object-cover">
+
+                    {# Hover Overlay #}
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
+                        <span class="text-white border border-white px-6 py-3 uppercase tracking-widest text-sm font-heading">Inspect Artifact</span>
+                    </div>
+                </div>
+            </div>
+
+            {# Right Column: Content #}
+            <div class="flex flex-col justify-center h-full pt-8 lg:pt-12">
+                {% if self.eyebrow %}
+                    <div class="text-sage-terra font-heading uppercase tracking-widest text-sm mb-6">{{ self.eyebrow }}</div>
+                {% endif %}
+
+                <div class="font-display text-4xl lg:text-5xl text-charcoal mb-8 leading-tight">
+                    {{ self.heading|richtext }}
+                </div>
+
+                {% if self.intro %}
+                    <div class="text-lg text-charcoal/80 mb-10 leading-relaxed font-body">
+                        {{ self.intro|richtext }}
+                    </div>
+                {% endif %}
+
+                {% if self.points %}
+                    <ol class="space-y-6 mb-12 list-decimal list-outside pl-5 font-heading text-lg text-charcoal marker:text-sage-terra marker:font-bold">
+                        {% for point in self.points %}
+                            <li class="pl-2">{{ point }}</li>
+                        {% endfor %}
+                    </ol>
+                {% endif %}
+
+                {% if self.cta_text and self.cta_url %}
+                    <div>
+                        <a href="{{ self.cta_url }}" class="inline-block text-sage-terra font-heading uppercase tracking-widest text-sm border-b-2 border-sage-terra pb-2 hover:text-sage-oak hover:border-sage-oak transition-colors">
+                            {{ self.cta_text }}
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>

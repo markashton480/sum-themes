@@ -1,0 +1,33 @@
+{% load wagtailcore_tags %}
+{% if categories %}
+  {% with selected_slug=selected_category.slug|default:selected_category %}
+    <section class="py-6 border-y border-sage-black/10 bg-sage-linen/70">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-sage-moss">
+            Filter by category
+          </span>
+
+          <a
+            href="{% pageurl page %}"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] border transition {% if not selected_slug %}bg-sage-black text-sage-linen border-sage-black{% else %}bg-sage-oat/70 text-sage-black border-sage-black/10 hover:bg-sage-terra/10{% endif %}"
+          >
+            All posts
+          </a>
+
+          {% for category in categories %}
+            <a
+              href="?category={{ category.slug }}"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] border transition {% if selected_slug == category.slug %}bg-sage-black text-sage-linen border-sage-black{% else %}bg-sage-oat/70 text-sage-black border-sage-black/10 hover:bg-sage-terra/10{% endif %}"
+            >
+              {{ category.name }}
+              {% if category.post_count %}
+                <span class="text-[10px] text-sage-meta">{{ category.post_count }}</span>
+              {% endif %}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endwith %}
+{% endif %}

@@ -1,0 +1,4 @@
+{% comment %}
+Divider block - horizontal rule with muted/strong/accent styles.
+{% endcomment %}
+<hr class="border-t my-10 {% if self.style == 'strong' %}border-sage-black{% elif self.style == 'accent' %}border-sage-terra{% else %}border-sage-black/20{% endif %}">

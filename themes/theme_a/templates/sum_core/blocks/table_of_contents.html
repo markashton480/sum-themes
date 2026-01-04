@@ -1,0 +1,31 @@
+{% load wagtailcore_tags %}
+<nav
+  class="bg-sage-oat/60 border border-sage-black/10 rounded-sm shadow-sm p-6 md:p-8"
+  aria-label="Table of Contents"
+>
+  <p class="text-xs font-bold uppercase tracking-[0.18em] text-sage-black/60 mb-4">
+    Contents
+  </p>
+  <ol class="space-y-3">
+    {% for item in self.items %}
+      {% with anchor=item.anchor|slugify %}
+        <li>
+          <a
+            href="#{{ anchor }}"
+            class="group flex items-start gap-4 text-sage-label hover:text-sage-terra transition-colors"
+          >
+            <span class="text-xs font-bold uppercase tracking-[0.18em] text-sage-black/50 group-hover:text-sage-terra transition-colors leading-6">
+              {{ forloop.counter }}.
+            </span>
+            <div>
+              <span class="block font-display text-lg leading-tight">{{ item.label }}</span>
+              <span class="block text-xs font-semibold uppercase tracking-[0.16em] text-sage-black/40">
+                #{{ anchor }}
+              </span>
+            </div>
+          </a>
+        </li>
+      {% endwith %}
+    {% endfor %}
+  </ol>
+</nav>

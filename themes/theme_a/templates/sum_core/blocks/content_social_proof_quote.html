@@ -1,0 +1,43 @@
+{% load wagtailimages_tags %}
+
+<section class="py-16 md:py-24 bg-sage-oat/30">
+  <div class="container max-w-5xl mx-auto px-6">
+    <figure class="relative border border-sage-moss/15 rounded-2xl bg-white/80 p-8 md:p-12">
+      <span class="absolute -top-6 left-6 text-6xl md:text-7xl text-sage-moss/15 font-display leading-none pointer-events-none" aria-hidden="true">“</span>
+      <blockquote class="font-display text-3xl md:text-4xl leading-relaxed text-sage-black italic reveal">
+        {{ self.quote|linebreaksbr }}
+      </blockquote>
+
+      <div class="mt-8 flex flex-col md:flex-row md:items-center gap-6">
+        {% if self.logo %}
+        {% with logo_alt=self.company|default:self.author|default:"Company logo" %}
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border border-sage-moss/20 bg-white/90 flex items-center justify-center reveal delay-100">
+          {% image self.logo fill-160x160 class="w-12 h-12 md:w-14 md:h-14 object-contain" alt=logo_alt %}
+        </div>
+        {% endwith %}
+        {% endif %}
+
+        {% if self.author or self.role or self.company %}
+        <figcaption class="flex flex-col gap-2 text-sage-black/70 font-body reveal delay-100">
+          {% if self.author or self.company %}
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-sage-black/50" aria-hidden="true">—</span>
+            {% if self.author %}
+            <cite class="not-italic font-semibold text-sage-black">{{ self.author }}</cite>
+            {% endif %}
+            {% if self.company %}
+            <span class="text-sm uppercase tracking-[0.2em] text-sage-label/60 {% if self.author %}ml-1{% endif %}">
+              {{ self.company }}
+            </span>
+            {% endif %}
+          </div>
+          {% endif %}
+          {% if self.role %}
+          <span class="text-xs uppercase tracking-[0.3em] text-sage-label/50">{{ self.role }}</span>
+          {% endif %}
+        </figcaption>
+        {% endif %}
+      </div>
+    </figure>
+  </div>
+</section>

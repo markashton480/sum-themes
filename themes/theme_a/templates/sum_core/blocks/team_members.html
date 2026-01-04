@@ -1,0 +1,41 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="py-24 bg-sage-linen" aria-label="{{ self.heading|striptags|default:self.eyebrow|default:'Team' }}">
+  <div class="max-w-7xl mx-auto px-6">
+    {% if self.eyebrow or self.heading %}
+    <header class="mb-12 max-w-3xl reveal" data-team-heading>
+      {% if self.eyebrow %}
+        <span class="block text-xs font-bold uppercase tracking-widest text-sage-moss mb-4">
+          {{ self.eyebrow }}
+        </span>
+      {% endif %}
+      {% if self.heading %}
+        <div class="font-display text-4xl md:text-5xl text-sage-black">
+          {{ self.heading|richtext }}
+        </div>
+      {% endif %}
+    </header>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-team-grid>
+      {% for member in self.members %}
+      <article class="bg-white border border-sage-black/10 p-8 flex flex-col gap-6 shadow-sm reveal {% if forloop.counter == 2 %}delay-100{% elif forloop.counter == 3 %}delay-200{% endif %}" data-team-member>
+        <div class="aspect-square overflow-hidden bg-sage-oat">
+          {% image member.photo fill-600x600 class="w-full h-full object-cover" alt=member.alt_text %}
+        </div>
+
+        <div>
+          <h3 class="font-display text-2xl text-sage-black">{{ member.name }}</h3>
+          {% if member.role %}
+          <p class="text-xs uppercase tracking-widest text-sage-moss mt-2">{{ member.role }}</p>
+          {% endif %}
+        </div>
+
+        {% if member.bio %}
+        <p class="text-sage-black/70 leading-relaxed text-sm">{{ member.bio|linebreaksbr }}</p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>

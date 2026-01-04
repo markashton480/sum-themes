@@ -1,0 +1,255 @@
+{% load wagtailcore_tags form_tags %}
+<section class="section bg-sage-oat quote-form-block py-20 md:py-28 {% if self.show_compact_meta %}section--compact{% endif %}">
+  <div class="max-w-5xl mx-auto px-6">
+    <header class="text-center max-w-3xl mx-auto reveal">
+      {% if self.eyebrow %}
+        <span class="block text-xs font-bold uppercase tracking-widest text-sage-moss mb-4">
+          {{ self.eyebrow }}
+        </span>
+      {% endif %}
+      <div class="font-display text-4xl md:text-5xl text-sage-black mb-6 leading-tight">
+        {{ self.heading|richtext }}
+      </div>
+      {% if self.intro %}
+        <div class="text-lg text-sage-label font-light leading-relaxed">
+          {{ self.intro|richtext }}
+        </div>
+      {% endif %}
+    </header>
+
+    {% if self.show_compact_meta %}
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-6 text-xs uppercase tracking-widest text-sage-meta" data-compact-meta>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex h-2 w-2 rounded-full bg-sage-terra" aria-hidden="true"></span>
+          <span>Response within 2 business days</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="inline-flex h-2 w-2 rounded-full bg-sage-terra" aria-hidden="true"></span>
+          <span>No obligation estimate</span>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="quote-form-container reveal delay-100 mt-10">
+      {% with block_id=block.id %}
+      <form action="/forms/submit/" method="post" novalidate
+            class="quote-form premium-form bg-sage-linen/70 border border-sage-black/10 rounded-2xl p-8 md:p-12 space-y-8 js-async-form"
+            data-form-type="quote_request" id="quote-form{% if block_id %}-{{ block_id }}{% endif %}"
+            data-success-message="{{ self.success_message|default:"Thanks, we'll prepare your quote."|escapejs }}"
+            data-error-message="Something went wrong. Please try again.">
+        {% csrf_token %}
+
+        <!-- Hidden fields for attribution and spam protection -->
+        {% form_hidden_fields form_type="quote_request" %}
+
+        <!-- Honeypot field (visually hidden) -->
+        <div class="sr-only" aria-hidden="true">
+          <label for="form-company-field{% if block_id %}-{{ block_id }}{% endif %}">Company</label>
+          <input type="text" name="company" id="form-company-field{% if block_id %}-{{ block_id }}{% endif %}" tabindex="-1" autocomplete="off">
+        </div>
+
+        {% if form %}
+          {% for field in form %}
+            <div class="relative group z-0 {% if field.errors %}has-error{% endif %}">
+              <label for="{{ field.id_for_label }}" class="block text-xs uppercase tracking-widest text-sage-label mb-2">
+                {{ field.label }}
+              </label>
+              <div>
+                {{ field }}
+              </div>
+              {% if field.help_text %}
+                <span class="text-xs text-sage-label/70 mt-2 block">{{ field.help_text }}</span>
+              {% endif %}
+              {% if field.errors %}
+                <span class="text-xs text-sage-terra mt-2 block font-bold" id="{{ field.auto_id }}_errors">
+                  {{ field.errors.0 }}
+                </span>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          {% if form.non_field_errors %}
+            <div class="p-4 bg-sage-terra/10 rounded-sm border border-sage-terra/30">
+              {% for error in form.non_field_errors %}
+                <p class="text-xs uppercase tracking-widest text-sage-terra font-mono">{{ error }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+        {% else %}
+          <!-- Working form fields for frontend use -->
+          <div class="space-y-8">
+            <div class="relative group z-0">
+              <label for="quote-project-type{% if block_id %}-{{ block_id }}{% endif %}" class="block text-xs uppercase tracking-widest text-sage-label mb-2">
+                Project Type
+              </label>
+              <select id="quote-project-type{% if block_id %}-{{ block_id }}{% endif %}" name="project_type"
+                      class="w-full bg-transparent border-0 border-b-2 border-sage-black/20 py-3 text-lg font-display text-sage-black focus:border-sage-terra transition-colors cursor-pointer">
+                <option value="" disabled selected>Select a project type</option>
+                <option value="residential">Residential Retrofit</option>
+                <option value="newbuild">New Build / Extension</option>
+                <option value="commercial">Commercial</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="relative group z-0">
+                <input type="text" id="quote-postcode{% if block_id %}-{{ block_id }}{% endif %}" name="postcode" required placeholder=" "
+                       class="peer block w-full bg-transparent border-0 border-b-2 border-sage-black/20 py-4 text-xl font-display text-sage-black placeholder-transparent focus:border-sage-terra transition-colors"
+                       aria-required="true" aria-describedby="quote-postcode-error{% if block_id %}-{{ block_id }}{% endif %}">
+                <label for="quote-postcode{% if block_id %}-{{ block_id }}{% endif %}"
+                       class="absolute text-sage-black/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-sage-black/70 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+                  Project Postcode
+                </label>
+                <span id="quote-postcode-error{% if block_id %}-{{ block_id }}{% endif %}" class="text-xs text-sage-terra mt-2 block font-bold" aria-live="polite"></span>
+              </div>
+              <div class="relative group z-0">
+                <label for="quote-budget{% if block_id %}-{{ block_id }}{% endif %}" class="block text-xs uppercase tracking-widest text-sage-label mb-2">
+                  Est. Budget
+                </label>
+                <select id="quote-budget{% if block_id %}-{{ block_id }}{% endif %}" name="budget"
+                        class="w-full bg-transparent border-0 border-b-2 border-sage-black/20 py-3 text-lg font-display text-sage-black focus:border-sage-terra transition-colors cursor-pointer">
+                  <option value="" disabled selected>Select a range</option>
+                  <option value="10-20k">10k - 20k</option>
+                  <option value="20-40k">20k - 40k</option>
+                  <option value="40k+">40k+</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="relative group z-0">
+                <input type="text" id="quote-name{% if block_id %}-{{ block_id }}{% endif %}" name="name" required placeholder=" "
+                       class="peer block w-full bg-transparent border-0 border-b-2 border-sage-black/20 py-4 text-xl font-display text-sage-black placeholder-transparent focus:border-sage-terra transition-colors"
+                       aria-required="true" aria-describedby="quote-name-error{% if block_id %}-{{ block_id }}{% endif %}">
+                <label for="quote-name{% if block_id %}-{{ block_id }}{% endif %}"
+                       class="absolute text-sage-black/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-sage-black/70 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+                  Full Name
+                </label>
+                <span id="quote-name-error{% if block_id %}-{{ block_id }}{% endif %}" class="text-xs text-sage-terra mt-2 block font-bold" aria-live="polite"></span>
+              </div>
+              <div class="relative group z-0">
+                <input type="email" id="quote-email{% if block_id %}-{{ block_id }}{% endif %}" name="email" required placeholder=" "
+                       class="peer block w-full bg-transparent border-0 border-b-2 border-sage-black/20 py-4 text-xl font-display text-sage-black placeholder-transparent focus:border-sage-terra transition-colors"
+                       aria-required="true" aria-describedby="quote-email-error{% if block_id %}-{{ block_id }}{% endif %}">
+                <label for="quote-email{% if block_id %}-{{ block_id }}{% endif %}"
+                       class="absolute text-sage-black/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-sage-black/70 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+                  Email Address
+                </label>
+                <span id="quote-email-error{% if block_id %}-{{ block_id }}{% endif %}" class="text-xs text-sage-terra mt-2 block font-bold" aria-live="polite"></span>
+              </div>
+            </div>
+
+            <div class="relative group z-0">
+              <textarea id="quote-details{% if block_id %}-{{ block_id }}{% endif %}" name="message" rows="3" placeholder=" "
+                        class="peer block w-full bg-transparent border-0 border-b-2 border-sage-black/20 py-4 text-lg font-body font-light text-sage-black placeholder-transparent focus:border-sage-terra transition-colors resize-none"></textarea>
+              <label for="quote-details{% if block_id %}-{{ block_id }}{% endif %}"
+                     class="absolute text-sage-black/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-sage-black/70 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+                Additional Details
+              </label>
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Form messages -->
+        <div class="form-messages" role="alert" aria-live="polite"></div>
+
+        <div class="pt-2">
+          <button type="submit" class="btn btn-primary btn-submit w-full md:w-auto">
+            {{ self.submit_label|default:"Request a quote" }}
+          </button>
+        </div>
+      </form>
+      {% endwith %}
+    </div>
+  </div>
+</section>
+
+{% form_attribution_script %}
+
+<script>
+(function() {
+  'use strict';
+
+  function bindForm(form) {
+    if (!form || form.dataset.formBound === 'true') return;
+    form.dataset.formBound = 'true';
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var formData = new FormData(form);
+      var submitBtn = form.querySelector('.btn-submit');
+      var messagesDiv = form.querySelector('.form-messages');
+      var originalBtnText = submitBtn.textContent;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      messagesDiv.innerHTML = '';
+      messagesDiv.className = 'form-messages';
+
+      var csrfInput = form.querySelector('input[name="csrfmiddlewaretoken"]');
+      var csrfToken = csrfInput ? csrfInput.value : '';
+
+      fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRFToken': csrfToken
+        }
+      })
+      .then(function(response) {
+        return response.json().then(function(data) {
+          return { status: response.status, data: data };
+        });
+      })
+      .then(function(result) {
+        if (result.data.success) {
+          messagesDiv.className = 'form-messages form-messages--success';
+          var successMsg = document.createElement('p');
+          successMsg.className = 'form-success-msg';
+          successMsg.textContent = form.dataset.successMessage || 'Thank you for your submission.';
+          messagesDiv.innerHTML = '';
+          messagesDiv.appendChild(successMsg);
+          form.reset();
+        } else {
+          messagesDiv.className = 'form-messages form-messages--error';
+          messagesDiv.innerHTML = '';
+          if (result.data.errors) {
+            for (var field in result.data.errors) {
+              result.data.errors[field].forEach(function(msg) {
+                var errorP = document.createElement('p');
+                errorP.className = 'form-error-msg';
+                errorP.textContent = msg;
+                messagesDiv.appendChild(errorP);
+              });
+            }
+          }
+          if (!messagesDiv.hasChildNodes()) {
+            var fallbackP = document.createElement('p');
+            fallbackP.className = 'form-error-msg';
+            fallbackP.textContent = form.dataset.errorMessage || 'Something went wrong. Please try again.';
+            messagesDiv.appendChild(fallbackP);
+          }
+        }
+      })
+      .catch(function() {
+        messagesDiv.className = 'form-messages form-messages--error';
+        var errorP = document.createElement('p');
+        errorP.className = 'form-error-msg';
+        errorP.textContent = form.dataset.errorMessage || 'Something went wrong. Please try again.';
+        messagesDiv.innerHTML = '';
+        messagesDiv.appendChild(errorP);
+      })
+      .finally(function() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      });
+    });
+  }
+
+  document.querySelectorAll('.js-async-form').forEach(bindForm);
+})();
+</script>

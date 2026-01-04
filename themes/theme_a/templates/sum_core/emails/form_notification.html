@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>New Form Submission</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.5; color: #333; }
+        .container { max-width: 640px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; font-size: 24px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        h2 { color: #34495e; font-size: 18px; margin-top: 25px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .field { margin-bottom: 6px; }
+        .label { font-weight: bold; width: 140px; display: inline-block; color: #555; }
+        .value { color: #000; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; }
+        th { background: #f7f7f7; }
+        .footer { margin-top: 30px; font-size: 12px; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>New Form Submission</h1>
+        <p>A new <strong>{{ form_definition.name|escape }}</strong> submission has been received.</p>
+
+        <h2>Contact Details</h2>
+        <div class="field"><span class="label">Name:</span> <span class="value">{{ lead.name|escape }}</span></div>
+        <div class="field"><span class="label">Email:</span> <span class="value"><a href="mailto:{{ lead.email|urlencode|escape }}">{{ lead.email|escape }}</a></span></div>
+        {% if lead.phone %}
+        <div class="field"><span class="label">Phone:</span> <span class="value"><a href="tel:{{ lead.phone|urlencode|escape }}">{{ lead.phone|escape }}</a></span></div>
+        {% endif %}
+
+        <h2>Message</h2>
+        <div class="field">{{ lead.message|default_if_none:""|escape|linebreaksbr }}</div>
+
+        <h2>Submission Info</h2>
+        <div class="field"><span class="label">Form:</span> <span class="value">{{ form_definition.name|escape }} ({{ form_definition.slug|escape }})</span></div>
+        <div class="field"><span class="label">Submitted At:</span> <span class="value">{{ lead.submitted_at|date:"N j, Y, P" }}</span></div>
+
+        {% if lead.page_url or lead.landing_page_url or lead.referrer_url or lead.utm_source or lead.utm_medium or lead.utm_campaign or lead.utm_term or lead.utm_content %}
+        <h2>Attribution</h2>
+        {% if lead.page_url %}
+        <div class="field"><span class="label">Page URL:</span> <span class="value"><a href="{{ lead.page_url|escape }}">{{ lead.page_url|escape }}</a></span></div>
+        {% endif %}
+        {% if lead.landing_page_url %}
+        <div class="field"><span class="label">Landing Page:</span> <span class="value"><a href="{{ lead.landing_page_url|escape }}">{{ lead.landing_page_url|escape }}</a></span></div>
+        {% endif %}
+        {% if lead.referrer_url %}
+        <div class="field"><span class="label">Referrer:</span> <span class="value"><a href="{{ lead.referrer_url|escape }}">{{ lead.referrer_url|escape }}</a></span></div>
+        {% endif %}
+        {% if lead.utm_source %}
+        <div class="field"><span class="label">UTM Source:</span> <span class="value">{{ lead.utm_source|escape }}</span></div>
+        {% endif %}
+        {% if lead.utm_medium %}
+        <div class="field"><span class="label">UTM Medium:</span> <span class="value">{{ lead.utm_medium|escape }}</span></div>
+        {% endif %}
+        {% if lead.utm_campaign %}
+        <div class="field"><span class="label">UTM Campaign:</span> <span class="value">{{ lead.utm_campaign|escape }}</span></div>
+        {% endif %}
+        {% if lead.utm_term %}
+        <div class="field"><span class="label">UTM Term:</span> <span class="value">{{ lead.utm_term|escape }}</span></div>
+        {% endif %}
+        {% if lead.utm_content %}
+        <div class="field"><span class="label">UTM Content:</span> <span class="value">{{ lead.utm_content|escape }}</span></div>
+        {% endif %}
+        {% endif %}
+
+        {% if lead.form_data %}
+        <h2>Additional Fields</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in lead.form_data.items %}
+                <tr>
+                    <td>{{ key|escape }}</td>
+                    <td>
+                        {% if value.name %}{{ value.name|escape }}{% elif value.path %}{{ value.path|escape }}{% else %}{{ value|default_if_none:""|escape }}{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        <div class="footer">
+            <p>This is an automated notification from {{ form_definition.site.hostname|escape }}.</p>
+            <p>Lead ID: {{ lead.id }}</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="py-24 bg-sage-black text-sage-linen overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6">
+
+    <header class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 reveal">
+      <div>
+        {% if self.eyebrow %}
+          <span class="block font-accent italic text-2xl text-sage-terra mb-2">
+            {{ self.eyebrow }}
+          </span>
+        {% endif %}
+        {% if self.heading %}
+          <div class="font-display text-4xl md:text-5xl text-sage-linen">
+            {{ self.heading|richtext }}
+          </div>
+        {% endif %}
+      </div>
+    </header>
+
+    <div class="relative">
+      <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-sage-black to-transparent pointer-events-none md:hidden z-10"></div>
+
+      <div class="flex overflow-x-auto md:grid md:grid-cols-3 gap-8 pb-8 md:pb-0 no-scrollbar snap-x snap-mandatory">
+        {% for item in self.testimonials %}
+        <article class="min-w-[85vw] md:min-w-0 snap-center bg-sage-black/40 border border-sage-linen/10 p-8 md:p-10 flex flex-col h-full reveal {% if forloop.counter == 2 %}delay-100{% elif forloop.counter == 3 %}delay-200{% endif %}">
+          {% if item.rating %}
+          <div class="flex items-center gap-1 text-sage-terra text-xs uppercase tracking-widest mb-6" aria-label="Rated {{ item.rating }} out of 5">
+            {% for _ in "12345" %}
+            <span aria-hidden="true" class="{% if forloop.counter <= item.rating %}text-sage-terra{% else %}text-sage-linen/30{% endif %}">★</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% if item.quote %}
+          <blockquote class="font-display text-xl md:text-2xl text-sage-linen/90 leading-relaxed italic mb-8">
+            "{{ item.quote|linebreaksbr }}"
+          </blockquote>
+          {% endif %}
+
+          <div class="mt-auto flex items-center gap-4 pt-6 border-t border-sage-linen/10">
+            {% if item.photo %}
+              <div class="w-12 h-12 rounded-full overflow-hidden border border-sage-linen/20">
+                {% image item.photo fill-96x96 class="w-full h-full object-cover" %}
+              </div>
+            {% else %}
+              {% with initials=item.author_name|slice:":2"|upper %}
+              <div class="w-12 h-12 rounded-full bg-sage-linen/10 text-sage-linen flex items-center justify-center font-bold text-xs tracking-[0.2em]">
+                {{ initials }}
+              </div>
+              {% endwith %}
+            {% endif %}
+
+            <div class="flex-1 min-w-0">
+              <h4 class="font-body font-bold text-sage-linen tracking-wide">{{ item.author_name }}</h4>
+              {% if item.company %}
+              <p class="text-[11px] uppercase tracking-widest text-sage-linen/60 mt-1">{{ item.company }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>

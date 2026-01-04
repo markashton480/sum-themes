@@ -1,0 +1,54 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% with has_image=self.image %}
+<section class="py-24 md:py-32 bg-sage-oat/30 border-y border-sage-black/5">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="{% if has_image and self.layout != 'no_image' %}grid lg:grid-cols-2 gap-12 lg:gap-16 items-center{% else %}max-w-3xl mx-auto{% endif %}">
+            <div class="space-y-6 {% if has_image and self.layout == 'image_right' %}lg:order-1{% elif has_image %}lg:order-2{% endif %}">
+                {% if self.eyebrow %}
+                    <span class="text-sage-terra font-accent italic text-xl block">{{ self.eyebrow }}</span>
+                {% endif %}
+
+                <div class="font-display text-4xl md:text-5xl text-sage-black leading-tight">
+                    {{ self.heading|richtext }}
+                </div>
+
+                <div class="prose prose-lg max-w-none text-sage-label font-light prose-a:text-sage-terra prose-strong:text-sage-black">
+                    {{ self.body|richtext }}
+                </div>
+
+                {% if self.highlights %}
+                    <ul class="grid gap-3 md:gap-4">
+                        {% for highlight in self.highlights %}
+                            <li class="flex items-start gap-3 text-sage-black">
+                                <span class="mt-1 inline-flex h-7 w-7 items-center justify-center rounded-full bg-sage-terra/15 border border-sage-terra/30 text-sage-terra font-heading text-sm leading-none">•</span>
+                                <span class="font-heading text-lg leading-snug">{{ highlight }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if self.cta_text and self.cta_url %}
+                    <div>
+                        <a href="{{ self.cta_url }}" class="inline-flex items-center text-xs font-bold uppercase tracking-widest border-b border-sage-black/30 pb-2 hover:border-sage-terra hover:text-sage-terra transition-colors">
+                            {{ self.cta_text }}
+                            <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if has_image and self.layout != "no_image" %}
+                <div class="relative {% if self.layout == 'image_right' %}lg:order-2{% else %}lg:order-1{% endif %}">
+                    <div class="aspect-[4/3] md:aspect-[5/4] overflow-hidden rounded-3xl shadow-xl bg-sage-black/5 border border-sage-black/5">
+                        {% image self.image fill-1200x900 class="w-full h-full object-cover" alt=self.image_alt|default:self.heading|striptags %}
+                    </div>
+                    <div class="absolute -left-6 -bottom-6 hidden lg:block w-32 h-32 bg-sage-terra/10 blur-3xl pointer-events-none"></div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endwith %}

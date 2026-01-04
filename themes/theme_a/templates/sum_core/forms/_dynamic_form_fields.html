@@ -1,0 +1,104 @@
+{% load wagtailcore_tags form_tags %}
+
+<form action="/forms/submit/" method="post" novalidate enctype="multipart/form-data"
+      id="dynamic-form-{{ form_definition.slug }}-{{ self.presentation_style }}-{{ block.id }}"
+      class="dynamic-form space-y-8"
+      data-dynamic-form
+      data-form-definition="{{ form_definition.slug }}"
+      data-presentation="{{ self.presentation_style }}"
+      data-success-message="{{ form_definition.success_message|default:'Thank you for your submission.'|escapejs }}"
+      data-error-message="Something went wrong. Please try again."
+      {% if self.success_redirect_url %}data-success-redirect="{{ self.success_redirect_url }}"{% endif %}>
+  {% csrf_token %}
+
+  {% form_hidden_fields form_type=form_definition.slug %}
+  <input type="hidden" name="form_definition_id" value="{{ form_definition.pk }}">
+  <input type="hidden" name="_rendered_at" class="js-dynamic-form-timestamp" value="">
+
+  <div class="sr-only" aria-hidden="true">
+    <label for="form-website-field-{{ form_definition.slug }}-{{ block.id }}">Website</label>
+    <input type="text" name="website" id="form-website-field-{{ form_definition.slug }}-{{ block.id }}" tabindex="-1" autocomplete="off">
+  </div>
+
+  {% if form %}
+    <div class="space-y-6">
+      {% for block in form_definition.fields %}
+        {% if block.block_type == 'section_heading' %}
+          <div class="pt-6">
+            {% if block.value.level == 'h2' %}
+              <h2 class="font-display text-2xl md:text-3xl text-sage-black">{{ block.value.heading|escape }}</h2>
+            {% elif block.value.level == 'h3' %}
+              <h3 class="font-display text-xl md:text-2xl text-sage-black">{{ block.value.heading|escape }}</h3>
+            {% else %}
+              <h4 class="font-display text-lg md:text-xl text-sage-black">{{ block.value.heading|escape }}</h4>
+            {% endif %}
+          </div>
+        {% elif block.block_type == 'help_text' %}
+          <div class="prose prose-sm text-sage-black/70 max-w-none">
+            {{ block.value.text|richtext }}
+          </div>
+        {% else %}
+          {% with field=form|form_field:block.value.field_name %}
+            <div class="relative {% if field.errors %}has-error{% endif %}">
+              {% if block.block_type == 'checkbox' %}
+                <label class="flex items-start gap-3 text-sm text-sage-black">
+                  {{ field }}
+                  <span class="leading-6">{{ field.label }}</span>
+                </label>
+              {% elif block.block_type == 'checkbox_group' or block.block_type == 'radio_buttons' %}
+                <label class="block text-xs uppercase tracking-widest text-sage-black/60 mb-3">
+                  {{ field.label }}
+                </label>
+                <div class="space-y-3">
+                  {% for choice in field %}
+                    <label class="flex items-start gap-3 text-sm text-sage-black">
+                      {{ choice.tag }}
+                      <span class="leading-6">{{ choice.choice_label }}</span>
+                    </label>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <label for="{{ field.id_for_label }}" class="block text-xs uppercase tracking-widest text-sage-black/60 mb-2">
+                  {{ field.label }}
+                </label>
+                <div>
+                  {{ field }}
+                </div>
+              {% endif %}
+
+              {% if field.help_text %}
+                <p class="text-xs text-sage-black/60 mt-2">{{ field.help_text }}</p>
+              {% endif %}
+              {% if field.errors %}
+                <p class="text-xs text-sage-terra mt-2 font-bold" id="{{ field.auto_id }}_errors">
+                  {{ field.errors.0 }}
+                </p>
+              {% endif %}
+            </div>
+          {% endwith %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if form.non_field_errors %}
+      <div class="p-4 bg-sage-terra/10 rounded-sm border border-sage-terra/30">
+        {% for error in form.non_field_errors %}
+          <p class="text-xs uppercase tracking-widest text-sage-terra font-mono">{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  <div class="form-messages text-sm" role="alert" aria-live="polite"></div>
+
+  <div class="pt-2">
+    <button
+      type="submit"
+      class="btn btn-primary btn-submit w-full md:w-auto"
+      data-dynamic-form-submit
+      {% if form_inactive_warning %}disabled aria-disabled="true"{% endif %}
+    >
+      Submit
+    </button>
+  </div>
+</form>
