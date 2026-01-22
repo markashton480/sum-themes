@@ -1,0 +1,35 @@
+{% load branding_tags wagtailcore_tags chrome_tags %}
+{% get_site_settings as site_settings %}
+{% cookie_banner_should_render as show_cookie_banner %}
+{% cookie_banner_section_id page as section_id %}
+
+{% if show_cookie_banner %}
+  <div id="cookie-banner" role="dialog" aria-labelledby="cookie-heading" aria-describedby="cookie-desc"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}
+       class="cookie-banner fixed bottom-0 left-0 md:bottom-8 md:left-8 z-[90] w-full md:w-[28rem] bg-sage-black border-t md:border border-sage-linen/10 shadow-2xl transform translate-y-[110%] transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] p-8 md:rounded-sm will-change-transform">
+    <div class="flex flex-col space-y-6">
+      <div class="space-y-2">
+        <h2 id="cookie-heading" class="font-display text-2xl text-sage-linen">Cookies</h2>
+        <p id="cookie-desc" class="text-sage-oat/80 text-sm font-light leading-relaxed">
+          We use cookies to make the site work and to understand how it is used. You can accept all cookies or choose essential-only.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-4 pt-2">
+        <button id="cookie-accept" type="button" data-cookie-consent="accept"
+                class="flex-1 bg-sage-terra text-white px-6 py-3 text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-sage-black transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 focus:ring-offset-sage-black">
+          Accept All
+        </button>
+
+        <button id="cookie-decline" type="button" data-cookie-consent="reject"
+                class="flex-1 bg-transparent border border-sage-linen/30 text-sage-linen px-6 py-3 text-xs font-bold uppercase tracking-widest hover:border-sage-linen hover:bg-sage-linen hover:text-sage-black transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-sage-linen focus:ring-offset-2 focus:ring-offset-sage-black">
+          Essential Only
+        </button>
+      </div>
+
+      <div class="text-xs text-sage-oat/50 border-t border-sage-linen/10 pt-4">
+        Read our full
+        <a href="/privacy/" class="text-sage-terra hover:text-white underline decoration-sage-terra/30 underline-offset-4 transition-colors">Privacy Policy</a>.
+      </div>
+    </div>
+  </div>
+{% endif %}

@@ -1,41 +1,71 @@
-{% load wagtailcore_tags %}
-<section class="py-32 md:py-48 hero hero--gradient hero--gradient-{{ self.gradient_style }} relative overflow-hidden">
-    <!-- Subtle background texture or pattern could go here -->
-    <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"%23000000\" fill-opacity=\"1\" fill-rule=\"evenodd\"%3E%3Ccircle cx=\"3\" cy=\"3\" r=\"0.5\"/%3E%3C/g%3E%3C/svg%3E');"></div>
+{% load static wagtailcore_tags %}
+{% with hero=hero|default:self %}
+<section
+    class="bg-sage-black text-sage-linen pt-40 pb-24 border-b border-sage-linen/10 relative overflow-hidden hero"
+    {% if hero.section_id %}data-section-id="{{ hero.section_id }}"{% endif %}
+>
+    <div class="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none"
+         style="background-image: url('{% static "theme_a/img/wood-pattern.png" %}');"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-sage-black/80 pointer-events-none"></div>
 
-    <div class="container mx-auto px-4 relative z-10">
-        <div class="max-w-4xl mx-auto text-center">
-            {% if self.status %}
-                <div class="reveal mb-8">
-                    <span class="inline-flex items-center gap-3 px-4 py-1.5 rounded-sm bg-sage-moss/10 text-sage-moss text-[10px] font-bold uppercase tracking-[0.2em] border border-sage-moss/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-sage-moss animate-pulse"></span>
-                        {{ self.status }}
-                    </span>
-                </div>
-            {% endif %}
-
-            <div class="reveal delay-100">
-                <div class="font-display text-5xl md:text-6xl lg:text-7xl leading-[1.1] text-sage-black tracking-tight">
-                    {{ self.headline|richtext }}
-                </div>
-            </div>
-
-            {% if self.subheadline %}
-                <div class="reveal delay-200 mt-10 text-xl md:text-2xl text-sage-black/70 leading-relaxed font-body max-w-2xl mx-auto">
-                    {{ self.subheadline }}
-                </div>
-            {% endif %}
-
-            {% if self.ctas %}
-                <div class="flex flex-wrap justify-center gap-6 mt-12 reveal delay-300">
-                    {% for cta in self.ctas %}
-                        <a href="{{ cta.url }}" class="btn {% if cta.style == 'primary' %}btn-primary{% else %}btn-outline{% endif %}"
-                           {% if cta.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
-                            {{ cta.label }}
-                        </a>
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+        {% if hero.breadcrumbs %}
+            <div role="navigation" aria-label="Breadcrumb" class="mb-10">
+                <ul class="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-widest text-sage-linen/70">
+                    {% for crumb in hero.breadcrumbs %}
+                        <li>
+                            {% if crumb.is_current %}
+                                <span aria-current="page" class="text-white">{{ crumb.title }}</span>
+                            {% elif crumb.url %}
+                                <a href="{{ crumb.url }}" class="hover:text-white focus-visible-ring rounded-sm py-2 pr-1">
+                                    {{ crumb.title }}
+                                </a>
+                            {% else %}
+                                <span>{{ crumb.title }}</span>
+                            {% endif %}
+                        </li>
+                        {% if not forloop.last %}
+                            <li aria-hidden="true" class="text-sage-linen/30">/</li>
+                        {% endif %}
                     {% endfor %}
-                </div>
-            {% endif %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-end">
+            <div class="lg:col-span-8">
+        {% if hero.status %}
+            <span class="block text-sage-terra font-accent italic text-xl mb-6 reveal">
+                {{ hero.status }}
+            </span>
+        {% endif %}
+        <div class="reveal delay-100">
+            <div class="font-display text-5xl md:text-7xl lg:text-8xl text-sage-linen leading-[0.9] mb-8">
+                {{ hero.headline|richtext }}
+            </div>
         </div>
+            </div>
+            <div class="lg:col-span-4 lg:pb-4 reveal delay-200">
+            {% if hero.subheadline %}
+                <p class="font-light text-lg leading-relaxed text-sage-linen/95 mb-8">
+                    {{ hero.subheadline }}
+                </p>
+            {% endif %}
+            {% if hero.ctas %}
+                <div class="flex flex-wrap gap-5">
+                    {% for cta in hero.ctas %}
+                        <a href="{{ cta.url }}"
+                               class="{% if cta.style == 'primary' %}inline-flex justify-center items-center bg-sage-terra text-white border border-sage-terra px-10 py-5 text-xs font-bold uppercase tracking-widest hover:bg-sage-black hover:border-sage-black{% else %}inline-flex justify-center items-center border border-sage-linen/50 text-sage-linen px-10 py-5 text-xs font-bold uppercase tracking-widest hover:bg-sage-linen hover:text-sage-black{% endif %} transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-offset-2 focus-visible:ring-offset-sage-black"
+                               {% if cta.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                                {{ cta.label }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if hero.extra_template %}
+            {% include hero.extra_template %}
+        {% endif %}
     </div>
 </section>
+{% endwith %}

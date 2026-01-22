@@ -1,0 +1,29 @@
+{% load wagtailcore_tags %}
+
+<section class="bg-sage-black text-sage-linen py-24 border-t border-sage-linen/10"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+    <div class="max-w-4xl mx-auto px-6 text-center">
+        {% if self.eyebrow %}
+            <span class="block text-sage-terra font-accent italic text-xl mb-4">
+                {{ self.eyebrow }}
+            </span>
+        {% endif %}
+
+        <div class="font-display text-3xl md:text-5xl text-sage-linen mb-10">
+            {{ self.heading|richtext }}
+        </div>
+
+        {% if self.cta_link %}
+            <a
+                href="{{ self.cta_link.href }}"
+                {{ self.cta_link.attrs_str }}
+                class="inline-flex items-center justify-center mx-auto bg-sage-terra text-white px-12 py-5 text-sm uppercase tracking-[0.2em] font-bold hover:bg-white hover:text-sage-black transition-colors duration-300 shadow-xl focus:outline-none focus:ring-4 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-sage-black"
+            >
+                {% if self.cta_label %}
+                    {{ self.cta_label }}
+                {% else %}
+                    {{ self.cta_link.text }}
+                {% endif %}
+            </a>
+        {% endif %}
+    </div>
+</section>

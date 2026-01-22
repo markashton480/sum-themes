@@ -1,10 +1,10 @@
-# Theme A (Sage & Stone)
+# Theme A
 
 Premium theme for SUM Platform featuring reveal animations, mega menu, and elegant typography for home improvement trades.
 
 ## Quick Reference
 
-- **Name**: Sage & Stone
+- **Name**: Theme A
 - **Version**: 0.5.0
 - **Tailwind**: v3.4.x (authoring only)
 
@@ -23,7 +23,8 @@ theme_a/
 │   │   ├── input.css      # Tailwind source file (DO NOT EDIT main.css directly)
 │   │   └── main.css       # GENERATED - compiled Tailwind output
 │   └── js/
-│       └── main.js        # Theme A JavaScript
+│       ├── main.js        # Theme visual interactions (menus, animations)
+│       └── dynamic_forms.js  # OPTIONAL - modal/sidebar form containers
 └── templates/             # Theme templates (theme/* plus sum_core/* overrides)
 ```
 
@@ -101,7 +102,7 @@ Expected output:
 
 ### Tailwind Content Sources
 
-Theme A scans both local templates and the Sage & Stone compiled reference HTML
+Theme A scans both local templates and the compiled reference HTML
 to keep class coverage aligned with the prototype:
 
 - `themes/theme_a/templates/**/*.html`
@@ -224,6 +225,39 @@ We use `npm-shrinkwrap.json` instead of `package-lock.json` because shrinkwrap i
 Current compiled CSS is ~104KB with the reference scan strategy. If this grows
 significantly, consider introducing a theme-local `reference-scan.html` to
 reduce coupling and bloat.
+
+## JavaScript Architecture
+
+Theme A follows the SUM Platform JavaScript separation:
+
+| File | Purpose |
+|------|---------|
+| `main.js` | Header scroll, mobile menu, FAQ accordion, mega menu |
+| `dynamic_forms.js` | **Optional** - Modal/sidebar container management |
+
+### Core vs Theme
+
+- **Core** (`sum_core/js/forms.js`): Auto-binds to `[data-dynamic-form]` elements, handles AJAX submission, CSRF, loading states, success/error messages, form reset.
+- **Theme** (`js/main.js`): Visual interactions (animations, menus, accordions).
+- **Theme** (`js/dynamic_forms.js`): **Optional** - Only needed for modal/sidebar form containers.
+
+**Key principle:** A theme with only inline forms needs **zero** custom form JavaScript.
+
+### When to Include dynamic_forms.js
+
+Include `dynamic_forms.js` in your `base.html` only if your theme uses modal or sidebar form containers:
+
+```html
+<!-- Only if using modal/sidebar form containers -->
+<script src="{% static 'theme_a/js/dynamic_forms.js' %}" defer></script>
+```
+
+This file handles:
+- Modal open/close/backdrop
+- Sidebar open/close with session persistence
+- Auto-close containers on `sum:form:success` event
+
+See `docs/dev/JS-API-CONTRACT.md` for the full core/theme JS contract.
 
 ---
 

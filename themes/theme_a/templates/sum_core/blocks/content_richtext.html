@@ -1,10 +1,16 @@
 {% load wagtailcore_tags %}
-<section class="section">
-  <div class="container max-w-6xl mx-auto px-6">
-    <div class="max-w-3xl {% if self.align == 'center' %}mx-auto{% endif %}">
-      <div class="prose prose-sage prose-lg font-accent text-sage-black prose-headings:font-display prose-headings:font-normal prose-h2:font-semibold prose-a:text-sage-terra prose-a:underline max-w-none leading-relaxed reveal {% if self.align == 'center' %}prose-headings:text-center{% endif %}">
-        {{ self.body|richtext }}
+{% if is_blog_article %}
+  <div class="prose prose-sage prose-lg font-accent text-sage-black prose-headings:font-display prose-headings:font-normal prose-h2:font-semibold prose-a:text-sage-terra prose-a:underline max-w-none mb-8">
+    {{ self.body|richtext }}
+  </div>
+{% else %}
+  <section class="section">
+    <div class="container max-w-6xl mx-auto px-6">
+      <div class="max-w-3xl {% if self.align == 'center' %}mx-auto{% endif %}">
+        <div class="prose prose-sage prose-lg font-accent text-sage-black prose-headings:font-display prose-headings:font-normal prose-h2:font-semibold prose-a:text-sage-terra prose-a:underline max-w-none leading-relaxed reveal {% if self.align == 'center' %}prose-headings:text-center{% endif %}">
+          {{ self.body|richtext }}
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+{% endif %}

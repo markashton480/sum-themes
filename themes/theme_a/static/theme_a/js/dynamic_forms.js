@@ -1,10 +1,24 @@
+/**
+ * Theme A: Dynamic Form Containers
+ * Path: themes/theme_a/static/theme_a/js/dynamic_forms.js
+ *
+ * Handles visual containers for forms: modals and sidebars.
+ * Form submission logic is handled by core (sum_core/js/forms.js).
+ *
+ * This file is OPTIONAL. If a theme only uses inline forms, it doesn't need this.
+ * Only needed for modal or sidebar form containers.
+ */
+
 (function () {
   'use strict';
 
-  if (window.DynamicFormsInitialized) {
+  if (window.ThemeFormContainers) {
     return;
   }
-  window.DynamicFormsInitialized = true;
+
+  // ============================================================
+  // Scroll Lock (Theme visual behavior)
+  // ============================================================
 
   function lockBodyScroll() {
     if (typeof lockScroll === 'function') {
@@ -22,165 +36,32 @@
     document.body.classList.remove('overflow-hidden');
   }
 
-  function setTimestamps() {
-    var timestamp = Date.now().toString();
-    var inputs = document.querySelectorAll('.js-dynamic-form-timestamp');
-    inputs.forEach(function (input) {
-      input.value = timestamp;
-    });
+  // ============================================================
+  // Modal Containers
+  // ============================================================
+
+  function openModal(modal) {
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.setAttribute('aria-hidden', 'false');
+    lockBodyScroll();
   }
 
-  function setTimestampForForm(form) {
-    var input = form.querySelector('.js-dynamic-form-timestamp');
-    if (input) {
-      input.value = Date.now().toString();
-    }
-  }
-
-  function setMessage(messagesDiv, type, text) {
-    if (!messagesDiv) {
-      return;
-    }
-    messagesDiv.className = 'form-messages form-messages--' + type + ' text-sm';
-    messagesDiv.innerHTML = '';
-    if (text) {
-      var message = document.createElement('p');
-      message.className = type === 'success' ? 'form-success-msg' : 'form-error-msg';
-      message.textContent = text;
-      messagesDiv.appendChild(message);
-    }
-  }
-
-  function renderErrors(messagesDiv, errors, fallbackText) {
-    if (!messagesDiv) {
-      return;
-    }
-    messagesDiv.className = 'form-messages form-messages--error text-sm';
-    messagesDiv.innerHTML = '';
-
-    if (errors) {
-      Object.keys(errors).forEach(function (field) {
-        errors[field].forEach(function (msg) {
-          var error = document.createElement('p');
-          error.className = 'form-error-msg';
-          error.textContent = msg;
-          messagesDiv.appendChild(error);
-        });
-      });
-    }
-
-    if (!messagesDiv.hasChildNodes() && fallbackText) {
-      var fallback = document.createElement('p');
-      fallback.className = 'form-error-msg';
-      fallback.textContent = fallbackText;
-      messagesDiv.appendChild(fallback);
-    }
-  }
-
-  function handleAjaxSubmission(form) {
-    var submitBtn = form.querySelector('[data-dynamic-form-submit]') || form.querySelector('button[type="submit"]');
-    var messagesDiv = form.querySelector('.form-messages');
-    var originalBtnText = submitBtn ? submitBtn.textContent : '';
-    var csrfInput = form.querySelector('input[name="csrfmiddlewaretoken"]');
-    var csrfToken = csrfInput ? csrfInput.value : '';
-
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-    }
-    if (messagesDiv) {
-      messagesDiv.className = 'form-messages text-sm';
-      messagesDiv.innerHTML = '';
-    }
-
-    var formData = new FormData(form);
-
-    return fetch(form.action, {
-      method: 'POST',
-      body: formData,
-      credentials: 'same-origin',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'X-CSRFToken': csrfToken,
-      },
-    })
-      .then(function (response) {
-        return response
-          .json()
-          .then(function (data) {
-            return { status: response.status, data: data };
-          })
-          .catch(function () {
-            return { status: response.status, data: {} };
-          });
-      })
-      .then(function (result) {
-        if (result.data && result.data.success) {
-          setMessage(
-            messagesDiv,
-            'success',
-            form.dataset.successMessage || 'Thank you for your submission.'
-          );
-          form.reset();
-          setTimestampForForm(form);
-
-          var redirectUrl = form.dataset.successRedirect;
-          if (redirectUrl) {
-            window.location.href = redirectUrl;
-          }
-        } else {
-          renderErrors(
-            messagesDiv,
-            result.data ? result.data.errors : null,
-            form.dataset.errorMessage || 'Something went wrong. Please try again.'
-          );
-        }
-      })
-      .catch(function () {
-        renderErrors(
-          messagesDiv,
-          null,
-          form.dataset.errorMessage || 'Something went wrong. Please try again.'
-        );
-        form.dataset.ajaxDisabled = 'true';
-        form.submit();
-      })
-      .finally(function () {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalBtnText;
-        }
-      });
-  }
-
-  function bindForms() {
-    var forms = document.querySelectorAll('[data-dynamic-form]');
-
-    forms.forEach(function (form) {
-      if (form.dataset.dynamicFormReady === 'true') {
-        return;
-      }
-      form.dataset.dynamicFormReady = 'true';
-
-      form.addEventListener('submit', function (event) {
-        if (form.dataset.ajaxDisabled === 'true' || !window.fetch) {
-          return;
-        }
-
-        event.preventDefault();
-        handleAjaxSubmission(form);
-      });
-    });
+  function closeModal(modal) {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    modal.setAttribute('aria-hidden', 'true');
+    unlockBodyScroll();
   }
 
   function bindModals() {
     var modals = document.querySelectorAll('[data-dynamic-form-modal]');
 
     modals.forEach(function (modal) {
-      if (modal.dataset.dynamicFormReady === 'true') {
+      if (modal.dataset.containerBound === 'true') {
         return;
       }
-      modal.dataset.dynamicFormReady = 'true';
+      modal.dataset.containerBound = 'true';
 
       var wrapper = modal.closest('.dynamic-form-modal');
       var opener = wrapper
@@ -188,49 +69,84 @@
         : null;
       var closeBtn = modal.querySelector('[data-dynamic-form-modal-close]');
 
-      function openModal() {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        modal.setAttribute('aria-hidden', 'false');
-        lockBodyScroll();
-      }
-
-      function closeModal() {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        modal.setAttribute('aria-hidden', 'true');
-        unlockBodyScroll();
-      }
-
       if (opener) {
-        opener.addEventListener('click', openModal);
-      }
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
+        opener.addEventListener('click', function () {
+          openModal(modal);
+        });
       }
 
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          closeModal(modal);
+        });
+      }
+
+      // Close on backdrop click
       modal.addEventListener('click', function (event) {
         if (event.target === modal) {
-          closeModal();
+          closeModal(modal);
         }
       });
 
-      document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
-          closeModal();
-        }
+      // Close modal on successful form submission
+      // (sum:form:success event bubbles up from the form element inside the modal)
+      modal.addEventListener('sum:form:success', function () {
+        setTimeout(function () {
+          closeModal(modal);
+        }, 1500);
       });
     });
+
+    // Close any open modal on Escape key (single listener for all modals)
+    if (!window._modalEscapeHandlerBound) {
+      window._modalEscapeHandlerBound = true;
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+          var openModal = document.querySelector('[data-dynamic-form-modal][aria-hidden="false"]');
+          if (openModal) {
+            closeModal(openModal);
+          }
+        }
+      });
+    }
+  }
+
+  // ============================================================
+  // Sidebar Containers
+  // ============================================================
+
+  function openSidebar(panel, overlay, storageKey) {
+    if (!panel || !overlay) return;
+    panel.classList.remove('translate-x-full');
+    panel.setAttribute('aria-hidden', 'false');
+    overlay.classList.remove('opacity-0', 'pointer-events-none');
+    overlay.classList.add('opacity-100');
+    lockBodyScroll();
+    if (storageKey) {
+      sessionStorage.setItem(storageKey, 'true');
+    }
+  }
+
+  function closeSidebar(panel, overlay, storageKey) {
+    if (!panel || !overlay) return;
+    panel.classList.add('translate-x-full');
+    panel.setAttribute('aria-hidden', 'true');
+    overlay.classList.add('opacity-0', 'pointer-events-none');
+    overlay.classList.remove('opacity-100');
+    unlockBodyScroll();
+    if (storageKey) {
+      sessionStorage.removeItem(storageKey);
+    }
   }
 
   function bindSidebars() {
     var wrappers = document.querySelectorAll('[data-dynamic-form-sidebar]');
 
     wrappers.forEach(function (wrapper) {
-      if (wrapper.dataset.dynamicFormReady === 'true') {
+      if (wrapper.dataset.containerBound === 'true') {
         return;
       }
-      wrapper.dataset.dynamicFormReady = 'true';
+      wrapper.dataset.containerBound = 'true';
 
       var overlay = wrapper.querySelector('[data-dynamic-form-sidebar-overlay]');
       var panel = wrapper.querySelector('[data-dynamic-form-sidebar-panel]');
@@ -240,52 +156,61 @@
         ? 'dynamic_form_sidebar_open_' + wrapper.dataset.sidebarKey
         : null;
 
-      function openSidebar() {
-        if (!panel || !overlay) {
-          return;
-        }
-        panel.classList.remove('translate-x-full');
-        panel.setAttribute('aria-hidden', 'false');
-        overlay.classList.remove('opacity-0', 'pointer-events-none');
-        overlay.classList.add('opacity-100');
-        lockBodyScroll();
-        if (storageKey) {
-          sessionStorage.setItem(storageKey, 'true');
-        }
+      function open() {
+        openSidebar(panel, overlay, storageKey);
       }
 
-      function closeSidebar() {
-        if (!panel || !overlay) {
-          return;
-        }
-        panel.classList.add('translate-x-full');
-        panel.setAttribute('aria-hidden', 'true');
-        overlay.classList.add('opacity-0', 'pointer-events-none');
-        overlay.classList.remove('opacity-100');
-        unlockBodyScroll();
-        if (storageKey) {
-          sessionStorage.removeItem(storageKey);
-        }
+      function close() {
+        closeSidebar(panel, overlay, storageKey);
       }
 
       if (opener) {
-        opener.addEventListener('click', openSidebar);
-      }
-      if (closeBtn) {
-        closeBtn.addEventListener('click', closeSidebar);
-      }
-      if (overlay) {
-        overlay.addEventListener('click', closeSidebar);
+        opener.addEventListener('click', open);
       }
 
-      if (storageKey && sessionStorage.getItem(storageKey) === 'true') {
-        openSidebar();
+      if (closeBtn) {
+        closeBtn.addEventListener('click', close);
       }
+
+      if (overlay) {
+        overlay.addEventListener('click', close);
+      }
+
+      // Restore state from session storage
+      if (storageKey && sessionStorage.getItem(storageKey) === 'true') {
+        open();
+      }
+
+      // Close sidebar on successful form submission
+      wrapper.addEventListener('sum:form:success', function () {
+        setTimeout(close, 1500);
+      });
     });
   }
 
-  setTimestamps();
-  bindForms();
-  bindModals();
-  bindSidebars();
+  // ============================================================
+  // Initialize
+  // ============================================================
+
+  function init() {
+    bindModals();
+    bindSidebars();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  // ============================================================
+  // Public API (for dynamic content)
+  // ============================================================
+
+  window.ThemeFormContainers = {
+    bindModals: bindModals,
+    bindSidebars: bindSidebars,
+    openModal: openModal,
+    closeModal: closeModal,
+  };
 })();

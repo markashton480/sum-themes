@@ -1,71 +1,221 @@
 {% extends "theme/base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags chrome_tags static %}
 
-{% block main_class %}{% if page.featured_image %}pt-0{% else %}pt-24{% endif %}{% endblock %}
+{% block main_class %}pt-0{% endblock %}
 
 {% block content %}
-  {% if page.featured_image %}
-    <section class="relative">
-      <div class="absolute inset-0 bg-gradient-to-b from-sage-black/10 via-transparent to-sage-linen pointer-events-none"></div>
-      {% image page.featured_image fill-1600x900 format-webp as hero_img %}
-      <img
-        src="{{ hero_img.url }}"
-        alt="{{ hero_img.alt|default:page.title }}"
-        width="{{ hero_img.width }}"
-        height="{{ hero_img.height }}"
-        decoding="async"
-        class="w-full h-[260px] md:h-[420px] object-cover"
-      />
-    </section>
-  {% endif %}
+  {% header_nav as nav %}
 
-  <article class="section">
-    <div class="container mx-auto px-6">
-      <header class="max-w-3xl mx-auto">
-        {% if page.category %}
-          <a
-            href="{% pageurl page.get_parent %}?category={{ page.category.slug }}"
-            class="inline-flex items-center px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/15 text-sage-black bg-sage-oat/60 hover:bg-sage-terra/10 hover:text-sage-black transition"
-          >
-            {{ page.category.name }}
-          </a>
-        {% endif %}
+  {# Integrated Two-Column Hero Section #}
+  <section class="bg-sage-black text-sage-linen relative" data-section-id="blog-article-hero">
+    {# Background textures #}
+    <div class="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none"
+         style="background-image: url('{% static "theme_a/img/wood-pattern.png" %}');"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-sage-black/80 pointer-events-none"></div>
 
-        <h1 class="font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-sage-black tracking-tight mt-6">
+    {# Main Container with Top Padding to clear Fixed Header #}
+    {# JS updates --safe-header-height via RAF during banner animation for smooth sync #}
+    <div class="grid grid-cols-1 lg:grid-cols-2 items-stretch js-header-aware"
+         style="padding-top: var(--safe-header-height, 160px);">
+
+      {# Left Column: Content (Determines Height) #}
+      <div class="relative z-10 flex flex-col justify-center px-6 py-12 lg:py-16 lg:pl-20 xl:pl-32 order-2 lg:order-1">
+        {# Breadcrumb #}
+        <nav aria-label="Breadcrumb" class="mb-8">
+          <ol class="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-widest text-sage-linen/70">
+            <li>
+              <a href="/" class="hover:text-white transition-colors">Home</a>
+            </li>
+            <li aria-hidden="true" class="text-sage-linen/30">/</li>
+            <li>
+              <a href="{% pageurl page.get_parent %}" class="hover:text-white transition-colors">{{ page.get_parent.title }}</a>
+            </li>
+            <li aria-hidden="true" class="text-sage-linen/30">/</li>
+            <li>
+              <span aria-current="page" class="text-white">{{ page.title|truncatewords:5 }}</span>
+            </li>
+          </ol>
+        </nav>
+
+        {# Metadata #}
+        <div class="flex flex-wrap items-center gap-4 mb-6 text-xs font-bold uppercase tracking-widest text-sage-linen/70">
+          {% if page.category %}
+            <a href="{% pageurl page.get_parent %}?category={{ page.category.slug }}" class="bg-sage-terra/20 text-sage-terra px-3 py-1 rounded-sm hover:bg-sage-terra/30 transition-colors">
+              {{ page.category.name }}
+            </a>
+          {% endif %}
+          {% with published_date=page.published_date|default:page.first_published_at %}
+            {% if published_date %}
+              <span>{{ published_date|date:"M j, Y" }}</span>
+            {% endif %}
+          {% endwith %}
+          {% if page.reading_time %}
+            <span>{{ page.reading_time }} Min Read</span>
+          {% endif %}
+        </div>
+
+        {# Title #}
+        <h1 class="font-display text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-sage-linen mb-8 leading-tight">
           {{ page.title }}
         </h1>
 
-        {% with published_date=page.published_date|default:page.first_published_at %}
-          <div class="mt-6 flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.2em] text-sage-meta">
-            {% if published_date %}
-              <time datetime="{{ published_date|date:'c' }}">{{ published_date|date:"F j, Y" }}</time>
-            {% endif %}
-            {% if page.reading_time %}
-              <span>{{ page.reading_time }} min read</span>
-            {% endif %}
-            {% if page.author_name %}
-              <span>By {{ page.author_name }}</span>
-            {% endif %}
+        {# Subtitle/Excerpt #}
+        {% if page.get_excerpt %}
+          <p class="font-accent text-lg md:text-xl text-sage-linen/80 max-w-lg leading-relaxed border-l-2 border-sage-terra pl-6 mb-10">
+            {{ page.get_excerpt }}
+          </p>
+        {% endif %}
+
+        {# CTA Button #}
+        {% if nav.header_cta.enabled %}
+          <div>
+            <a href="{{ nav.header_cta.href }}" class="inline-flex items-center justify-center px-8 py-4 bg-sage-terra text-white text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-sage-black transition-colors rounded-sm min-h-[44px]" {% for k, v in nav.header_cta.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
+              {{ nav.header_cta.text }}
+            </a>
           </div>
-        {% endwith %}
-      </header>
-    </div>
-  </article>
+        {% endif %}
+      </div>
 
-  {% if page.body %}
-    {% for block in page.body %}
-      {% include_block block %}
-    {% endfor %}
-  {% endif %}
+      {# Right Column: Image (Auto-sizes to match Left Column) #}
+      <div class="relative min-h-[40vh] h-auto lg:h-full order-1 lg:order-2">
+        <div class="absolute inset-0 w-full h-full">
+          {# Mobile Overlay #}
+          <div class="absolute inset-0 bg-sage-black/30 z-10 block lg:hidden"></div>
 
-  <section class="section">
-    <div class="container mx-auto px-6">
-      <div class="border-t border-sage-black/10 pt-8">
-        <a href="{% pageurl page.get_parent %}" class="btn btn--link">
-          <span aria-hidden="true">&larr;</span>
-          Back to all posts
-        </a>
+          {# Desktop Gradient (Left Edge Fade) #}
+          <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-sage-black to-transparent z-20 hidden lg:block"></div>
+
+          {% if page.featured_image %}
+            {% image page.featured_image fill-1600x900 format-webp as hero_img %}
+            <img
+              src="{{ hero_img.url }}"
+              class="absolute inset-0 w-full h-full object-cover"
+              alt="{{ hero_img.alt|default:page.title }}"
+              width="{{ hero_img.width }}"
+              height="{{ hero_img.height }}"
+              decoding="async"
+            >
+          {% else %}
+            <div class="absolute inset-0 bg-sage-oat/20 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-linen/40">
+              No image
+            </div>
+          {% endif %}
+        </div>
       </div>
     </div>
   </section>
+
+  <div class="max-w-7xl mx-auto px-6 py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative">
+    <article class="col-span-1 lg:col-span-8">
+      {% with is_blog_article=True %}
+        {% if body_before_tags %}
+          {% for block in body_before_tags %}
+            {% include_block block %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      {% if page.tags.all %}
+        <div class="mt-16 pt-8 border-t border-sage-black/10">
+          <span class="block text-xs font-bold uppercase tracking-widest text-sage-black/40 mb-4">Filed Under</span>
+          <div class="flex flex-wrap gap-2">
+            {% for tag in page.tags.all %}
+              <a href="{% pageurl page.get_parent %}?tag={{ tag.slug }}" class="px-4 py-3 bg-sage-oat text-sage-black text-xs font-bold uppercase tracking-widest hover:bg-sage-terra hover:text-white rounded-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-offset-2">
+                {{ tag.name }}
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% with is_blog_article=True %}
+        {% if body_after_tags %}
+          {% for block in body_after_tags %}
+            {% include_block block %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </article>
+
+    <aside class="hidden lg:block lg:col-span-4 pl-4" aria-label="Sidebar">
+      <div class="sticky top-32 space-y-20">
+        {% if toc_entries %}
+          <div class="relative">
+            <span class="block text-xs font-bold uppercase tracking-widest text-sage-black/40 mb-6">Contents</span>
+            <nav>
+              <ul class="space-y-4 font-accent text-sm border-l border-sage-black/10 pl-6">
+                {% for entry in toc_entries %}
+                  <li>
+                    <a href="#{{ entry.anchor }}" class="group flex items-center gap-3 text-sage-black hover:text-sage-terra transition-colors focus-visible:outline-none focus-visible:text-sage-terra">
+                      {{ entry.label }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </nav>
+          </div>
+        {% endif %}
+
+        {% with blog_index=page.get_parent.specific %}
+          {% if blog_index.sidebar_subscribe %}
+            {% for block in blog_index.sidebar_subscribe %}
+              {% include_block block %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% if promo_snippet %}
+          <div class="bg-sage-white border border-sage-black/5 p-8 shadow-sm group hover:border-sage-terra/30 transition-colors">
+            {% if promo_snippet.eyebrow %}
+              <span class="text-[10px] font-bold uppercase tracking-widest text-sage-terra mb-3 block">{{ promo_snippet.eyebrow }}</span>
+            {% endif %}
+            <h4 class="font-display text-xl text-sage-black mb-4 group-hover:text-sage-terra transition-colors">{{ promo_snippet.title }}</h4>
+            {% if promo_snippet.body %}
+              <p class="font-accent text-sm text-sage-black/70 mb-6 leading-relaxed">
+                {{ promo_snippet.body }}
+              </p>
+            {% endif %}
+            {% if promo_snippet.link_text and promo_snippet.get_link_url %}
+              <a href="{{ promo_snippet.get_link_url }}" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-sage-black border-b border-sage-black/20 pb-0.5 group-hover:border-sage-terra group-hover:text-sage-terra transition-all">
+                {{ promo_snippet.link_text }}
+                <svg class="w-3 h-3 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+
+  {% if read_next_posts %}
+    <section class="bg-sage-oat/30 border-t border-sage-black/5 py-24">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-end mb-12">
+          <h2 class="font-display text-3xl text-sage-black">Read Next</h2>
+          <a href="{% pageurl page.get_parent %}" class="text-xs font-bold uppercase tracking-widest text-sage-terra border-b border-sage-terra pb-0.5 hover:text-sage-black hover:border-sage-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-offset-2 rounded-sm transition-colors">View All</a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {% for post in read_next_posts %}
+            <a href="{% pageurl post %}" class="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-offset-2 rounded-sm">
+              <div class="aspect-[4/3] bg-sage-white mb-4 overflow-hidden relative">
+                {% if post.featured_image %}
+                  {% image post.featured_image fill-600x450 format-webp as next_img %}
+                  <img src="{{ next_img.url }}" class="w-full h-full object-cover transition-transform duration-700 motion-reduce:transition-none" alt="{{ post.title }}" loading="lazy" decoding="async">
+                {% else %}
+                  <div class="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-black/50">
+                    No image
+                  </div>
+                {% endif %}
+              </div>
+              {% if post.category %}
+                <span class="text-[10px] font-bold uppercase tracking-widest text-sage-meta mb-2 block">{{ post.category.name }}</span>
+              {% endif %}
+              <h3 class="font-display text-xl text-sage-black group-hover:text-sage-terra transition-colors">{{ post.title }}</h3>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}

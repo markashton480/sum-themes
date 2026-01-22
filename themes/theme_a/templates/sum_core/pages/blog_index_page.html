@@ -1,47 +1,221 @@
 {% extends "theme/base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags chrome_tags %}
 
 {% block content %}
-  <section class="section section--hero relative overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-b from-sage-linen via-sage-oat/50 to-transparent"></div>
-    <div class="absolute inset-0 opacity-[0.08] pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;24&quot; height=&quot;24&quot; viewBox=&quot;0 0 24 24&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;%231A2F23&quot; fill-opacity=&quot;1&quot;%3E%3Ccircle cx=&quot;2&quot; cy=&quot;2&quot; r=&quot;1&quot;/%3E%3C/g%3E%3C/svg%3E');"></div>
-    <div class="container mx-auto px-6 relative z-10">
-      <div class="max-w-3xl">
-        <h1 class="heading-xl">{{ page.title }}</h1>
-        {% if page.intro %}
-          <div class="mt-6 text-body">
-            {{ page.intro|richtext }}
+  {% hero_context page status=page.intro|striptags headline=page.title extra_template="sum_core/includes/hero_extras/blog_index_filters.html" as hero %}
+  {% include "sum_core/blocks/hero_gradient.html" with hero=hero %}
+
+  {% if featured_post %}
+    <section class="max-w-7xl mx-auto px-6 mb-24 -mt-16 relative z-20" aria-labelledby="featured-heading">
+      <article class="bg-white shadow-xl overflow-hidden group border border-sage-black/5 rounded-sm flex flex-col lg:flex-row h-full">
+        <div class="lg:w-2/3 relative h-[300px] md:h-[400px] lg:h-auto overflow-hidden">
+          {% if featured_post.featured_image %}
+            {% image featured_post.featured_image fill-1200x900 format-webp as featured_img %}
+            <img
+              src="{{ featured_img.url }}"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000"
+              alt="{{ featured_post.title }}"
+              loading="eager"
+            >
+          {% else %}
+            <div class="absolute inset-0 bg-sage-oat flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-black/50">
+              No image
+            </div>
+          {% endif %}
+          <div class="absolute top-6 left-6 bg-sage-linen/95 backdrop-blur px-4 py-2 text-sage-black shadow-sm rounded-sm z-10">
+            <span class="text-xs uppercase tracking-widest font-bold flex items-center gap-2">
+              <span class="w-2 h-2 bg-sage-terra rounded-full"></span>
+              Featured Entry
+            </span>
           </div>
-        {% elif page.search_description %}
-          <p class="mt-6 text-body">{{ page.search_description }}</p>
-        {% endif %}
-      </div>
-    </div>
-  </section>
+        </div>
 
-  {% include "sum_core/includes/_category_filter.html" %}
-
-  <section class="section">
-    <div class="container mx-auto px-6">
-      {% if posts %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {% for post in posts %}
-            {% if forloop.counter > 3 %}
-              {% include "sum_core/includes/_post_card.html" with post=post lazy_load=True %}
-            {% else %}
-              {% include "sum_core/includes/_post_card.html" with post=post %}
+        <div class="lg:w-1/3 p-8 md:p-12 flex flex-col justify-center bg-sage-linen relative">
+          <div class="mb-8">
+            {% if featured_post.category %}
+              <span class="text-sage-terra font-accent italic text-lg block mb-3">
+                {{ featured_post.category.name }}
+              </span>
             {% endif %}
-          {% endfor %}
-        </div>
-      {% else %}
-        <div class="py-16 text-center">
-          <p class="text-sage-black/60 text-lg">No blog posts found.</p>
-        </div>
-      {% endif %}
+            <h2 id="featured-heading" class="font-display text-3xl md:text-4xl text-sage-black mb-4 leading-tight group-hover:text-sage-darkmoss transition-colors">
+              {{ featured_post.title }}
+            </h2>
+            <p class="font-accent text-lg text-sage-label leading-relaxed">
+              {{ featured_post.get_excerpt }}
+            </p>
+          </div>
 
+          <a
+            href="{% pageurl featured_post %}"
+            aria-label="Read full article: {{ featured_post.title }}"
+            class="inline-flex items-center gap-3 bg-sage-terra text-sage-linen px-8 py-4 text-sm font-bold uppercase tracking-widest hover:bg-sage-black hover:shadow-lg focus-visible-ring self-start rounded-sm transition-all duration-300"
+          >
+            Read Article
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </a>
+        </div>
+      </article>
+    </section>
+  {% endif %}
+
+  <section class="max-w-7xl mx-auto px-6{% if not featured_post %} mt-16{% endif %}" aria-labelledby="archive-heading">
+    <h2 id="archive-heading" class="sr-only">Article Archive</h2>
+
+    {% if archive_posts %}
+      <ul id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+        {% for post in archive_posts %}
+          {% if forloop.counter == 4 and posts.number == 1 %}
+            <li class="article-item md:col-span-2 h-full">
+              <article class="group relative flex flex-col md:flex-row h-full bg-sage-black text-sage-linen hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 rounded-sm overflow-hidden">
+                <div class="md:w-1/2 overflow-hidden relative min-h-[300px]">
+                  {% if post.category %}
+                    <div class="absolute top-4 left-4 z-10">
+                      <span class="bg-sage-linen text-sage-black text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-sm shadow-sm">
+                        {{ post.category.name }}
+                      </span>
+                    </div>
+                  {% endif %}
+                  {% if post.featured_image %}
+                    {% image post.featured_image fill-960x720 format-webp as archive_img %}
+                    <img
+                      src="{{ archive_img.url }}"
+                      class="absolute inset-0 w-full h-full object-cover transition-transform duration-700"
+                      alt="{{ post.title }}"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-linen/60">
+                      No image
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="md:w-1/2 flex flex-col flex-grow p-10 md:p-12 justify-center">
+                  {% with published_date=post.published_date|default:post.first_published_at %}
+                    <div class="flex items-center gap-3 mb-4 text-xs uppercase tracking-widest font-bold text-sage-footer-primary">
+                      {% if published_date %}
+                        <span>{{ published_date|date:"M j, Y" }}</span>
+                      {% endif %}
+                      <span class="w-px h-3 bg-white/20" aria-hidden="true"></span>
+                      {% if post.reading_time %}
+                        <span>{{ post.reading_time }} Min Read</span>
+                      {% endif %}
+                    </div>
+                  {% endwith %}
+                  <h3 class="font-display text-3xl md:text-4xl text-white mb-4 leading-tight">
+                    <a href="{% pageurl post %}" aria-label="Read full article: {{ post.title }}" class="focus:outline-none focus:underline decoration-sage-terra decoration-2 underline-offset-4">
+                      <span class="absolute inset-0" aria-hidden="true"></span>
+                      {{ post.title }}
+                    </a>
+                  </h3>
+                  <p class="font-accent text-sage-footer-primary mb-8 text-lg leading-relaxed opacity-90">
+                    {{ post.get_excerpt }}
+                  </p>
+                  <div class="mt-auto inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-sage-terra border-b border-sage-terra pb-1 self-start group-hover:text-white group-hover:border-white transition-colors">
+                    Read Article
+                  </div>
+                </div>
+              </article>
+            </li>
+          {% else %}
+            <li class="article-item h-full">
+              <article class="group relative flex flex-col h-full bg-white border border-sage-black/5 hover:border-sage-terra/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-sm overflow-hidden">
+                <div class="aspect-[4/3] overflow-hidden bg-sage-oat relative">
+                  {% if post.category %}
+                    <div class="absolute top-4 left-4 z-10">
+                      <span class="bg-sage-black/80 backdrop-blur text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-sm">
+                        {{ post.category.name }}
+                      </span>
+                    </div>
+                  {% endif %}
+                  {% if post.featured_image %}
+                    {% image post.featured_image fill-720x540 format-webp as archive_img %}
+                    <img
+                      src="{{ archive_img.url }}"
+                      class="w-full h-full object-cover transition-transform duration-700"
+                      alt="{{ post.title }}"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-black/50">
+                      No image
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="flex flex-col flex-grow p-8">
+                  {% with published_date=post.published_date|default:post.first_published_at %}
+                    <div class="flex items-center gap-3 mb-4 text-xs uppercase tracking-widest font-bold text-sage-meta">
+                      {% if published_date %}
+                        <span>{{ published_date|date:"M j, Y" }}</span>
+                      {% endif %}
+                      <span class="w-px h-3 bg-sage-black/20" aria-hidden="true"></span>
+                      {% if post.reading_time %}
+                        <span>{{ post.reading_time }} Min Read</span>
+                      {% endif %}
+                    </div>
+                  {% endwith %}
+                  <h3 class="font-display text-2xl text-sage-black mb-3 group-hover:text-sage-terra transition-colors leading-snug">
+                    <a href="{% pageurl post %}" aria-label="Read full article: {{ post.title }}" class="focus:outline-none focus:underline decoration-sage-terra decoration-2 underline-offset-4">
+                      <span class="absolute inset-0" aria-hidden="true"></span>
+                      {{ post.title }}
+                    </a>
+                  </h3>
+                  <p class="font-accent text-sage-label mb-8 line-clamp-3 text-base leading-relaxed">
+                    {{ post.get_excerpt }}
+                  </p>
+
+                  <div class="mt-auto pt-6 border-t border-sage-black/5 flex justify-between items-center text-sage-black group-hover:text-sage-terra transition-colors">
+                    <span class="text-xs font-bold uppercase tracking-widest">Read Story</span>
+                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                  </div>
+                </div>
+              </article>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="py-16 text-center">
+        <p class="text-sage-black/60 text-lg">No blog posts found.</p>
+      </div>
+    {% endif %}
+
+    {% if posts %}
+      <div
+        class="mt-20 text-center border-t border-sage-black/10 pt-16 mb-24 hidden"
+        data-blog-load-more
+        data-visible-count="{{ visible_posts_count }}"
+        data-total-count="{{ filtered_posts_count }}"
+      >
+        {% if posts.has_next %}
+          <a
+            href="?page={{ posts.next_page_number }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}{% if request.GET.tag %}&amp;tag={{ request.GET.tag }}{% endif %}{% if request.GET.q %}&amp;q={{ request.GET.q|urlencode }}{% endif %}"
+            class="inline-flex items-center gap-3 bg-sage-black text-sage-linen px-8 py-4 text-sm font-bold uppercase tracking-widest hover:bg-sage-terra focus-visible-ring rounded-sm transition-colors shadow-lg"
+            data-load-more-button
+          >
+            Load More Articles
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </a>
+        {% endif %}
+        <p
+          id="result-count"
+          class="mt-6 text-xs font-bold uppercase tracking-widest text-sage-black/40 transition-opacity duration-300"
+          aria-live="polite"
+          data-result-count
+        >
+          Showing {{ visible_posts_count }} of {{ filtered_posts_count }} articles
+        </p>
+      </div>
       {% if posts.has_other_pages %}
-        {% include "sum_core/includes/_pagination.html" with page_obj=posts %}
+        <div class="mb-24" data-pagination-fallback>
+          {% include "sum_core/includes/_pagination.html" with page_obj=posts %}
+        </div>
       {% endif %}
-    </div>
+    {% endif %}
   </section>
 {% endblock %}

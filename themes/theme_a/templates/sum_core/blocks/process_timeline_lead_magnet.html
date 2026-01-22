@@ -1,0 +1,81 @@
+{% load wagtailcore_tags %}
+
+{% with steps_count=steps_count|default:self.steps|length highlight_index=highlight_index|default:0 %}
+<section class="py-28 bg-sage-oat/30 border-y border-sage-black/5"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+            {% if self.eyebrow %}
+                <span class="text-sage-terra font-accent italic text-xl block mb-2">{{ self.eyebrow }}</span>
+            {% endif %}
+            <div class="font-display text-4xl md:text-6xl text-sage-black">
+                {{ self.heading|richtext }}
+            </div>
+            {% if self.intro %}
+                <p class="mt-6 text-sage-label font-light text-lg">
+                    {{ self.intro|richtext }}
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="relative mb-16">
+            <div class="hidden lg:block absolute top-12 left-0 w-full h-px bg-sage-black/10 z-0" aria-hidden="true"></div>
+            <div class="grid grid-cols-1 {% if steps_count <= 2 %}md:grid-cols-2 lg:grid-cols-2{% elif steps_count == 3 %}md:grid-cols-3 lg:grid-cols-3{% elif steps_count == 4 %}md:grid-cols-2 lg:grid-cols-4{% else %}md:grid-cols-3 lg:grid-cols-5{% endif %} gap-8 relative z-10">
+                {% for step in self.steps %}
+                    {% if highlight_index and forloop.counter == highlight_index %}
+                        <div class="bg-sage-black text-sage-linen p-8 border border-sage-black/5 shadow-xl reveal delay-{{ forloop.counter0 }}00 relative group hover:-translate-y-1 transition-transform duration-300">
+                            <div class="hidden lg:block absolute -top-4 left-1/2 -translate-x-1/2 w-3 h-3 bg-sage-terra rounded-full border-4 border-sage-linen"></div>
+                            <span class="block text-4xl font-display text-sage-moss mb-4 origin-left group-hover:scale-110 transition-transform">
+                                {% if step.number %}
+                                    {% if step.number < 10 %}0{% endif %}{{ step.number }}
+                                {% else %}
+                                    {% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}
+                                {% endif %}
+                            </span>
+                            <h3 class="font-bold text-sm uppercase tracking-widest text-white mb-3">{{ step.title }}</h3>
+                            {% if step.description %}
+                                <p class="text-base text-sage-footer-primary leading-relaxed">
+                                    {{ step.description|richtext }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="bg-sage-linen p-8 border border-sage-black/5 reveal{% if not forloop.first %} delay-{{ forloop.counter0 }}00{% endif %} group hover:-translate-y-1 transition-transform duration-300">
+                            <span class="block text-4xl font-display text-sage-black/20 mb-4 group-hover:text-sage-terra transition-colors duration-300 origin-left group-hover:scale-110">
+                                {% if step.number %}
+                                    {% if step.number < 10 %}0{% endif %}{{ step.number }}
+                                {% else %}
+                                    {% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}
+                                {% endif %}
+                            </span>
+                            <h3 class="font-bold text-sm uppercase tracking-widest text-sage-black mb-3">{{ step.title }}</h3>
+                            {% if step.description %}
+                                <p class="text-base text-sage-label leading-relaxed">
+                                    {{ step.description|richtext }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if self.cta_link %}
+            <div class="text-center reveal delay-500 mb-20">
+                <a href="{{ self.cta_link.href }}" {{ self.cta_link.attrs_str }} class="inline-block border-b-2 border-sage-terra text-sage-black text-sm uppercase tracking-widest font-bold py-3 hover:text-sage-terra transition-colors focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2">
+                    {% if self.cta_label %}
+                        {{ self.cta_label }}
+                    {% else %}
+                        {{ self.cta_link.text }}
+                    {% endif %}
+                </a>
+            </div>
+        {% endif %}
+
+        {% if self.lead_magnet %}
+            <div class="reveal delay-500">
+                {% include_block self.lead_magnet %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endwith %}

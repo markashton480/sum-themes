@@ -1,37 +1,65 @@
-{% load branding_tags wagtailcore_tags wagtailimages_tags navigation_tags %}
+{% load banner_tags branding_tags wagtailcore_tags wagtailimages_tags navigation_tags %}
 {% get_site_settings as site_settings %}
 {% wagtail_site as current_site %}
 {% firstof site_settings.company_name current_site.site_name WAGTAIL_SITE_NAME as site_name %}
 {% header_nav as nav %}
+{% get_active_banner as active_banner %}
+{% get_banner_identifier active_banner site_settings.announcement_text as banner_identifier %}
+{% banner_is_dismissed banner_identifier as banner_dismissed %}
 {# Theme A include (v0.6 theme-owned rendering contract) #}
-
 <!-- FIXED TOP STACK -->
 <div id="top-stack" class="fixed top-0 left-0 right-0 z-50 flex flex-col w-full">
 
     <!-- ALERT BANNER (Optional) -->
-    {% if site_settings.announcement_text %}
-    <div id="banner-wrapper" class="banner-grid-wrapper bg-sage-terra text-white will-change-[grid-template-rows] pointer-events-auto">
-        <div class="banner-inner">
-            <div class="max-w-7xl mx-auto flex justify-between items-center relative py-3 px-4">
-                <div class="w-8 md:hidden"></div>
-                <div class="text-xs md:text-sm font-bold tracking-widest uppercase text-center flex-grow">
-                    {{ site_settings.announcement_text }}
+    {% if active_banner and not banner_dismissed %}
+        <div id="banner-wrapper" class="banner-grid-wrapper {{ active_banner.background_color }} text-white will-change-[grid-template-rows] pointer-events-auto" data-banner-id="{{ banner_identifier }}">
+            <div class="banner-inner">
+                <div class="max-w-7xl mx-auto flex justify-between items-center relative py-3 px-4">
+                    <div class="w-8 md:hidden"></div>
+                    <div class="text-xs md:text-sm font-bold tracking-widest uppercase text-center flex-grow">
+                        {{ active_banner.message }}
+                        {% if active_banner.link_url and active_banner.link_text %}
+                            <a href="{{ active_banner.link_url }}" class="underline underline-offset-4 ml-2 text-white/90 hover:text-white">
+                                {{ active_banner.link_text }}
+                            </a>
+                        {% endif %}
+                    </div>
+                    {% if active_banner.dismissible %}
+                        <button id="banner-close-btn" type="button" class="ml-4 px-3 py-1 hover:bg-white/20 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white min-h-[32px] flex items-center justify-center group" aria-label="Close announcement">
+                            <span class="hidden md:inline text-xs mr-2 font-bold tracking-wider opacity-80 group-hover:opacity-100">DISMISS</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    {% else %}
+                        <div class="w-8 md:hidden"></div>
+                    {% endif %}
                 </div>
-                <button id="banner-close-btn" type="button" class="ml-4 px-3 py-1 hover:bg-white/20 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white min-h-[32px] flex items-center justify-center group" aria-label="Close announcement">
-                    <span class="hidden md:inline text-xs mr-2 font-bold tracking-wider opacity-80 group-hover:opacity-100">DISMISS</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
             </div>
         </div>
-    </div>
+    {% elif site_settings.announcement_text and not banner_dismissed %}
+        <div id="banner-wrapper" class="banner-grid-wrapper bg-primary text-white will-change-[grid-template-rows] pointer-events-auto" data-banner-id="{{ banner_identifier }}">
+            <div class="banner-inner">
+                <div class="max-w-7xl mx-auto flex justify-between items-center relative py-3 px-4">
+                    <div class="w-8 md:hidden"></div>
+                    <div class="text-xs md:text-sm font-bold tracking-widest uppercase text-center flex-grow">
+                        {{ site_settings.announcement_text }}
+                    </div>
+                    <button id="banner-close-btn" type="button" class="ml-4 px-3 py-1 hover:bg-white/20 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-white min-h-[32px] flex items-center justify-center group" aria-label="Close announcement">
+                        <span class="hidden md:inline text-xs mr-2 font-bold tracking-wider opacity-80 group-hover:opacity-100">DISMISS</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
     {% endif %}
 
     <!-- HEADER -->
     <header id="main-header"
-            data-transparent-at-top="{{ has_hero|yesno:'true,false' }}"
-            class="w-full border-b border-transparent group/header py-6 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[background-color,padding] pointer-events-auto relative {% if not has_hero %}bg-sage-linen/95 backdrop-blur-md shadow-sm scrolled{% endif %}">
+            data-transparent-at-top="{{ header_transparent_at_top|yesno:'true,false' }}"
+            class="w-full border-b border-transparent group/header py-6 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-[background-color,padding] pointer-events-auto relative {% if not header_transparent_at_top %}bg-sage-linen/95 backdrop-blur-md shadow-sm scrolled{% endif %}">
         <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
             <!-- Logo -->
             <a href="/" class="group z-50 py-2 relative">
@@ -39,21 +67,21 @@
                     {% image site_settings.header_logo height-40 as header_logo %}
                     <img class="header-logo group-[.scrolled]/header:invert-0 transition-all duration-300" src="{{ header_logo.url }}" alt="{{ site_name }}">
                 {% else %}
-                    <div class="header-logo-text font-display text-2xl md:text-3xl font-bold tracking-tight leading-none {% if has_hero %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} transition-colors duration-300">
-                        {{ site_name|upper }}
+                    <div class="header-logo-text font-display text-2xl md:text-3xl font-bold tracking-tight leading-none uppercase {% if header_transparent_at_top %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} transition-colors duration-300">
+                        {{ site_name }}
                     </div>
                 {% endif %}
             </a>
 
-            <!-- Desktop Nav -->
-            <nav class="hidden desktop:flex items-center space-x-12 relative z-[60]" aria-label="Main Navigation">
+            <!-- Desktop Nav (shows from iPad breakpoint with responsive spacing) -->
+            <nav class="hidden ipad:flex items-center space-x-6 desktop:space-x-12 relative z-[60]" aria-label="Main Navigation">
                 {% block primary_nav %}
                     {% for item in nav.menu_items %}
                         {% if item.has_children %}
                             <!-- Mega Menu Trigger -->
                             <div class="relative" id="nav-{{ forloop.counter }}">
                                 <button id="trigger-{{ forloop.counter }}"
-                                        class="nav-link text-sm uppercase tracking-widest {% if has_hero %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} hover:text-sage-terra transition-colors duration-300 py-4 border-b-2 border-transparent focus:outline-none flex items-center gap-1"
+                                        class="nav-link text-sm uppercase tracking-widest {% if header_transparent_at_top %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} hover:text-sage-terra transition-colors duration-300 py-4 border-b-2 border-transparent focus:outline-none flex items-center gap-1"
                                         aria-expanded="false"
                                         aria-controls="mega-menu-{{ forloop.counter }}">
                                     {{ item.label }}
@@ -62,71 +90,97 @@
 
                                 <!-- Mega Menu Panel -->
                                 <div id="mega-menu-{{ forloop.counter }}" class="mega-panel hidden" role="menu" aria-hidden="true">
-                                    <div class="bg-sage-linen shadow-2xl border-t border-sage-black/10 mx-6 grid grid-cols-12 overflow-hidden rounded-sm">
-                                        <!-- Categories Column -->
-                                        <div class="col-span-12 p-8">
-                                            <span class="block text-xs font-mono text-sage-terra uppercase tracking-widest mb-6">{{ item.label }}</span>
-                                            <ul class="grid grid-cols-3 gap-4">
-                                                {% for child in item.children %}
-                                                    <li>
-                                                        <a href="{{ child.href }}" class="block font-display text-xl text-sage-black hover:text-sage-terra transition-colors{% if child.is_active %} text-sage-terra{% endif %}">
-                                                            {{ child.label }}
+                                    <div class="bg-sage-linen shadow-2xl border-t border-sage-black/10 mx-6 grid grid-cols-8 {% if item.featured_image %}desktop:grid-cols-12{% endif %} overflow-hidden rounded-sm">
+                                        {% if item.children %}
+                                            {# Col 1: Main Categories #}
+                                            {% with primary_child=item.children.0 %}
+                                                <div class="col-span-3 bg-sage-oat/30 p-6 desktop:p-8 border-r border-sage-black/5">
+                                                    <span class="block text-xs font-mono text-sage-terra uppercase tracking-widest mb-6">{{ primary_child.label }}</span>
+                                                    {% if primary_child.children %}
+                                                        <ul class="space-y-4">
+                                                            {% for grandchild in primary_child.children %}
+                                                                <li>
+                                                                    <a href="{{ grandchild.href }}" class="block font-display text-xl text-sage-black hover:text-sage-terra transition-colors{% if grandchild.is_active %} text-sage-terra{% endif %}">
+                                                                        {{ grandchild.label }}
+                                                                    </a>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% else %}
+                                                        <a href="{{ primary_child.href }}" class="block font-display text-xl text-sage-black hover:text-sage-terra transition-colors{% if primary_child.is_active %} text-sage-terra{% endif %}">
+                                                            {{ primary_child.label }}
                                                         </a>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endwith %}
+                                            {# Col 2: Sub & Sub-Sub Categories #}
+                                            {% if item.children|length > 1 %}
+                                                <div class="col-span-5 p-6 desktop:p-8">
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                        {% for child in item.children|slice:"1:" %}
+                                                            <div>
+                                                                <span class="block text-xs font-bold text-sage-black uppercase tracking-widest mb-4 border-b border-sage-black/10 pb-2{% if child.is_active %} text-sage-terra{% endif %}">
+                                                                    {{ child.label }}
+                                                                </span>
+                                                                {% if child.children %}
+                                                                    <ul class="space-y-3 text-sm text-sage-label">
+                                                                        {% for grandchild in child.children %}
+                                                                            <li>
+                                                                                <a href="{{ grandchild.href }}" class="hover:text-sage-terra hover:underline decoration-1 underline-offset-4 transition-all{% if grandchild.is_active %} text-sage-terra{% endif %}">
+                                                                                    {{ grandchild.label }}
+                                                                                </a>
+                                                                            </li>
+                                                                        {% endfor %}
+                                                                    </ul>
+                                                                {% else %}
+                                                                    <a href="{{ child.href }}" class="text-sm text-sage-label hover:text-sage-terra hover:underline decoration-1 underline-offset-4 transition-all{% if child.is_active %} text-sage-terra{% endif %}">
+                                                                        {{ child.label }}
+                                                                    </a>
+                                                                {% endif %}
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                            {# Col 3: Visual Feature (hidden on iPad, shown on desktop) #}
+                                            {% if item.featured_image %}
+                                                <div class="hidden desktop:block col-span-4 relative bg-sage-black overflow-hidden">
+                                                    {% image item.featured_image fill-800x600 format-webp as featured_img %}
+                                                    <img src="{{ featured_img.url }}" alt="{{ item.featured_title|default:item.label }}" class="absolute inset-0 w-full h-full object-cover opacity-80 transition-transform duration-700">
+                                                    <div class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black/80 to-transparent">
+                                                        {% if item.featured_label %}
+                                                            <span class="text-sage-oat font-mono text-xs uppercase tracking-widest block mb-1">{{ item.featured_label }}</span>
+                                                        {% endif %}
+                                                        {% if item.featured_title %}
+                                                            <span class="text-white font-display text-2xl block">{{ item.featured_title }}</span>
+                                                        {% endif %}
+                                                        {% if item.featured_link_text and item.featured_link %}
+                                                            <a href="{{ item.featured_link.href }}" class="text-sage-terra text-xs uppercase tracking-widest mt-2 inline-block border-b border-sage-terra pb-0.5 hover:text-white hover:border-white transition-colors"{% if item.featured_link.opens_new_tab %} target="_blank" rel="noopener noreferrer"{% endif %}>
+                                                                {{ item.featured_link_text }}
+                                                            </a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                         {% else %}
                             <a href="{{ item.href }}"
-                               class="nav-link text-sm uppercase tracking-widest {% if has_hero %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} hover:text-sage-terra transition-colors duration-300 py-4 border-b-2 border-transparent{% if item.is_active %} border-sage-terra{% endif %}"
+                               class="nav-link text-sm uppercase tracking-widest {% if header_transparent_at_top %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} hover:text-sage-terra transition-colors duration-300 py-4 border-b-2 border-transparent{% if item.is_active %} border-sage-terra{% endif %}"
                                {% if item.is_current %}aria-current="page"{% endif %}
                                {% for k, v in item.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
                                 {{ item.label }}
                             </a>
                         {% endif %}
                     {% empty %}
-                        <a href="/" class="nav-link text-sm uppercase tracking-widest {% if has_hero %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} hover:text-sage-terra transition-colors duration-300 py-4">Home</a>
+                        <a href="/" class="nav-link text-sm uppercase tracking-widest {% if header_transparent_at_top %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} hover:text-sage-terra transition-colors duration-300 py-4">Home</a>
                     {% endfor %}
 
                     {% if nav.header_cta.enabled %}
                         <a href="{{ nav.header_cta.href }}"
-                           class="btn btn-outline-inverse btn-header"
-                           {% for k, v in nav.header_cta.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
-                            {{ nav.header_cta.text }}
-                        </a>
-                    {% endif %}
-                {% endblock %}
-            </nav>
-
-            <!-- iPad Nav -->
-            <nav class="hidden ipad:flex desktop:hidden items-center space-x-10 relative z-[60]" aria-label="Main Navigation">
-                {% block ipad_nav %}
-                    {% for item in nav.menu_items %}
-                        {% if item.has_children %}
-                            {% with first_child=item.children.0 %}
-                                <a href="{{ item.href|default:first_child.href }}"
-                                   class="nav-link text-sm uppercase tracking-widest {% if has_hero %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} hover:text-sage-terra transition-colors duration-300 py-4 border-b-2 border-transparent">
-                                    {{ item.label }}
-                                </a>
-                            {% endwith %}
-                        {% else %}
-                            <a href="{{ item.href }}"
-                               class="nav-link text-sm uppercase tracking-widest {% if has_hero %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} hover:text-sage-terra transition-colors duration-300 py-4 border-b-2 border-transparent"
-                               {% if item.is_current %}aria-current="page"{% endif %}
-                               {% for k, v in item.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
-                                {{ item.label }}
-                            </a>
-                        {% endif %}
-                    {% empty %}
-                        <a href="/" class="nav-link text-sm uppercase tracking-widest {% if has_hero %}text-sage-linen group-[.scrolled]/header:text-sage-black{% else %}text-sage-black{% endif %} hover:text-sage-terra transition-colors duration-300 py-4">Home</a>
-                    {% endfor %}
-
-                    {% if nav.header_cta.enabled %}
-                        <a href="{{ nav.header_cta.href }}"
-                           class="btn btn-outline-inverse btn-header"
+                           class="px-6 desktop:px-8 py-3 desktop:py-4 text-sm font-bold uppercase tracking-widest transition-colors duration-300 text-sage-linen border border-sage-linen/30 backdrop-blur-sm hover:bg-sage-linen hover:text-sage-black hover:border-sage-linen group-[.scrolled]/header:border-sage-black group-[.scrolled]/header:text-sage-black group-[.scrolled]/header:bg-transparent group-[.scrolled]/header:backdrop-blur-none group-[.scrolled]/header:hover:bg-sage-black group-[.scrolled]/header:hover:text-sage-linen group-[.scrolled]/header:hover:border-sage-black"
                            {% for k, v in nav.header_cta.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
                             {{ nav.header_cta.text }}
                         </a>
@@ -144,13 +198,51 @@
                 {% endif %}
 
                 <button id="mobile-menu-btn" type="button" class="relative w-12 h-12 flex flex-col justify-center items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-sage-terra touch-manipulation" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
-                    <span class="block w-8 h-0.5 {% if has_hero %}bg-sage-linen group-[.scrolled]/header:bg-sage-black{% else %}bg-sage-black{% endif %} transition-all duration-300 origin-center"></span>
-                    <span class="block w-8 h-0.5 {% if has_hero %}bg-sage-linen group-[.scrolled]/header:bg-sage-black{% else %}bg-sage-black{% endif %} transition-all duration-300 origin-center"></span>
+                    <span class="block w-8 h-0.5 {% if header_transparent_at_top %}bg-sage-linen group-[.scrolled]/header:bg-sage-black{% else %}bg-sage-black{% endif %} transition-all duration-300 origin-center"></span>
+                    <span class="block w-8 h-0.5 {% if header_transparent_at_top %}bg-sage-linen group-[.scrolled]/header:bg-sage-black{% else %}bg-sage-black{% endif %} transition-all duration-300 origin-center"></span>
                 </button>
             </div>
         </div>
     </header>
 </div>
+
+<noscript>
+    <div class="bg-sage-linen border-b border-sage-black/10 px-6 py-4 ipad:hidden">
+        <nav aria-label="Main Navigation (No JS)">
+            <ul class="flex flex-col gap-4 text-sm uppercase tracking-widest text-sage-black">
+                {% for item in nav.menu_items %}
+                    {% if item.has_children %}
+                        {% with first_child=item.children.0 %}
+                            <li>
+                                <a href="{{ item.href|default:first_child.href }}" class="hover:text-sage-terra transition-colors">
+                                    {{ item.label }}
+                                </a>
+                            </li>
+                        {% endwith %}
+                    {% else %}
+                        <li>
+                            <a href="{{ item.href }}" class="hover:text-sage-terra transition-colors"
+                               {% if item.is_current %}aria-current="page"{% endif %}
+                               {% for k, v in item.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
+                                {{ item.label }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if nav.header_cta.enabled %}
+                    <li>
+                        <a href="{{ nav.header_cta.href }}"
+                           class="btn btn-outline btn-header w-fit"
+                           {% for k, v in nav.header_cta.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
+                            {{ nav.header_cta.text }}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</noscript>
 
 <!-- Mobile Nav Overlay -->
 <div id="mobile-menu" class="fixed inset-0 bg-sage-linen transform translate-x-full transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] z-[80] overflow-hidden pointer-events-none" aria-hidden="true" style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
@@ -169,7 +261,7 @@
         <div class="h-full w-[100vw] flex-none overflow-y-auto px-6 pt-24 pb-12 flex flex-col items-center text-center space-y-8">
             {% for item in nav.menu_items %}
                 {% if item.has_children %}
-                    <button type="button" data-menu-level="1" class="font-display text-4xl text-sage-black hover:text-sage-terra transition-colors py-2 flex items-center gap-2 group touch-manipulation">
+                    <button type="button" data-menu-level="1" data-menu-target="menu-{{ forloop.counter }}" class="font-display text-4xl text-sage-black hover:text-sage-terra transition-colors py-2 flex items-center gap-2 group touch-manipulation">
                         {{ item.label }}
                         <svg class="w-6 h-6 text-sage-terra opacity-50 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </button>
@@ -190,31 +282,63 @@
             {% endif %}
         </div>
 
-        <!-- LEVEL 2: Submenu (simplified) -->
+        <!-- LEVEL 2: Submenu -->
         <div class="h-full w-[100vw] flex-none overflow-y-auto px-6 pt-24 pb-12 flex flex-col items-start">
-            <button type="button" data-menu-level="0" class="mb-12 text-xs uppercase tracking-widest text-sage-terra flex items-center gap-2 font-bold touch-manipulation">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                Back to Menu
-            </button>
-            <span class="block text-xs font-mono text-sage-black/40 uppercase tracking-widest mb-6">Select Category</span>
-
             {% for item in nav.menu_items %}
                 {% if item.has_children %}
-                    {% for child in item.children %}
-                        <a href="{{ child.href }}" class="w-full text-left font-display text-3xl text-sage-black border-b border-sage-black/10 py-6 flex justify-between items-center hover:text-sage-terra transition-colors" data-menu-close>
-                            {{ child.label }}
-                        </a>
-                    {% endfor %}
+                    <div data-menu-panel-level="1" data-menu-panel="menu-{{ forloop.counter }}" class="hidden w-full">
+                        <button type="button" data-menu-level="0" class="mb-12 text-xs uppercase tracking-widest text-sage-terra flex items-center gap-2 font-bold touch-manipulation">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            Back to Menu
+                        </button>
+                        <span class="block text-xs font-mono text-sage-black/40 uppercase tracking-widest mb-6">Select {{ item.label }}</span>
+
+                        {% for child in item.children %}
+                            {% if child.has_children %}
+                                <button type="button" data-menu-level="2" data-menu-target="submenu-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="w-full text-left font-display text-3xl text-sage-black border-b border-sage-black/10 py-6 flex justify-between items-center group touch-manipulation">
+                                    {{ child.label }}
+                                    <svg class="w-5 h-5 text-sage-terra opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </button>
+                            {% else %}
+                                <a href="{{ child.href }}" class="w-full text-left font-display text-3xl text-sage-black/60 border-b border-sage-black/10 py-6 flex justify-between items-center hover:text-sage-terra transition-colors" data-menu-close>
+                                    {{ child.label }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 {% endif %}
             {% endfor %}
         </div>
 
-        <!-- LEVEL 3: Sub-submenu placeholder -->
+        <!-- LEVEL 3: Sub-submenu -->
         <div class="h-full w-[100vw] flex-none overflow-y-auto px-6 pt-24 pb-12 flex flex-col items-start">
-            <button type="button" data-menu-level="1" class="mb-12 text-xs uppercase tracking-widest text-sage-terra flex items-center gap-2 font-bold touch-manipulation">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                Back
-            </button>
+            {% for item in nav.menu_items %}
+                {% if item.has_children %}
+                    {% for child in item.children %}
+                        {% if child.has_children %}
+                            <div data-menu-panel-level="2" data-menu-panel="submenu-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="hidden w-full">
+                                <button type="button" data-menu-level="1" data-menu-target="menu-{{ forloop.parentloop.counter }}" class="mb-12 text-xs uppercase tracking-widest text-sage-terra flex items-center gap-2 font-bold touch-manipulation">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                    Back to {{ item.label }}
+                                </button>
+                                <h3 class="font-display text-3xl text-sage-black mb-8">{{ child.label }}</h3>
+
+                                <div class="space-y-8 w-full">
+                                    <ul class="space-y-4">
+                                        {% for grandchild in child.children %}
+                                            <li>
+                                                <a href="{{ grandchild.href }}" class="block text-lg text-sage-black hover:text-sage-terra border-l-2 border-transparent hover:border-sage-terra pl-4 -ml-4 transition-all" data-menu-close>
+                                                    {{ grandchild.label }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
         </div>
 
     </div>

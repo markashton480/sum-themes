@@ -1,0 +1,67 @@
+<form
+  class="mt-24 border-b border-sage-linen/10 flex flex-wrap gap-10 md:gap-8"
+  method="get"
+  data-portfolio-filters
+  data-selected-category="{{ selected_category|default:'all' }}"
+>
+  <button
+    type="submit"
+    name="category"
+    value=""
+    class="text-sm font-bold uppercase tracking-widest border-b-2 py-4 transition-colors duration-300 {% if not selected_category %}text-white border-sage-terra{% else %}text-sage-linen/70 border-transparent hover:text-sage-terra hover:border-sage-terra/50{% endif %}"
+    data-filter="all"
+    aria-pressed="{% if not selected_category %}true{% else %}false{% endif %}"
+  >
+    All Commissions
+  </button>
+  {% if "Kitchens" in categories %}
+    <button
+      type="submit"
+      name="category"
+      value="kitchens"
+      class="text-sm font-bold uppercase tracking-widest border-b-2 py-4 transition-colors duration-300 {% if selected_category == 'kitchens' %}text-white border-sage-terra{% else %}text-sage-linen/70 border-transparent hover:text-sage-terra hover:border-sage-terra/50{% endif %}"
+      data-filter="kitchens"
+      aria-pressed="{% if selected_category == 'kitchens' %}true{% else %}false{% endif %}"
+    >
+      Kitchens
+    </button>
+  {% endif %}
+  {% if "Restoration" in categories %}
+    <button
+      type="submit"
+      name="category"
+      value="restoration"
+      class="text-sm font-bold uppercase tracking-widest border-b-2 py-4 transition-colors duration-300 {% if selected_category == 'restoration' %}text-white border-sage-terra{% else %}text-sage-linen/70 border-transparent hover:text-sage-terra hover:border-sage-terra/50{% endif %}"
+      data-filter="restoration"
+      aria-pressed="{% if selected_category == 'restoration' %}true{% else %}false{% endif %}"
+    >
+      Restoration
+    </button>
+  {% endif %}
+  {% if "Furniture" in categories %}
+    <button
+      type="submit"
+      name="category"
+      value="furniture"
+      class="text-sm font-bold uppercase tracking-widest border-b-2 py-4 transition-colors duration-300 {% if selected_category == 'furniture' %}text-white border-sage-terra{% else %}text-sage-linen/70 border-transparent hover:text-sage-terra hover:border-sage-terra/50{% endif %}"
+      data-filter="furniture"
+      aria-pressed="{% if selected_category == 'furniture' %}true{% else %}false{% endif %}"
+    >
+      Furniture
+    </button>
+  {% endif %}
+  {% for category in categories %}
+    {% if category != "Kitchens" and category != "Restoration" and category != "Furniture" %}
+      <button
+        type="submit"
+        name="category"
+        value="{{ category|slugify }}"
+        class="text-sm font-bold uppercase tracking-widest border-b-2 py-4 transition-colors duration-300 {% if selected_category == category|slugify %}text-white border-sage-terra{% else %}text-sage-linen/70 border-transparent hover:text-sage-terra hover:border-sage-terra/50{% endif %}"
+        data-filter="{{ category|slugify }}"
+        aria-pressed="{% if selected_category == category|slugify %}true{% else %}false{% endif %}"
+      >
+        {{ category }}
+      </button>
+    {% endif %}
+  {% endfor %}
+</form>

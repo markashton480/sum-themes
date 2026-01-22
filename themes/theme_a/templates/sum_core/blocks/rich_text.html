@@ -1,8 +1,14 @@
 {% load wagtailcore_tags %}
-<section class="section">
-  <div class="container max-w-4xl mx-auto px-6">
-    <div class="prose prose-lg max-w-none text-sage-black/90">
-      {{ self|richtext }}
-    </div>
+{% if is_blog_article %}
+  <div class="prose prose-sage prose-lg font-accent text-sage-black prose-headings:font-display prose-headings:font-normal prose-h2:font-semibold prose-a:text-sage-terra prose-a:underline max-w-none mb-8">
+    {{ self|richtext }}
   </div>
-</section>
+{% else %}
+  <section class="section">
+    <div class="container max-w-4xl mx-auto px-6">
+      <div class="prose prose-lg max-w-none text-sage-black/90">
+        {{ self|richtext }}
+      </div>
+    </div>
+  </section>
+{% endif %}

@@ -1,0 +1,34 @@
+<section class="py-24 bg-sage-black text-sage-linen border-y border-sage-moss/20">
+  <div class="max-w-7xl mx-auto px-6">
+    {% if self.heading or self.intro %}
+      <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+        {% if self.heading %}
+          <h2 class="font-display text-3xl md:text-5xl mb-6">{{ self.heading }}</h2>
+        {% endif %}
+        {% if self.intro %}
+          <p class="text-sage-linen/90 font-light text-lg leading-relaxed">
+            {{ self.intro }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+      {% for feature in self.features %}
+        <div class="text-center px-4 reveal{% if not forloop.last %} border-b md:border-b-0 md:border-r border-sage-linen/10 pb-12 md:pb-0{% endif %}">
+          {% if feature.icon %}
+            <span class="block font-mono text-3xl text-sage-terra mb-6">{{ feature.icon }}</span>
+          {% else %}
+            <span class="block font-mono text-3xl text-sage-terra mb-6">
+              {% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}.
+            </span>
+          {% endif %}
+          <h3 class="font-display text-2xl mb-4">{{ feature.title }}</h3>
+          <p class="text-sage-linen/90 font-light leading-relaxed text-base">
+            {{ feature.description }}
+          </p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

@@ -1,13 +1,26 @@
 {% load wagtailcore_tags %}
-<section class="section">
-  <div class="container max-w-6xl mx-auto px-6">
-    <div class="flex flex-wrap gap-4 {% if self.alignment == 'center' %}justify-center{% elif self.alignment == 'right' %}justify-end{% else %}justify-start{% endif %}">
-      {% for btn in self.buttons %}
-      <a href="{{ btn.url }}"
-         class="btn w-full sm:w-auto {% if btn.style == 'primary' %}btn-primary{% else %}btn-outline{% endif %}">
+{% if is_blog_article %}
+  <div class="mt-10 flex flex-wrap gap-4 {% if self.alignment == 'center' %}justify-center{% elif self.alignment == 'right' %}justify-end{% else %}justify-start{% endif %}">
+    {% for btn in self.buttons %}
+      <a
+        href="{{ btn.url }}"
+        class="inline-flex items-center justify-center px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-offset-2 {% if btn.style == 'primary' %}bg-sage-terra text-white hover:bg-sage-black{% else %}border border-sage-black/30 text-sage-black hover:border-sage-black hover:bg-sage-black hover:text-sage-linen{% endif %}"
+      >
         {{ btn.label }}
       </a>
-      {% endfor %}
-    </div>
+    {% endfor %}
   </div>
-</section>
+{% else %}
+  <section class="section">
+    <div class="container max-w-6xl mx-auto px-6">
+      <div class="flex flex-wrap gap-4 {% if self.alignment == 'center' %}justify-center{% elif self.alignment == 'right' %}justify-end{% else %}justify-start{% endif %}">
+        {% for btn in self.buttons %}
+        <a href="{{ btn.url }}"
+           class="btn w-full sm:w-auto {% if btn.style == 'primary' %}btn-primary{% else %}btn-outline{% endif %}">
+          {{ btn.label }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}

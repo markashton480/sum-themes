@@ -1,0 +1,26 @@
+{% load wagtailcore_tags %}
+
+<section class="plain-english-box bg-sage-oat p-8 border-l-4 border-sage-terra rounded-sm shadow-sm">
+  <div class="flex items-center gap-3 mb-3">
+    {% if self.icon != 'none' %}
+      {% if self.icon == 'quote' %}
+        <svg class="w-6 h-6 text-sage-terra" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21L14.017 18C14.017 16.0547 15.192 15.125 16.643 15.125C17.653 15.125 18.257 15.4687 18.257 16.5C18.257 17.5 17.519 18.5 16.643 18.5C15.936 18.5 15.463 18.0625 15.463 18.0625L15.362 19.5312C15.362 19.5312 16.299 21 18.29 21C20.682 21 22 18.6562 22 16.0312C22 13.0625 19.66 11 16.744 11C13.896 11 12 13.0937 12 16.375C12 18.8437 12.876 21 14.017 21ZM5.01699 21L5.01699 18C5.01699 16.0547 6.19199 15.125 7.64299 15.125C8.65299 15.125 9.25699 15.4687 9.25699 16.5C9.25699 17.5 8.51899 18.5 7.64299 18.5C6.93599 18.5 6.46299 18.0625 6.46299 18.0625L6.36199 19.5312C6.36199 19.5312 7.29899 21 9.28999 21C11.682 21 13 18.6562 13 16.0312C13 13.0625 10.66 11 7.74399 11C4.89599 11 2.99999 13.0937 2.99999 16.375C2.99999 18.8437 3.87599 21 5.01699 21Z"/>
+        </svg>
+      {% else %}
+        <svg class="w-6 h-6 text-sage-terra" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      {% endif %}
+    {% endif %}
+    <span class="font-accent text-sage-terra italic text-xl font-bold">{{ self.label|default:"In Plain English" }}</span>
+  </div>
+
+  {% if self.heading %}
+    <h3 class="font-display text-2xl text-sage-black mb-3">{{ self.heading }}</h3>
+  {% endif %}
+
+  <div class="prose prose-lg text-sage-black max-w-none font-medium">
+    {{ self.body|richtext }}
+  </div>
+</section>

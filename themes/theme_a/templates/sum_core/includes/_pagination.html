@@ -3,7 +3,7 @@
     <div class="flex flex-wrap items-center justify-center gap-2">
       {% if page_obj.has_previous %}
         <a
-          href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}"
+          href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}{% if request.GET.tag %}&amp;tag={{ request.GET.tag }}{% endif %}{% if request.GET.q %}&amp;q={{ request.GET.q|urlencode }}{% endif %}"
           class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/15 text-sage-black bg-sage-linen/80 hover:bg-sage-black hover:text-sage-linen transition"
         >
           &larr; Prev
@@ -25,7 +25,7 @@
             </span>
           {% elif num >= page_obj.number|add:'-2' and num <= page_obj.number|add:'2' %}
             <a
-              href="?page={{ num }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}"
+              href="?page={{ num }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}{% if request.GET.tag %}&amp;tag={{ request.GET.tag }}{% endif %}{% if request.GET.q %}&amp;q={{ request.GET.q|urlencode }}{% endif %}"
               class="inline-flex items-center justify-center w-10 h-10 text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/15 text-sage-black bg-sage-linen/80 hover:bg-sage-black hover:text-sage-linen transition"
             >
               {{ num }}
@@ -36,7 +36,7 @@
 
       {% if page_obj.has_next %}
         <a
-          href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}"
+          href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&amp;category={{ request.GET.category }}{% endif %}{% if request.GET.tag %}&amp;tag={{ request.GET.tag }}{% endif %}{% if request.GET.q %}&amp;q={{ request.GET.q|urlencode }}{% endif %}"
           class="inline-flex items-center justify-center px-4 py-2 text-[11px] font-bold uppercase tracking-[0.2em] border border-sage-black/15 text-sage-black bg-sage-linen/80 hover:bg-sage-black hover:text-sage-linen transition"
         >
           Next &rarr;

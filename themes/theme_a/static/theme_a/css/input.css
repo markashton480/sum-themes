@@ -1,7 +1,7 @@
 /**
  * Name: Theme A Tailwind Input
  * Path: core/sum_core/themes/theme_a/static/theme_a/css/input.css
- * Purpose: Tailwind CSS source file for Theme A (Sage & Stone).
+ * Purpose: Tailwind CSS source file for Theme A.
  *          This is compiled to main.css by maintainers; sites never need Node.
  * Family: Theme A
  * Dependencies: Tailwind (authoring only)
@@ -20,7 +20,7 @@
    can change these at runtime WITHOUT requiring a CSS rebuild.
    ============================================================= */
 :root {
-  /* Sage & Stone brand colours (default values) */
+  /* Theme A brand colours (default values) */
   --color-sage-black: 26 47 35; /* #1A2F23 Obsidian Green */
   --color-sage-linen: 247 245 241; /* #F7F5F1 Warm Linen */
   --color-sage-oat: 227 222 212; /* #E3DED4 Oat */
@@ -37,6 +37,10 @@
   --color-primary: 160 86 59; /* Terra accent */
   --color-secondary: 85 111 97; /* Moss secondary */
   --color-accent: 160 86 59; /* Terra accent */
+
+  /* Sticky CTA thresholds */
+  --sticky-cta-scroll-threshold: 160;
+  --desktop-sticky-cta-scroll-threshold: 160;
 }
 
 /* =============================================================
@@ -95,6 +99,39 @@
    SECTION 3: COMPONENTS LAYER
    ============================================================= */
 @layer components {
+  /* Contact form (dark / inverted) */
+  .contact-form-block input:focus-visible,
+  .contact-form-block textarea:focus-visible,
+  .contact-form-block select:focus-visible {
+    outline: none;
+    outline-offset: 0;
+  }
+
+  .contact-form-block input[type="text"],
+  .contact-form-block input[type="email"],
+  .contact-form-block input[type="tel"],
+  .contact-form-block input[type="url"],
+  .contact-form-block input[type="number"] {
+    @apply w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen placeholder-transparent;
+    @apply focus:border-sage-terra focus:ring-0 transition-colors;
+  }
+
+  .contact-form-block textarea {
+    @apply w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-xl font-body font-light text-sage-linen placeholder-transparent;
+    @apply focus:border-sage-terra focus:ring-0 transition-colors resize-none;
+  }
+
+  .contact-form-block select {
+    @apply w-full bg-sage-black border-0 border-b-2 border-sage-linen/20 py-3 text-xl font-display text-sage-linen;
+    @apply focus:border-sage-terra focus:ring-0 transition-colors cursor-pointer;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .contact-form-block select:hover {
+      @apply text-sage-terra;
+    }
+  }
+
   /* Banner Grid Wrapper (for smooth height transition) */
   .banner-grid-wrapper {
     display: grid;
@@ -112,9 +149,10 @@
   .mega-panel {
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-10px);
-    width: 100vw;
+    /* Position is calculated by JS and set via --mega-panel-left */
+    left: var(--mega-panel-left, 0);
+    transform: translateY(-10px);
+    width: var(--mega-panel-width, calc(100vw - 3rem));
     max-width: 80rem;
     opacity: 0;
     pointer-events: none;
@@ -125,7 +163,7 @@
   }
   .mega-panel[data-open="true"] {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
     pointer-events: auto;
   }
 
@@ -154,10 +192,10 @@
   .portfolio-card__title {
     transition: color 0.2s ease;
   }
+  .portfolio-hero-heading [data-rt-accent="1"] {
+    @apply text-sage-terra;
+  }
   @media (hover: hover) and (pointer: fine) {
-    .portfolio-card:hover .portfolio-card__image {
-      transform: scale(1.05);
-    }
     .portfolio-card:hover .portfolio-card__title {
       color: theme("colors.sage.terra");
     }
@@ -274,6 +312,13 @@
   }
   .prose blockquote p:last-of-type::after {
     content: none;
+  }
+
+  /* Header-aware hero padding (for blog article integrated hero) */
+  .js-header-aware {
+    /* Padding-top is set via inline style using --safe-header-height CSS variable */
+    /* JS updates this variable during banner close animation */
+    transition: padding-top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Hero gradient block */
@@ -413,7 +458,7 @@
     @apply not-italic space-y-2;
   }
   .footer__link {
-    @apply hover:text-sage-terra transition-colors py-1 block;
+    @apply text-sage-footer-primary hover:text-sage-terra transition-colors py-1 block;
   }
   .footer__contact-link {
     @apply hover:text-white transition-colors py-1 inline-block;
@@ -427,29 +472,64 @@
 
   /* Sticky CTA */
   .sticky-cta {
-    @apply fixed bottom-8 right-8 z-50 flex items-stretch;
-    @apply rounded-sm overflow-hidden;
-    @apply bg-sage-linen border border-sage-black/5 shadow-2xl;
-    @apply transition-transform duration-500 ease-expo-out;
+    @apply fixed bottom-0 left-0 right-0 z-50;
+    @apply flex items-stretch gap-3;
+    @apply bg-sage-linen border-t border-sage-black/10 shadow-2xl;
+    @apply px-4 py-3;
+    @apply transition-transform duration-300;
   }
-  .sticky-cta:hover {
-    @apply -translate-y-1;
+  .js .sticky-cta {
+    @apply translate-y-full;
+  }
+  .js .sticky-cta.visible {
+    @apply translate-y-0;
+  }
+  @media (min-width: 768px) {
+    .sticky-cta {
+      @apply hidden;
+    }
   }
   .sticky-cta__phone {
-    @apply flex items-center gap-3 px-6 py-4 text-sage-black border-r border-sage-black/5;
-    @apply transition-colors duration-300 ease-expo-out;
-  }
-  .sticky-cta__phone:hover {
-    @apply bg-sage-oat;
+    @apply inline-flex items-center justify-center gap-2;
+    @apply px-4 py-3 rounded-sm;
+    @apply bg-white border border-sage-black/10;
+    @apply text-sage-black text-xs font-bold uppercase tracking-widest;
   }
   .sticky-cta__icon {
-    @apply text-sage-moss;
+    @apply text-sage-terra;
   }
-  .sticky-cta__phone-text {
-    @apply font-bold text-[11px] uppercase tracking-widest;
+  .sticky-cta__button {
+    @apply inline-flex items-center justify-center flex-1;
+    @apply px-6 py-3 rounded-sm;
+    @apply bg-sage-terra text-white;
+    @apply text-xs font-bold uppercase tracking-widest;
+    @apply hover:bg-sage-black transition-colors;
   }
-  .sticky-cta__button.btn {
-    @apply rounded-none border-0 py-4 px-8;
+
+  /* Desktop Sticky CTA */
+  .desktop-sticky-cta {
+    @apply fixed bottom-6 left-0 right-0 z-[99] hidden px-6 pb-6 transition-transform duration-300;
+  }
+  @media (min-width: 768px) {
+    .desktop-sticky-cta {
+      @apply block;
+    }
+  }
+  .js .desktop-sticky-cta {
+    @apply translate-y-full;
+  }
+  .js .desktop-sticky-cta.visible {
+    @apply translate-y-0;
+  }
+
+  /* Wireframe contract: Theme A desktop sticky CTA uses #sticky-cta (desktop-only) */
+  #sticky-cta {
+    @apply hidden;
+  }
+  @media (min-width: 768px) {
+    #sticky-cta {
+      @apply block;
+    }
   }
 
   /* Accordion / FAQ physics */
@@ -474,16 +554,6 @@
   /* Mobile menu */
   .menu-level {
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* Hover effects (desktop only) */
-  @media (hover: hover) and (pointer: fine) {
-    .img-zoom-container img {
-      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    .group:hover .img-zoom-container img {
-      transform: scale(1.05);
-    }
   }
 }
 
@@ -559,10 +629,6 @@
       transition: none;
       opacity: 1;
       transform: none;
-    }
-
-    .img-zoom-container img {
-      transition: none;
     }
 
     *,

@@ -1,27 +1,18 @@
 {% extends "theme/base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags chrome_tags %}
 
-{% block main_class %}{% if page.has_hero_block %}pt-0{% else %}pt-24{% endif %}{% endblock %}
+{% block main_class %}pt-0{% endblock %}
 
 {% block content %}
-  {% if not page.has_hero_block %}
-    <section class="section section--hero">
-      <div class="container">
-        <h1 class="heading-xl">
-          {{ page.title }}
-        </h1>
-        {% if page.intro %}
-          <div class="text-body">
-            {{ page.intro|richtext }}
-          </div>
-        {% endif %}
-      </div>
-    </section>
-  {% endif %}
+  {# Template-owned hero section #}
+  {% include "theme/includes/hero_image_owned.html" %}
 
+  {# Body content - filter out any legacy hero blocks #}
   {% if page.body %}
     {% for block in page.body %}
-      {% include_block block %}
+      {% if not block|is_header_block %}
+        {% include_block block %}
+      {% endif %}
     {% endfor %}
   {% endif %}
 {% endblock %}

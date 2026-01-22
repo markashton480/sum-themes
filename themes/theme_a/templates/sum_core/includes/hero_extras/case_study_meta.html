@@ -1,0 +1,11 @@
+<div class="mt-6 flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.2em] text-sage-linen/70">
+  {% if page.project_date %}
+    <time datetime="{{ page.project_date|date:'Y-m-d' }}">{{ page.project_date|date:"F Y" }}</time>
+  {% endif %}
+  {% if page.client_name %}
+    <span>{{ page.client_name }}</span>
+  {% endif %}
+  {% if page.project_type %}
+    <span>{{ page.project_type }}</span>
+  {% endif %}
+</div>

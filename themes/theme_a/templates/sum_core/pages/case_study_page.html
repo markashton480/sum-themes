@@ -1,0 +1,46 @@
+{% extends "theme/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags chrome_tags %}
+
+{% block main_class %}pt-0{% endblock %}
+
+{% block content %}
+  {% hero_context page status=page.category|default:"Case Study" headline=page.title subheadline=page.outcomes extra_template="sum_core/includes/hero_extras/case_study_meta.html" as hero %}
+  {% include "sum_core/blocks/hero_gradient.html" with hero=hero %}
+
+  {% if page.body %}
+    {% for block in page.body %}
+      {% if not forloop.first or block.block_type != "editorial_header" %}
+        {% include_block block %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  <section class="section">
+    <div class="container mx-auto px-6">
+      <div class="border-t border-sage-black/10 pt-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <a href="{% pageurl page.get_parent %}" class="btn btn--link">
+          <span aria-hidden="true">&larr;</span>
+          Back to the archive
+        </a>
+        <div class="flex flex-wrap gap-6 text-xs font-bold uppercase tracking-widest">
+          {% with prev_case=page.get_prev_siblings.live.public.specific.last %}
+            {% if prev_case %}
+              <a href="{% pageurl prev_case %}" class="hover:text-sage-terra transition-colors">
+                <span aria-hidden="true">&larr;</span>
+                {{ prev_case.title }}
+              </a>
+            {% endif %}
+          {% endwith %}
+          {% with next_case=page.get_next_siblings.live.public.specific|first %}
+            {% if next_case %}
+              <a href="{% pageurl next_case %}" class="hover:text-sage-terra transition-colors">
+                {{ next_case.title }}
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            {% endif %}
+          {% endwith %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
