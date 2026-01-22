@@ -1,0 +1,50 @@
+{% load wagtailcore_tags richtext_tags %}
+{% with heading_text=self.heading|striptags %}
+  {% with anchor=self.anchor|default:heading_text|slugify %}
+    {% if is_blog_article %}
+      <section class="mb-12">
+        {% if self.eyebrow %}
+          <span class="text-xs font-bold uppercase tracking-widest text-sage-terra mb-3 block">{{ self.eyebrow }}</span>
+        {% endif %}
+        {% if self.heading %}
+          <h2 class="scroll-mt-32 text-4xl mb-6 font-display text-sage-black"{% if anchor %} id="{{ anchor }}"{% endif %}>
+            {{ self.heading|richtext_inline }}
+          </h2>
+        {% endif %}
+        {% if self.subheading %}
+          <p class="font-accent text-sm text-sage-black/70 mb-2">{{ self.subheading }}</p>
+        {% endif %}
+        {% if self.subheading_secondary %}
+          <p class="font-accent text-sm text-sage-black/70 mb-6">{{ self.subheading_secondary }}</p>
+        {% endif %}
+        <div class="prose prose-sage prose-lg font-accent text-sage-black prose-headings:font-display prose-headings:font-normal prose-h2:font-semibold prose-a:text-sage-terra prose-a:underline max-w-none{% if self.drop_cap %} [&>p:first-of-type]:first-letter:float-left [&>p:first-of-type]:first-letter:font-accent [&>p:first-of-type]:first-letter:text-sage-terra [&>p:first-of-type]:first-letter:text-5xl [&>p:first-of-type]:first-letter:leading-[0.8] [&>p:first-of-type]:first-letter:mr-4 [&>p:first-of-type]:first-letter:mt-2 [&>p:first-of-type]:first-letter:italic{% endif %}">
+          {{ self.body|richtext }}
+        </div>
+      </section>
+    {% else %}
+      <section class="section">
+        <div class="container max-w-6xl mx-auto px-6">
+          <div class="{% if self.align == 'center' %}text-center max-w-3xl mx-auto{% else %}text-left max-w-4xl{% endif %}">
+            {% if self.eyebrow %}
+              <span class="text-xs font-bold uppercase tracking-widest text-sage-terra">{{ self.eyebrow }}</span>
+            {% endif %}
+            {% if self.heading %}
+              <h2 class="scroll-mt-32 text-4xl mb-6 font-display text-sage-black"{% if anchor %} id="{{ anchor }}"{% endif %}>
+                {{ self.heading|richtext_inline }}
+              </h2>
+            {% endif %}
+            {% if self.subheading %}
+              <p class="font-accent text-base text-sage-black/70 mb-2">{{ self.subheading }}</p>
+            {% endif %}
+            {% if self.subheading_secondary %}
+              <p class="font-accent text-base text-sage-black/70 mb-6">{{ self.subheading_secondary }}</p>
+            {% endif %}
+            <div class="prose prose-sage prose-lg font-accent text-sage-black max-w-none">
+              {{ self.body|richtext }}
+            </div>
+          </div>
+        </div>
+      </section>
+    {% endif %}
+  {% endwith %}
+{% endwith %}

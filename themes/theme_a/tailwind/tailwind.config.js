@@ -1,7 +1,7 @@
 /**
  * Name: Tailwind Configuration
  * Path: themes/theme_a/tailwind/tailwind.config.js
- * Purpose: Configure Tailwind CSS for Theme A (Sage & Stone), mapping theme colours
+ * Purpose: Configure Tailwind CSS for Theme A, mapping theme colours
  *          to CSS variables so branding overrides work without rebuilding CSS.
  * Family: Theme A
  * Dependencies: Tailwind (authoring only)
@@ -22,10 +22,13 @@ module.exports = {
     'hero--gradient-primary',
     'hero--gradient-secondary',
     'hero--gradient-accent',
+    'bg-primary',
+    'bg-secondary',
+    'bg-accent',
   ],
   theme: {
     extend: {
-      // Custom font families - Sage & Stone typography
+      // Custom font families - theme typography
       fontFamily: {
         'display': ['var(--font-heading, "Playfair Display")', 'Georgia', 'serif'],
         'body': ['var(--font-body, "Lato")', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
@@ -37,7 +40,7 @@ module.exports = {
       // Uses hsl() format so Tailwind opacity modifiers work (e.g. bg-primary/50)
       colors: {
         'sage': {
-          // Core Sage & Stone palette - dynamic via branding vars with fixed defaults
+          // Core palette - dynamic via branding vars with fixed defaults
           'black': 'hsl(var(--text-h, 146) var(--text-s, 29%) var(--text-l, 14%) / <alpha-value>)',        // #1A2F23 Obsidian Green
           'linen': 'hsl(var(--background-h, 40) var(--background-s, 27%) var(--background-l, 96%) / <alpha-value>)',     // #F7F5F1 Warm Linen
           'oat': 'hsl(var(--surface-h, 40) var(--surface-s, 22%) var(--surface-l, 86%) / <alpha-value>)',         // #E3DED4 Oat
@@ -58,7 +61,7 @@ module.exports = {
 
       // Custom breakpoints
       screens: {
-        'ipad': '970px', // Matches Sage & Stone reference breakpoint
+        'ipad': '970px', // Matches reference breakpoint
         'desktop': '1200px', // Header/nav switch breakpoint (avoid for general layout)
       },
 

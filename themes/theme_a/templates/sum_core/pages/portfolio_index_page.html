@@ -1,0 +1,386 @@
+{% extends "theme/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags richtext_tags chrome_tags %}
+
+{% block main_class %}pt-0{% endblock %}
+
+{% block content %}
+  {% firstof page.intro page.search_description as portfolio_intro %}
+  {% hero_context page status=page.title headline=page.hero_heading subheadline=portfolio_intro section_id="portfolio-03" extra_template="sum_core/includes/hero_extras/portfolio_filters.html" as hero %}
+  {% include "sum_core/blocks/hero_gradient.html" with hero=hero %}
+
+  {% if featured_case_study %}
+    <section class="pt-24 mb-32{% if selected_category and selected_category != featured_case_study.category|slugify %} hidden{% endif %}" data-section-id="portfolio-04" data-portfolio-item data-category="{{ featured_case_study.category|slugify }}">
+      <div class="px-6 max-w-7xl mx-auto">
+        <article class="group reveal relative">
+          <a href="{% pageurl featured_case_study %}" class="block focus:outline-none">
+            <div class="relative aspect-[16/9] md:aspect-[21/9] lg:aspect-[2.4/1] w-full overflow-hidden mb-10 img-zoom-container bg-sage-oat">
+              {% for block in featured_case_study.body %}
+                {% if block.block_type == "image_block" %}
+                  {% image block.value.image fill-1600x900 as featured_img %}
+                  <img
+                    src="{{ featured_img.url }}"
+                    alt="{{ block.value.alt_text|default:featured_case_study.title }}"
+                    width="{{ featured_img.width }}"
+                    height="{{ featured_img.height }}"
+                    decoding="async"
+                    class="w-full h-full object-cover"
+                  />
+                {% endif %}
+              {% endfor %}
+
+              <div class="absolute bottom-8 left-8 bg-white/95 backdrop-blur px-8 py-6 border-t border-r border-sage-black/10 z-20">
+                <span class="block font-mono text-xs text-sage-terra uppercase tracking-widest mb-1">
+                  {% if featured_case_study.portfolio_number %}
+                    Project {{ featured_case_study.portfolio_number }}
+                  {% else %}
+                    Featured Project
+                  {% endif %}
+                </span>
+                <span class="block font-display text-2xl text-sage-black">{{ featured_case_study.title }}</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+              {% if featured_case_study.location or featured_case_study.client_name %}
+                <div class="md:col-span-3">
+                  <span class="block text-xs uppercase tracking-widest text-sage-meta mb-1">
+                    {% if featured_case_study.location %}Location{% else %}Client{% endif %}
+                  </span>
+                  <span class="font-display text-lg text-sage-black">
+                    {{ featured_case_study.location|default:featured_case_study.client_name }}
+                  </span>
+                </div>
+              {% endif %}
+              {% if featured_case_study.material or featured_case_study.project_type %}
+                <div class="md:col-span-3">
+                  <span class="block text-xs uppercase tracking-widest text-sage-meta mb-1">
+                    {% if featured_case_study.material %}Material{% else %}Project{% endif %}
+                  </span>
+                  <span class="font-display text-lg text-sage-black">
+                    {{ featured_case_study.material|default:featured_case_study.project_type }}
+                  </span>
+                </div>
+              {% endif %}
+              {% if featured_case_study.portfolio_quote or featured_case_study.portfolio_summary or featured_case_study.outcomes %}
+                <div class="md:col-span-4">
+                  <p class="font-accent text-lg text-sage-label italic">
+                    "{{ featured_case_study.portfolio_quote|default:featured_case_study.portfolio_summary|default:featured_case_study.outcomes }}"
+                  </p>
+                </div>
+              {% endif %}
+              <div class="md:col-span-2 text-right">
+                <span class="inline-flex items-center text-sm font-bold uppercase tracking-widest border border-sage-black/30 px-6 py-3.5 group-hover:text-sage-terra group-hover:border-sage-terra transition-colors duration-300 bg-transparent" aria-hidden="true">
+                  View Case Study
+                </span>
+                <span class="sr-only">View {{ featured_case_study.title }} Case Study</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      </div>
+    </section>
+  {% endif %}
+
+  {% if case_studies %}
+    <section class="max-w-7xl mx-auto px-6 mb-32" data-section-id="portfolio-05">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-12 gap-y-24">
+        {% for case_study in case_studies %}
+          {% if forloop.counter == 1 %}
+            <article class="lg:col-span-7 flex flex-col justify-end lg:pb-12 group reveal {% if selected_category and selected_category != case_study.category|slugify %}hidden{% endif %}" data-portfolio-item data-category="{{ case_study.category|slugify }}">
+              <a href="{% pageurl case_study %}" class="block focus:outline-none h-full flex flex-col">
+                <div class="aspect-[4/3] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
+                  {% for block in case_study.body %}
+                    {% if block.block_type == "image_block" %}
+                      {% image block.value.image fill-1200x900 as card_img %}
+                      <img
+                        src="{{ card_img.url }}"
+                        alt="{{ block.value.alt_text|default:case_study.title }}"
+                        width="{{ card_img.width }}"
+                        height="{{ card_img.height }}"
+                        decoding="async"
+                        class="w-full h-full object-cover"
+                      />
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <div class="pr-8">
+                  <div class="flex justify-between items-baseline mb-3">
+                    <h2 class="font-display text-4xl text-sage-black group-hover:text-sage-terra transition-colors duration-300">
+                      {{ case_study.title }}
+                    </h2>
+                    <span class="font-mono text-xs text-sage-terra">{{ forloop.counter|add:1|stringformat:"02d" }}</span>
+                  </div>
+                  {% if case_study.portfolio_summary or case_study.outcomes %}
+                    <p class="text-sage-label font-light mb-8 line-clamp-2 text-lg">
+                      {{ case_study.portfolio_summary|default:case_study.outcomes }}
+                    </p>
+                  {% endif %}
+                  <span class="inline-block text-sm font-bold uppercase tracking-widest px-6 py-3.5 border border-sage-black/20 group-hover:border-sage-terra group-hover:text-sage-terra transition-all duration-300" aria-hidden="true">
+                    Explore
+                  </span>
+                  <span class="sr-only">Explore {{ case_study.title }}</span>
+                </div>
+              </a>
+            </article>
+
+            <div class="hidden lg:block lg:col-span-1"></div>
+          {% elif forloop.counter == 2 %}
+            <article class="lg:col-span-4 group reveal delay-100 flex flex-col justify-end {% if selected_category and selected_category != case_study.category|slugify %}hidden{% endif %}" data-portfolio-item data-category="{{ case_study.category|slugify }}">
+              <a href="{% pageurl case_study %}" class="block focus:outline-none h-full flex flex-col">
+                <div class="aspect-square lg:aspect-[3/4] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
+                  {% for block in case_study.body %}
+                    {% if block.block_type == "image_block" %}
+                      {% image block.value.image fill-900x900 as card_img %}
+                      <img
+                        src="{{ card_img.url }}"
+                        alt="{{ block.value.alt_text|default:case_study.title }}"
+                        width="{{ card_img.width }}"
+                        height="{{ card_img.height }}"
+                        decoding="async"
+                        class="w-full h-full object-cover"
+                      />
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <div class="max-w-md">
+                  <div class="flex justify-between items-baseline mb-2">
+                    <h2 class="font-display text-2xl text-sage-black group-hover:text-sage-terra transition-colors duration-300">
+                      {{ case_study.title }}
+                    </h2>
+                    <span class="font-mono text-xs text-sage-terra">{{ forloop.counter|add:1|stringformat:"02d" }}</span>
+                  </div>
+                  {% if case_study.portfolio_summary or case_study.outcomes %}
+                    <p class="text-sage-label font-light mb-8 text-sm">
+                      {{ case_study.portfolio_summary|default:case_study.outcomes }}
+                    </p>
+                  {% endif %}
+                  <span class="inline-block text-sm font-bold uppercase tracking-widest px-6 py-3.5 border border-sage-black/20 group-hover:border-sage-terra group-hover:text-sage-terra transition-all duration-300" aria-hidden="true">
+                    Explore
+                  </span>
+                  <span class="sr-only">Explore {{ case_study.title }}</span>
+                </div>
+              </a>
+            </article>
+            {% if forloop.counter == 2 and page.portfolio_quote %}
+              <div class="lg:col-span-12 py-16 flex justify-center reveal">
+                <div class="max-w-2xl text-center">
+                  <svg class="w-8 h-8 text-sage-terra mx-auto mb-6 opacity-60" fill="currentColor" viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+                    <path d="M14.017 21L14.017 18C14.017 16.0547 15.192 15.125 16.643 15.125C17.653 15.125 18.257 15.4687 18.257 16.5C18.257 17.5 17.519 18.5 16.643 18.5C15.936 18.5 15.463 18.0625 15.463 18.0625L15.362 19.5312C15.362 19.5312 16.299 21 18.29 21C20.682 21 22 18.6562 22 16.0312C22 13.0625 19.66 11 16.744 11C13.896 11 12 13.0937 12 16.375C12 18.8437 12.876 21 14.017 21ZM5.01699 21L5.01699 18C5.01699 16.0547 6.19199 15.125 7.64299 15.125C8.65299 15.125 9.25699 15.4687 9.25699 16.5C9.25699 17.5 8.51899 18.5 7.64299 18.5C6.93599 18.5 6.46299 18.0625 6.46299 18.0625L6.36199 19.5312C6.36199 19.5312 7.29899 21 9.28999 21C11.682 21 13 18.6562 13 16.0312C13 13.0625 10.66 11 7.74399 11C4.89599 11 2.99999 13.0937 2.99999 16.375C2.99999 18.8437 3.87599 21 5.01699 21Z"></path>
+                  </svg>
+                  <p class="font-display text-2xl md:text-3xl leading-relaxed text-sage-black/80">
+                    "{{ page.portfolio_quote }}"
+                  </p>
+                </div>
+              </div>
+            {% endif %}
+          {% elif forloop.counter == 3 %}
+            <article class="lg:col-span-8 group reveal {% if selected_category and selected_category != case_study.category|slugify %}hidden{% endif %}" data-portfolio-item data-category="{{ case_study.category|slugify }}">
+              <a href="{% pageurl case_study %}" class="block focus:outline-none">
+                <div class="aspect-[16/10] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
+                  {% for block in case_study.body %}
+                    {% if block.block_type == "image_block" %}
+                      {% image block.value.image fill-1200x900 as card_img %}
+                      <img
+                        src="{{ card_img.url }}"
+                        alt="{{ block.value.alt_text|default:case_study.title }}"
+                        width="{{ card_img.width }}"
+                        height="{{ card_img.height }}"
+                        decoding="async"
+                        class="w-full h-full object-cover"
+                      />
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+                  <div>
+                    <h2 class="font-display text-2xl text-sage-black group-hover:text-sage-terra transition-colors duration-300 mb-2">
+                      {{ case_study.title }}
+                    </h2>
+                    {% if case_study.project_type %}
+                      <span class="block text-xs uppercase tracking-widest text-sage-meta">{{ case_study.project_type }}</span>
+                    {% endif %}
+                  </div>
+                  <div class="flex flex-col items-end gap-6">
+                    {% if case_study.portfolio_summary or case_study.outcomes %}
+                      <p class="md:max-w-sm text-sage-label font-light text-sm text-right">
+                        {{ case_study.portfolio_summary|default:case_study.outcomes }}
+                      </p>
+                    {% endif %}
+                    <span class="inline-block text-sm font-bold uppercase tracking-widest px-6 py-3.5 border border-sage-black/20 group-hover:border-sage-terra group-hover:text-sage-terra transition-all duration-300" aria-hidden="true">
+                      Explore
+                    </span>
+                    <span class="sr-only">Explore {{ case_study.title }}</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          {% elif forloop.counter == 4 %}
+            <article class="lg:col-span-4 lg:pt-32 group reveal delay-100 {% if selected_category and selected_category != case_study.category|slugify %}hidden{% endif %}" data-portfolio-item data-category="{{ case_study.category|slugify }}">
+              <a href="{% pageurl case_study %}" class="block focus:outline-none">
+                <div class="aspect-square lg:aspect-[2/3] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
+                  {% for block in case_study.body %}
+                    {% if block.block_type == "image_block" %}
+                      {% image block.value.image fill-900x1200 as card_img %}
+                      <img
+                        src="{{ card_img.url }}"
+                        alt="{{ block.value.alt_text|default:case_study.title }}"
+                        width="{{ card_img.width }}"
+                        height="{{ card_img.height }}"
+                        decoding="async"
+                        class="w-full h-full object-cover"
+                      />
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <div>
+                  <h2 class="font-display text-2xl text-sage-black group-hover:text-sage-terra transition-colors duration-300 mb-2">
+                    {{ case_study.title }}
+                  </h2>
+                  <span class="block font-mono text-xs text-sage-terra mb-2">{{ forloop.counter|add:1|stringformat:"02d" }}</span>
+                  {% if case_study.portfolio_summary or case_study.outcomes %}
+                    <p class="text-sage-label font-light text-sm mb-6">
+                      {{ case_study.portfolio_summary|default:case_study.outcomes }}
+                    </p>
+                  {% endif %}
+                  <span class="inline-block text-sm font-bold uppercase tracking-widest px-6 py-3.5 border border-sage-black/20 group-hover:border-sage-terra group-hover:text-sage-terra transition-all duration-300" aria-hidden="true">
+                    Explore
+                  </span>
+                  <span class="sr-only">Explore {{ case_study.title }}</span>
+                </div>
+              </a>
+            </article>
+          {% else %}
+            <article class="lg:col-span-4 group reveal {% if selected_category and selected_category != case_study.category|slugify %}hidden{% endif %}" data-portfolio-item data-category="{{ case_study.category|slugify }}">
+              <a href="{% pageurl case_study %}" class="block focus:outline-none">
+                <div class="aspect-[4/3] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
+                  {% for block in case_study.body %}
+                    {% if block.block_type == "image_block" %}
+                      {% image block.value.image fill-1200x900 as card_img %}
+                      <img
+                        src="{{ card_img.url }}"
+                        alt="{{ block.value.alt_text|default:case_study.title }}"
+                        width="{{ card_img.width }}"
+                        height="{{ card_img.height }}"
+                        decoding="async"
+                        class="w-full h-full object-cover"
+                      />
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <div>
+                  <div class="flex justify-between items-baseline mb-2">
+                    <h2 class="font-display text-2xl text-sage-black group-hover:text-sage-terra transition-colors duration-300">
+                      {{ case_study.title }}
+                    </h2>
+                    <span class="font-mono text-xs text-sage-terra">{{ forloop.counter|add:1|stringformat:"02d" }}</span>
+                  </div>
+                  {% if case_study.portfolio_summary or case_study.outcomes %}
+                    <p class="text-sage-label font-light text-sm mb-6">
+                      {{ case_study.portfolio_summary|default:case_study.outcomes }}
+                    </p>
+                  {% endif %}
+                  <span class="inline-block text-sm font-bold uppercase tracking-widest px-6 py-3.5 border border-sage-black/20 group-hover:border-sage-terra group-hover:text-sage-terra transition-all duration-300" aria-hidden="true">
+                    Explore
+                  </span>
+                  <span class="sr-only">Explore {{ case_study.title }}</span>
+                </div>
+              </a>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if page.cta_heading or page.cta_primary_label %}
+    <section class="bg-sage-black text-sage-linen py-24 border-t border-sage-linen/10" data-section-id="portfolio-06">
+      <div class="max-w-4xl mx-auto px-6 text-center reveal">
+        {% if page.cta_eyebrow %}
+          <span class="block text-sage-terra font-accent italic text-xl mb-4">{{ page.cta_eyebrow }}</span>
+        {% endif %}
+        {% if page.cta_heading %}
+          <h2 class="font-display text-3xl md:text-5xl text-sage-linen mb-10">
+            {{ page.cta_heading }}
+          </h2>
+        {% endif %}
+        <div class="flex flex-col sm:flex-row gap-8 justify-center items-center">
+          {% if page.cta_primary_label and page.cta_primary_link %}
+            <a href="{{ page.cta_primary_link }}" class="bg-sage-terra text-white px-12 py-5 text-sm uppercase tracking-[0.2em] font-bold hover:bg-white hover:text-sage-black transition-colors duration-300 shadow-xl focus:outline-none focus:ring-4 focus:ring-white/50">
+              {{ page.cta_primary_label }}
+            </a>
+          {% endif %}
+          {% if page.cta_secondary_label and page.cta_secondary_link %}
+            <a href="{{ page.cta_secondary_link }}" class="inline-block text-sage-linen text-sm uppercase tracking-widest font-semibold border border-sage-linen/30 hover:bg-sage-linen hover:text-sage-black transition-colors duration-300 px-6 py-4 rounded-sm">
+              {{ page.cta_secondary_label }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}
+
+{% block extra_body %}
+  <script>
+    (function () {
+      const filterContainer = document.querySelector("[data-portfolio-filters]");
+      if (!filterContainer) {
+        return;
+      }
+
+      const buttons = Array.from(filterContainer.querySelectorAll("[data-filter]"));
+      const items = Array.from(document.querySelectorAll("[data-portfolio-item]"));
+
+      const activeClasses = ["text-white", "border-sage-terra"];
+      const inactiveClasses = ["text-sage-linen/70", "border-transparent"];
+
+      const setButtonState = (button, isActive) => {
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+        activeClasses.forEach((className) => button.classList.toggle(className, isActive));
+        inactiveClasses.forEach((className) => button.classList.toggle(className, !isActive));
+      };
+
+      const syncButtonState = (filter) => {
+        buttons.forEach((button) => {
+          setButtonState(button, button.dataset.filter === filter);
+        });
+      };
+
+      const applyFilter = (filter) => {
+        items.forEach((item) => {
+          const category = item.dataset.category || "";
+          const matches = filter === "all" || category === filter;
+          item.classList.toggle("hidden", !matches);
+        });
+      };
+
+      const updateUrl = (filter) => {
+        const url = new URL(window.location.href);
+        if (filter === "all") {
+          url.searchParams.delete("category");
+        } else {
+          url.searchParams.set("category", filter);
+        }
+        window.history.replaceState({}, "", url.toString());
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          const filter = button.dataset.filter || "all";
+          syncButtonState(filter);
+          applyFilter(filter);
+          updateUrl(filter);
+        });
+      });
+
+      const initialFilter = filterContainer.dataset.selectedCategory || "all";
+      const hasInitialButton = buttons.some((button) => button.dataset.filter === initialFilter);
+      const startingFilter = hasInitialButton ? initialFilter : "all";
+
+      syncButtonState(startingFilter);
+      applyFilter(startingFilter);
+      updateUrl(startingFilter);
+    })();
+  </script>
+{% endblock %}

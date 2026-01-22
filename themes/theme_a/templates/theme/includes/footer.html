@@ -10,8 +10,8 @@
         <div class="footer__grid">
             <!-- Brand -->
             <div class="footer__brand">
-                <div class="footer__brand-name">
-                    {{ site_name|upper }}
+                <div class="footer__brand-name uppercase">
+                    {{ site_name }}
                 </div>
                 {% if footer.tagline %}
                     <p class="footer__tagline">
@@ -69,7 +69,11 @@
         </div>
 
         <div class="footer__bottom">
-            <p class="footer__copyright">&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+            {% if VISUAL_TEST and VISUAL_TEST_FROZEN_YEAR %}
+                <p class="footer__copyright">&copy; {{ VISUAL_TEST_FROZEN_YEAR }} {{ site_name }}. All rights reserved.</p>
+            {% else %}
+                <p class="footer__copyright">&copy; {% now "Y" %} {{ site_name }}. All rights reserved.</p>
+            {% endif %}
         </div>
     </div>
 </footer>

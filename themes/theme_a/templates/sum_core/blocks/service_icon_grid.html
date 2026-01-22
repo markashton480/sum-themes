@@ -1,0 +1,19 @@
+{% load wagtailcore_tags %}
+
+<section class="py-24"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for item in self.items %}
+                <div class="bg-sage-linen p-8 border border-sage-black/10">
+                    <div class="mb-6 text-sage-terra">
+                        {{ item.icon_svg|safe }}
+                    </div>
+                    <h3 class="font-display text-2xl text-sage-black mb-4">{{ item.title }}</h3>
+                    <div class="text-base text-sage-label mb-6 leading-relaxed">
+                        {{ item.description|richtext }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

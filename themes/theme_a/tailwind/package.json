@@ -1,7 +1,7 @@
 {
   "name": "theme_a",
   "version": "1.0.0",
-  "description": "SUM Platform Theme A (Sage & Stone) - Tailwind build toolchain for maintainers only",
+  "description": "SUM Platform Theme A - Tailwind build toolchain for maintainers only",
   "private": true,
   "scripts": {
     "build": "node ./node_modules/tailwindcss/lib/cli.js -i ../static/theme_a/css/input.css -o ../static/theme_a/css/main.css --minify",

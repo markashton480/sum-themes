@@ -1,0 +1,47 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="py-24 md:py-32 bg-sage-linen">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+      <div class="lg:col-span-6">
+        {% if self.status_text %}
+          <span class="block text-sage-terra font-accent italic text-xl mb-6">{{ self.status_text }}</span>
+        {% endif %}
+
+        <div class="font-display text-4xl md:text-5xl lg:text-6xl text-sage-black leading-tight mb-6">
+          {{ self.title|richtext }}
+        </div>
+
+        <p class="text-sage-label font-light text-lg leading-relaxed">
+          {{ self.description|linebreaksbr }}
+        </p>
+
+        {% if self.primary_cta or self.secondary_cta %}
+          <div class="flex flex-col sm:flex-row gap-4 mt-10">
+            {% if self.primary_cta %}
+              {% include "sum_core/blocks/button.html" with cta=self.primary_cta %}
+            {% endif %}
+            {% if self.secondary_cta %}
+              {% include "sum_core/blocks/button.html" with cta=self.secondary_cta %}
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="lg:col-span-6">
+        <div class="relative">
+          <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-sage-black/5 border border-sage-black/5 shadow-xl">
+            {% image self.image fill-1200x1500 class="w-full h-full object-cover" alt=self.image.title|default:self.title|striptags %}
+          </div>
+
+          {% if self.float_card_label and self.float_card_value %}
+            <div class="absolute -left-6 -bottom-6 bg-white/95 backdrop-blur-md border border-sage-black/10 px-6 py-4 shadow-lg">
+              <span class="block text-xs uppercase tracking-widest text-sage-label">{{ self.float_card_label }}</span>
+              <span class="block font-display text-2xl text-sage-black mt-2">{{ self.float_card_value }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,9 +1,13 @@
-{% load static wagtailcore_tags branding_tags wagtailimages_tags analytics_tags seo_tags %}
+{% load static wagtailcore_tags branding_tags wagtailimages_tags analytics_tags seo_tags chrome_tags %}
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth no-js{% if VISUAL_TEST %} visual-test{% endif %}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script>
+      document.documentElement.classList.remove('no-js');
+      document.documentElement.classList.add('js');
+    </script>
     {% get_site_settings as site_settings %}
     {% wagtail_site as current_site %}
     {% analytics_head %}
@@ -18,16 +22,49 @@
       <link rel="icon" href="{{ favicon_rendition.url }}" />
     {% endif %}
 
-    <!-- Google Fonts: Sage & Stone Typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    {% if not VISUAL_TEST %}
+      <!-- Google Fonts: Theme A Typography -->
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
-    <!-- Branding Fonts (client overrides) -->
-    {% branding_fonts %}
+      <!-- Branding Fonts (client overrides) -->
+      {% branding_fonts %}
+    {% endif %}
 
     <!-- Theme A CSS -->
     <link rel="stylesheet" href="{% static 'theme_a/css/main.css' %}" />
+    {% if VISUAL_TEST %}
+      <link rel="stylesheet" href="{% static 'theme_a/css/visual_test.css' %}" />
+      <script>
+        (function () {
+          var frozenIso = "{{ VISUAL_TEST_FROZEN_ISO|default:'2025-10-14T00:00:00Z'|escapejs }}";
+          var frozenMs = Date.parse(frozenIso);
+          if (!Number.isFinite(frozenMs)) {
+            frozenMs = Date.parse("2025-10-14T00:00:00Z");
+          }
+
+          var NativeDate = Date;
+          var tick = 0;
+
+          function FakeDate() {
+            if (arguments.length === 0) {
+              return new NativeDate(frozenMs);
+            }
+            // eslint-disable-next-line prefer-rest-params
+            return new (Function.prototype.bind.apply(NativeDate, [null].concat([].slice.call(arguments))))();
+          }
+          FakeDate.UTC = NativeDate.UTC;
+          FakeDate.parse = NativeDate.parse;
+          FakeDate.now = function () {
+            tick += 1;
+            return frozenMs + tick;
+          };
+          FakeDate.prototype = NativeDate.prototype;
+          window.Date = FakeDate;
+        })();
+      </script>
+    {% endif %}
 
     <!-- Branding Variables (Must load AFTER main.css to override defaults) -->
     {% branding_css %}
@@ -38,7 +75,7 @@
     {% endif %}
     {% block extra_head %}{% endblock %}
   </head>
-  <body id="body" class="antialiased font-body text-sage-black selection:bg-sage-terra selection:text-white relative">
+  <body id="body" class="antialiased font-body text-sage-black selection:bg-sage-terra selection:text-white relative{% if VISUAL_TEST %} visual-test{% endif %}">
     <!-- Skip Link (Accessibility) -->
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[70] focus:bg-sage-terra focus:text-white focus:px-6 focus:py-3 focus:font-bold focus:shadow-lg focus:outline-none">
       Skip to main content
@@ -48,13 +85,17 @@
     <!-- THEME: theme_a -->
 
     {% analytics_body %}
-    {% include "theme/includes/header.html" with has_hero=page.has_hero_block %}
+    {% header_transparent_at_top page as header_transparent_at_top %}
+    {% include "theme/includes/header.html" with header_transparent_at_top=header_transparent_at_top %}
 
-    <main id="main" class="{% block main_class %}{% if not page.has_hero_block %}pt-24{% endif %}{% endblock %}">{% block content %}{% endblock %}</main>
+    <main id="main" class="{% block main_class %}{% if not header_transparent_at_top %}pt-24{% endif %}{% endblock %}">{% block content %}{% endblock %}</main>
 
     {% include "sum_core/includes/cookie_banner.html" %}
 
     {% include "theme/includes/footer.html" %}
+
+    <!-- Sticky CTA (Desktop) -->
+    {% include "theme/includes/sticky_cta_desktop.html" %}
 
     <!-- Sticky CTA (Mobile) -->
     {% include "theme/includes/sticky_cta.html" %}
@@ -66,9 +107,9 @@
     {% endif %}
     <script src="{% static 'sum_core/js/event_tracking.js' %}" defer></script>
     <script src="{% static 'sum_core/js/main.js' %}"></script>
-    <script src="{% static 'sum_core/js/navigation.js' %}"></script>
+    <script src="{% static 'sum_core/js/forms.js' %}"></script>
 
-    <!-- Theme A JS (Sage & Stone interactions) -->
+    <!-- Theme A JS (theme interactions) -->
     <script src="{% static 'theme_a/js/main.js' %}"></script>
     {% block extra_body %}{% endblock %}
   </body>

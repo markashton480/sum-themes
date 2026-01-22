@@ -1,0 +1,14 @@
+{% load wagtailcore_tags %}
+{% if is_blog_article %}
+  <div class="font-display text-2xl md:text-3xl leading-relaxed text-sage-black mb-12 indent-0 [&_em]:text-sage-terra [&_em]:font-accent [&_em]:italic">
+    {{ self.body|richtext }}
+  </div>
+{% else %}
+  <section class="section">
+    <div class="container max-w-6xl mx-auto px-6">
+      <div class="prose prose-sage prose-lg font-accent text-sage-black max-w-none">
+        {{ self.body|richtext }}
+      </div>
+    </div>
+  </section>
+{% endif %}

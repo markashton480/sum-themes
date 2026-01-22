@@ -1,0 +1,154 @@
+{% load wagtailcore_tags %}
+
+{% with modal_id=self.modal_id|default:'provenance-modal' %}
+<section class="py-24 md:py-32 bg-sage-black text-sage-linen overflow-hidden">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex flex-col md:flex-row items-center gap-16">
+      {% if self.cta_action == 'modal' and self.modal %}
+        <button type="button" class="w-full md:w-1/2 relative reveal group cursor-pointer text-left bg-transparent border-0 p-0" data-modal-target="{{ modal_id }}" aria-controls="{{ modal_id }}" aria-haspopup="dialog">
+      {% else %}
+        <div class="w-full md:w-1/2 relative reveal group">
+      {% endif %}
+          <div class="aspect-[4/3] bg-[#8B7355] relative shadow-2xl flex items-center justify-center p-8 border-4 border-[#6e5a40] transition-transform duration-500 group-hover:scale-[1.02] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] will-change-transform">
+            <div class="absolute top-4 left-4 w-3 h-3 rounded-full bg-[#5c4a33] flex items-center justify-center"><div class="w-full h-0.5 bg-[#4a3b29] rotate-45"></div></div>
+            <div class="absolute top-4 right-4 w-3 h-3 rounded-full bg-[#5c4a33] flex items-center justify-center"><div class="w-full h-0.5 bg-[#4a3b29] rotate-45"></div></div>
+            <div class="absolute bottom-4 left-4 w-3 h-3 rounded-full bg-[#5c4a33] flex items-center justify-center"><div class="w-full h-0.5 bg-[#4a3b29] rotate-45"></div></div>
+            <div class="absolute bottom-4 right-4 w-3 h-3 rounded-full bg-[#5c4a33] flex items-center justify-center"><div class="w-full h-0.5 bg-[#4a3b29] rotate-45"></div></div>
+
+            <div class="text-center text-[#3d3021] font-serif tracking-widest space-y-4">
+              <div class="text-xs uppercase opacity-70">{{ self.plate.maker_label|default:"Maker" }}</div>
+              <div class="text-lg font-bold">{{ self.plate.maker_name }}</div>
+              <div class="w-12 h-px bg-[#3d3021] mx-auto opacity-30"></div>
+              <div class="text-xs uppercase opacity-70">{{ self.plate.source_label|default:"Source" }}</div>
+              <div class="text-sm font-mono">
+                {{ self.plate.source_coordinates }}
+                {% if self.plate.source_location %}<br>{{ self.plate.source_location }}{% endif %}
+              </div>
+              <div class="w-12 h-px bg-[#3d3021] mx-auto opacity-30"></div>
+              <div class="text-xs uppercase opacity-70">{{ self.plate.completion_label|default:"Completion" }}</div>
+              <div class="text-lg font-bold">{{ self.plate.completion_date }}</div>
+            </div>
+
+            <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-30 pointer-events-none"></div>
+
+            {% if self.cta_action == 'modal' and self.modal %}
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="bg-sage-linen text-sage-black px-6 py-3 uppercase text-xs font-bold tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Inspect Artifact</span>
+              </div>
+            {% endif %}
+          </div>
+        {% if self.cta_action == 'modal' and self.modal %}
+        </button>
+        {% else %}
+        </div>
+        {% endif %}
+
+        <div class="w-full md:w-1/2 reveal">
+          {% if self.eyebrow %}
+            <span class="text-sage-moss font-bold tracking-widest uppercase text-xs mb-4 block">{{ self.eyebrow }}</span>
+          {% endif %}
+          <div class="font-display text-4xl md:text-5xl mb-6">
+            {{ self.heading|richtext }}
+          </div>
+          <div class="prose prose-lg text-sage-linen/90 max-w-none font-light mb-8">
+            {{ self.body|richtext }}
+          </div>
+
+          {% if self.points %}
+            <ul class="space-y-4 mb-10">
+              {% for point in self.points %}
+                <li class="flex items-start">
+                  <span class="text-sage-terra mr-4 font-serif italic text-xl" aria-hidden="true">{{ forloop.counter }}.</span>
+                  <span class="text-sage-linen">{{ point }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          {% if self.cta %}
+            {% if self.cta_action == 'modal' and self.modal %}
+              <button type="button" data-modal-target="{{ modal_id }}" class="inline-block border-b-2 border-sage-terra text-sage-terra pb-1 hover:text-white transition-colors uppercase text-sm font-bold tracking-widest py-2" aria-controls="{{ modal_id }}">
+                {{ self.cta.label }}
+              </button>
+            {% else %}
+              <a href="{{ self.cta.link.href }}" {{ self.cta.link.attrs_str }} class="inline-block border-b-2 border-sage-terra text-sage-terra pb-1 hover:text-white transition-colors uppercase text-sm font-bold tracking-widest py-2">
+                {{ self.cta.label }}
+              </a>
+            {% endif %}
+          {% endif %}
+        </div>
+    </div>
+  </div>
+</section>
+
+{% if self.modal %}
+  <div id="{{ modal_id }}" class="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300" aria-hidden="true" role="dialog" aria-modal="true" data-modal>
+    <div id="{{ modal_id }}-backdrop" class="absolute inset-0 bg-sage-black/80 backdrop-blur-sm transition-opacity duration-300" data-modal-close data-modal-backdrop></div>
+
+    <div id="{{ modal_id }}-content" class="relative bg-sage-linen max-w-2xl w-full mx-4 shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" data-modal-content>
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        <div class="bg-sage-oat p-8 flex items-center justify-center relative overflow-hidden">
+          <div class="absolute inset-0 opacity-10 mix-blend-multiply" style="background-image: url('data:image/svg+xml,%3Csvg width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill=%22%23000000%22 fill-opacity=%221%22 fill-rule=%22evenodd%22%3E%3Ccircle cx=%223%22 cy=%223%22 r=%220.5%22/%3E%3C/g%3E%3C/svg%3E');"></div>
+          <div class="aspect-[4/3] w-full bg-[#8B7355] relative shadow-lg flex items-center justify-center p-4 border-2 border-[#6e5a40]">
+            <div class="absolute top-2 left-2 w-2 h-2 rounded-full bg-[#5c4a33]"></div>
+            <div class="absolute top-2 right-2 w-2 h-2 rounded-full bg-[#5c4a33]"></div>
+            <div class="absolute bottom-2 left-2 w-2 h-2 rounded-full bg-[#5c4a33]"></div>
+            <div class="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-[#5c4a33]"></div>
+            <div class="text-center text-[#3d3021] font-serif tracking-widest space-y-2 scale-90">
+              <div class="text-[10px] uppercase opacity-70">{{ self.plate.maker_label|default:"Maker" }}</div>
+              <div class="text-sm font-bold">{{ self.plate.maker_name }}</div>
+              <div class="w-8 h-px bg-[#3d3021] mx-auto opacity-30"></div>
+              <div class="text-[10px] uppercase opacity-70">{{ self.plate.source_label|default:"Source" }}</div>
+              <div class="text-[10px] font-mono">{{ self.plate.source_coordinates }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-8">
+          <div class="flex justify-between items-start mb-6">
+            <h3 class="font-display text-2xl text-sage-black">{{ self.modal.title|default:"Artifact Dossier" }}</h3>
+            <button type="button" class="text-sage-black/50 hover:text-sage-terra transition-colors focus:outline-none focus:ring-2 focus:ring-sage-terra rounded" data-modal-close data-modal-close-button aria-label="Close modal">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+          </div>
+
+          <div class="space-y-6 font-mono text-sm text-sage-black/80">
+            <div>
+              <span class="block text-xs uppercase tracking-widest text-sage-terra mb-1">{{ self.modal.maker.label|default:"Maker Profile" }}</span>
+              {% if self.modal.maker.name %}
+                <p class="font-sans">{{ self.modal.maker.name }}</p>
+              {% endif %}
+              {% if self.modal.maker.role %}
+                <p class="text-xs text-sage-black/60">{{ self.modal.maker.role }}</p>
+              {% endif %}
+            </div>
+            <div>
+              <span class="block text-xs uppercase tracking-widest text-sage-terra mb-1">{{ self.modal.source.label|default:"Material Source" }}</span>
+              {% if self.modal.source.name %}
+                <p class="font-sans">{{ self.modal.source.name }}</p>
+              {% endif %}
+              {% if self.modal.source.detail %}
+                <p class="text-xs text-sage-black/60">{{ self.modal.source.detail }}</p>
+              {% endif %}
+            </div>
+            <div>
+              <span class="block text-xs uppercase tracking-widest text-sage-terra mb-1">{{ self.modal.guarantee.label|default:"Guarantee ID" }}</span>
+              {% if self.modal.guarantee.value %}
+                <p class="font-sans">{{ self.modal.guarantee.value }}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if self.modal.cta %}
+            <div class="mt-8 pt-6 border-t border-sage-black/10">
+              <a href="{{ self.modal.cta.link.href }}" {{ self.modal.cta.link.attrs_str }} class="block w-full text-center bg-sage-black text-sage-linen py-3 uppercase text-xs font-bold tracking-widest hover:bg-sage-terra transition-colors">
+                {{ self.modal.cta.label }}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endwith %}

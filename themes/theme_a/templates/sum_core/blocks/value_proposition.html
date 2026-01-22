@@ -1,0 +1,76 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="py-24 md:py-32 relative overflow-hidden"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="reveal">
+                <div class="font-display text-5xl md:text-6xl lg:text-7xl text-sage-black mb-10 leading-none">
+                    {{ self.heading|richtext }}
+                </div>
+                <div class="prose prose-lg text-sage-black/80 font-light mb-10">
+                    {{ self.body|richtext }}
+                </div>
+
+                {% if self.primary_cta or self.secondary_cta %}
+                    <div class="flex flex-col gap-8 mb-12">
+                        <div class="flex flex-col sm:flex-row gap-5">
+                            {% if self.primary_cta %}
+                                {% with link=self.primary_cta.link %}
+                                    <a href="{{ link.href }}" {{ link.attrs_str }} class="inline-flex justify-center items-center bg-sage-terra text-white border border-sage-terra px-8 py-5 text-xs font-bold uppercase tracking-widest hover:bg-sage-black hover:border-sage-black transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 shadow-lg">
+                                        {{ self.primary_cta.label }}
+                                    </a>
+                                {% endwith %}
+                            {% endif %}
+                            {% if self.secondary_cta %}
+                                {% with link=self.secondary_cta.link %}
+                                    <a href="{{ link.href }}" {{ link.attrs_str }} class="inline-flex justify-center items-center bg-transparent text-sage-black border border-sage-black/30 px-8 py-5 text-xs font-bold uppercase tracking-widest hover:bg-white hover:border-sage-black transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2">
+                                        {{ self.secondary_cta.label }}
+                                    </a>
+                                {% endwith %}
+                            {% endif %}
+                        </div>
+
+                        {% if self.phone_label and self.phone_link %}
+                            <div class="pt-6 border-t border-sage-black/10">
+                                <p class="text-sm text-sage-label mb-3 font-accent italic">{{ self.phone_label }}</p>
+                                <a href="{{ self.phone_link.href }}" {{ self.phone_link.attrs_str }} class="inline-flex items-center gap-2 text-sage-terra hover:text-sage-black transition-colors group focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 rounded-sm">
+                                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                    <span class="font-bold text-lg font-display">{{ self.phone_link.text }}</span>
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if self.stats %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-10 border-t border-sage-black/10 pt-10 pl-6 border-l-4 border-l-sage-terra/20">
+                        {% for stat in self.stats %}
+                            <div>
+                                <span
+                                    class="block font-display text-6xl md:text-7xl text-sage-terra mb-2"
+                                    data-counter-target="{{ stat.value|cut:'%' }}"
+                                    data-counter-start="0"
+                                    {% if "%" in stat.value %}data-counter-suffix="%"{% endif %}
+                                >
+                                    {{ stat.value }}
+                                </span>
+                                <span class="text-xs uppercase tracking-widest text-sage-meta font-bold">{{ stat.label }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {% if self.image %}
+                <div class="relative h-[600px] reveal delay-100 bg-sage-oat group">
+                    {% image self.image fill-900x1200 class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000" alt=self.alt_text|default:"" %}
+                    {% if self.image_quote %}
+                        <div class="absolute bottom-0 left-0 bg-white p-8 max-w-xs border-t border-r border-sage-black/10 z-10">
+                            <p class="font-accent italic text-sage-black">"{{ self.image_quote }}"</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>

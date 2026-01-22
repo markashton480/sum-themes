@@ -1,0 +1,14 @@
+html.visual-test {
+  scroll-behavior: auto !important;
+}
+
+html.visual-test *,
+html.visual-test *::before,
+html.visual-test *::after {
+  animation: none !important;
+  transition-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-property: none !important;
+  scroll-behavior: auto !important;
+  caret-color: transparent !important;
+}

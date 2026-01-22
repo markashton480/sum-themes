@@ -1,0 +1,33 @@
+{% load wagtailcore_tags navigation_tags %}
+
+{% header_nav as nav %}
+
+<div class="max-w-4xl">
+  <div class="flex items-center gap-4 mb-6 text-xs font-bold uppercase tracking-widest text-sage-linen/70">
+    {% if page.category %}
+      <a href="{% pageurl page.get_parent %}?category={{ page.category.slug }}" class="bg-sage-terra/20 text-sage-terra px-3 py-1 rounded-sm hover:bg-sage-terra/30 transition-colors">
+        {{ page.category.name }}
+      </a>
+    {% endif %}
+    {% with published_date=page.published_date|default:page.first_published_at %}
+      {% if published_date %}
+        <span>{{ published_date|date:"M j, Y" }}</span>
+      {% endif %}
+    {% endwith %}
+    {% if page.reading_time %}
+      <span>{{ page.reading_time }} Min Read</span>
+    {% endif %}
+  </div>
+  {% if page.get_excerpt %}
+    <p class="font-accent text-xl md:text-2xl text-sage-linen/80 max-w-2xl leading-relaxed antialiased border-l-2 border-sage-terra pl-6 mb-8">
+      {{ page.get_excerpt }}
+    </p>
+  {% endif %}
+  {% if nav.header_cta.enabled %}
+    <div class="pl-6">
+      <a href="{{ nav.header_cta.href }}" class="inline-flex items-center justify-center px-8 py-4 bg-sage-terra text-white text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-sage-black transition-colors rounded-sm min-h-[44px]" {% for k, v in nav.header_cta.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
+        {{ nav.header_cta.text }}
+      </a>
+    </div>
+  {% endif %}
+</div>

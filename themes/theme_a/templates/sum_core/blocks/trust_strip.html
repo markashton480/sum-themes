@@ -1,0 +1,12 @@
+<section class="bg-sage-linen border-b border-sage-black/5 py-12">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center sm:text-left">
+      {% for item in self.items %}
+        <div class="flex items-center justify-center sm:justify-start gap-3 text-xs font-bold uppercase tracking-widest text-sage-meta">
+          <span class="text-sage-terra" aria-hidden="true">•</span>
+          <span>{{ item.text }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

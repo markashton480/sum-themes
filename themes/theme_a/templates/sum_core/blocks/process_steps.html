@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<section class="py-24 md:py-32 bg-sage-oat/30 border-y border-sage-black/5">
+<section id="process" class="py-24 md:py-32 bg-sage-oat/30 border-y border-sage-black/5">
     <div class="max-w-7xl mx-auto px-6">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
             <header class="reveal lg:sticky lg:top-32 lg:self-start">
@@ -45,6 +45,18 @@
                         </li>
                     {% endfor %}
                 </ol>
+
+                {% if self.cta_link %}
+                    <div class="text-center reveal delay-500 mt-12">
+                        <a href="{{ self.cta_link.href }}" {{ self.cta_link.attrs_str }} class="inline-block border-b-2 border-sage-terra text-sage-black text-sm uppercase tracking-widest font-bold py-3 hover:text-sage-terra transition-colors focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2">
+                            {% if self.cta_label %}
+                                {{ self.cta_label }}
+                            {% else %}
+                                {{ self.cta_link.text }}
+                            {% endif %}
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

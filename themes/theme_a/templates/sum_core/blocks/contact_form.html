@@ -1,5 +1,5 @@
 {% load wagtailcore_tags form_tags %}
-<section class="contact-form-block py-24 md:py-32 bg-sage-black text-sage-linen relative overflow-hidden">
+<section id="contact" class="contact-form-block py-24 md:py-32 bg-sage-black text-sage-linen relative overflow-hidden">
   <div class="container mx-auto px-6 relative z-10">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
       <!-- Header Column -->
@@ -18,30 +18,59 @@
               {{ self.intro|richtext }}
             </div>
           {% endif %}
+          {% if self.phone_label or self.phone_link %}
+            <div class="py-8 border-t border-sage-linen/10">
+              {% if self.phone_label %}
+                <p class="font-mono text-xs uppercase tracking-widest text-sage-terra mb-2">
+                  {{ self.phone_label }}
+                </p>
+              {% endif %}
+              {% if self.phone_link %}
+                <a href="{{ self.phone_link.href }}" {{ self.phone_link.attrs_str }} class="font-display text-2xl hover:text-sage-terra transition-colors focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 focus:ring-offset-sage-black rounded-sm">
+                  {{ self.phone_link.text }}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
         </header>
       </div>
 
       <!-- Form Column -->
       <div class="reveal delay-100">
         {% with block_id=block.id %}
-        <form action="/forms/submit/" method="post" novalidate class="space-y-8 md:space-y-12 js-async-form" data-form-type="contact" id="contact-form{% if block_id %}-{{ block_id }}{% endif %}"
-              data-success-message="{{ self.success_message|default:"Thanks, we'll be in touch shortly."|escapejs }}"
+        {% with form_definition=self.form_definition %}
+        {% with generated_form=form_definition|generate_dynamic_form %}
+        {% with form=form|default:generated_form %}
+        <form action="/forms/submit/" method="post" novalidate class="space-y-8 md:space-y-12" data-dynamic-form data-form-type="{% if form_definition %}{{ form_definition.slug }}{% else %}contact{% endif %}" id="contact-form{% if block_id %}-{{ block_id }}{% endif %}"
+              data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:"Thanks, we'll be in touch shortly."|escapejs }}{% else %}{{ self.success_message|default:"Thanks, we'll be in touch shortly."|escapejs }}{% endif %}"
               data-error-message="Something went wrong. Please try again.">
           {% csrf_token %}
 
           <!-- Hidden fields for attribution and spam protection -->
-          {% form_hidden_fields form_type="contact" %}
+          {% if form_definition %}
+            {% form_hidden_fields form_type=form_definition.slug %}
+            <input type="hidden" name="form_definition_id" value="{{ form_definition.pk }}">
+            <input type="hidden" name="_rendered_at" class="js-dynamic-form-timestamp" value="">
 
-          <!-- Honeypot field (visually hidden) -->
-          <div class="sr-only" aria-hidden="true">
-            <label for="form-company-field{% if block_id %}-{{ block_id }}{% endif %}">Company</label>
-            <input type="text" name="company" id="form-company-field{% if block_id %}-{{ block_id }}{% endif %}" tabindex="-1" autocomplete="off">
-          </div>
+            <!-- Honeypot field (visually hidden) -->
+            <div class="sr-only" aria-hidden="true">
+              <label for="form-website-field{% if block_id %}-{{ block_id }}{% endif %}">Website</label>
+              <input type="text" name="website" id="form-website-field{% if block_id %}-{{ block_id }}{% endif %}" tabindex="-1" autocomplete="off">
+            </div>
+          {% else %}
+            {% form_hidden_fields form_type="contact" %}
+
+            <!-- Honeypot field (visually hidden) -->
+            <div class="sr-only" aria-hidden="true">
+              <label for="form-company-field{% if block_id %}-{{ block_id }}{% endif %}">Company</label>
+              <input type="text" name="company" id="form-company-field{% if block_id %}-{{ block_id }}{% endif %}" tabindex="-1" autocomplete="off">
+            </div>
+          {% endif %}
 
           {% if form %}
             {% for field in form %}
               <div class="relative group z-0 {% if field.errors %}has-error{% endif %}">
-                <label for="{{ field.id_for_label }}" class="block text-xs uppercase tracking-widest text-sage-linen/60 mb-2">
+                <label for="{{ field.id_for_label }}" class="block text-xs uppercase tracking-widest text-sage-linen/40 mb-2">
                   {{ field.label }}
                 </label>
                 <div>
@@ -51,7 +80,7 @@
                   <span class="text-xs text-sage-linen/50 mt-2 block">{{ field.help_text }}</span>
                 {% endif %}
                 {% if field.errors %}
-                  <span class="text-xs text-sage-terra mt-2 block font-bold" id="{{ field.auto_id }}_errors">
+                  <span class="text-sage-terra text-xs mt-2 block font-mono uppercase tracking-widest" id="{{ field.auto_id }}_errors">
                     {{ field.errors.0 }}
                   </span>
                 {% endif %}
@@ -70,36 +99,36 @@
             <!-- Working form fields for frontend use -->
             <div class="relative group z-0">
               <input type="text" id="contact-name{% if block_id %}-{{ block_id }}{% endif %}" name="name" required placeholder=" "
-                     class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen placeholder-transparent focus:border-sage-terra transition-colors">
+                     class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent">
               <label for="contact-name{% if block_id %}-{{ block_id }}{% endif %}"
-                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-sage-linen/50 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
                 Full Name
               </label>
             </div>
 
             <div class="relative group z-0">
               <input type="email" id="contact-email{% if block_id %}-{{ block_id }}{% endif %}" name="email" required placeholder=" "
-                     class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen placeholder-transparent focus:border-sage-terra transition-colors">
+                     class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent">
               <label for="contact-email{% if block_id %}-{{ block_id }}{% endif %}"
-                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-sage-linen/50 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
                 Email Address
               </label>
             </div>
 
             <div class="relative group z-0">
               <input type="tel" id="contact-phone{% if block_id %}-{{ block_id }}{% endif %}" name="phone" placeholder=" "
-                     class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen placeholder-transparent focus:border-sage-terra transition-colors">
+                     class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent">
               <label for="contact-phone{% if block_id %}-{{ block_id }}{% endif %}"
-                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-sage-linen/50 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
                 Phone (Optional)
               </label>
             </div>
 
             <div class="relative group z-0">
               <textarea id="contact-message{% if block_id %}-{{ block_id }}{% endif %}" name="message" rows="3" required placeholder=" "
-                        class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-xl font-body font-light text-sage-linen placeholder-transparent focus:border-sage-terra transition-colors resize-none"></textarea>
+                        class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-xl font-body font-light text-sage-linen focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent resize-none"></textarea>
               <label for="contact-message{% if block_id %}-{{ block_id }}{% endif %}"
-                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-sage-linen/50 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
                 How can we help?
               </label>
             </div>
@@ -108,12 +137,19 @@
           <!-- Form messages -->
           <div class="form-messages" role="alert" aria-live="polite"></div>
 
-          <div class="pt-4">
-            <button type="submit" class="btn btn-primary btn-submit w-full md:w-auto">
-              {{ self.submit_label|default:"Send enquiry" }}
+          <div class="pt-8">
+            <button type="submit"
+                    class="btn btn-primary btn-submit w-full md:w-auto group relative inline-flex items-center justify-center px-10 py-5 overflow-hidden font-bold text-sage-black transition-all duration-300 bg-sage-linen hover:bg-white focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 focus:ring-offset-sage-black">
+              <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-80 group-hover:h-80 opacity-20"></span>
+              <span class="relative uppercase tracking-[0.2em] text-xs">
+                {{ self.submit_label|default:"Send enquiry" }}
+              </span>
             </button>
           </div>
         </form>
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
         {% endwith %}
       </div>
     </div>
@@ -121,90 +157,3 @@
 </section>
 
 {% form_attribution_script %}
-
-<script>
-(function() {
-  'use strict';
-
-  function bindForm(form) {
-    if (!form || form.dataset.formBound === 'true') return;
-    form.dataset.formBound = 'true';
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      var formData = new FormData(form);
-      var submitBtn = form.querySelector('.btn-submit');
-      var messagesDiv = form.querySelector('.form-messages');
-      var originalBtnText = submitBtn.textContent;
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-      messagesDiv.innerHTML = '';
-      messagesDiv.className = 'form-messages';
-
-      var csrfInput = form.querySelector('input[name="csrfmiddlewaretoken"]');
-      var csrfToken = csrfInput ? csrfInput.value : '';
-
-      fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        credentials: 'same-origin',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRFToken': csrfToken
-        }
-      })
-      .then(function(response) {
-        return response.json().then(function(data) {
-          return { status: response.status, data: data };
-        });
-      })
-      .then(function(result) {
-        if (result.data.success) {
-          messagesDiv.className = 'form-messages form-messages--success';
-          var successMsg = document.createElement('p');
-          successMsg.className = 'form-success-msg';
-          successMsg.textContent = form.dataset.successMessage || 'Thank you for your submission.';
-          messagesDiv.innerHTML = '';
-          messagesDiv.appendChild(successMsg);
-          form.reset();
-        } else {
-          messagesDiv.className = 'form-messages form-messages--error';
-          messagesDiv.innerHTML = '';
-          if (result.data.errors) {
-            for (var field in result.data.errors) {
-              result.data.errors[field].forEach(function(msg) {
-                var errorP = document.createElement('p');
-                errorP.className = 'form-error-msg';
-                errorP.textContent = msg;
-                messagesDiv.appendChild(errorP);
-              });
-            }
-          }
-          if (!messagesDiv.hasChildNodes()) {
-            var fallbackP = document.createElement('p');
-            fallbackP.className = 'form-error-msg';
-            fallbackP.textContent = form.dataset.errorMessage || 'Something went wrong. Please try again.';
-            messagesDiv.appendChild(fallbackP);
-          }
-        }
-      })
-      .catch(function() {
-        messagesDiv.className = 'form-messages form-messages--error';
-        var errorP = document.createElement('p');
-        errorP.className = 'form-error-msg';
-        errorP.textContent = form.dataset.errorMessage || 'Something went wrong. Please try again.';
-        messagesDiv.innerHTML = '';
-        messagesDiv.appendChild(errorP);
-      })
-      .finally(function() {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalBtnText;
-      });
-    });
-  }
-
-  document.querySelectorAll('.js-async-form').forEach(bindForm);
-})();
-</script>

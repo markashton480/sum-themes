@@ -1,0 +1,16 @@
+{% load navigation_tags chrome_tags %}
+{% desktop_sticky_cta as cta %}
+{% sticky_cta_section_id page as section_id %}
+{# Theme A desktop sticky CTA (v0.6 theme-owned rendering contract) #}
+
+{% if cta.enabled and cta.button_text and cta.button_href != "#" %}
+<div class="fixed bottom-0 left-0 right-0 bg-sage-black text-sage-linen py-4 px-6 border-t border-sage-linen/10 transform translate-y-full transition-transform duration-300 z-50 shadow-2xl print:hidden" id="sticky-cta" aria-label="Quick actions"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <span class="text-sm font-bold uppercase tracking-widest hidden md:inline">{{ cta.label }}</span>
+        <span class="text-sm font-bold uppercase tracking-widest md:hidden">{{ cta.label }}</span>
+        <a href="{{ cta.button_href }}" class="bg-sage-terra text-white px-6 py-3 text-xs uppercase tracking-widest font-bold hover:bg-white hover:text-sage-black transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-sage-black" {% for k, v in cta.button_attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
+            {{ cta.button_text }}
+        </a>
+    </div>
+</div>
+{% endif %}

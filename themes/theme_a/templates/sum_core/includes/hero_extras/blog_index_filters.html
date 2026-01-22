@@ -1,0 +1,61 @@
+{% load wagtailcore_tags %}
+<div class="flex flex-col lg:flex-row justify-between items-end gap-10 mb-16">
+  <div class="w-full lg:w-auto">
+    <form role="search" method="get" class="relative w-full md:w-80 group">
+      <label for="search-input" class="sr-only">Search the archives</label>
+      <input
+        id="search-input"
+        name="q"
+        type="search"
+        value="{{ search_query }}"
+        placeholder="Search the archives..."
+        class="w-full bg-sage-linen/5 border-b border-sage-linen/30 py-4 pr-12 text-sage-linen placeholder-sage-linen/70 focus:outline-none focus:border-sage-terra focus:ring-0 focus:border-b-2 rounded-t-sm font-body text-base transition-all"
+      >
+      {% if selected_category %}
+        <input type="hidden" name="category" value="{{ selected_category.slug }}">
+      {% endif %}
+      <button type="submit" aria-label="Submit Search" class="absolute right-0 top-0 h-full w-12 flex items-center justify-center text-sage-linen/70 hover:text-sage-terra focus:outline-none focus:text-sage-terra focus-visible-ring rounded-sm transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+<span id="filter-desc" class="sr-only">Select a category to filter the article list below.</span>
+
+<nav aria-label="Article categories" id="category-filters" class="relative">
+  <div class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-sage-black to-transparent pointer-events-none md:hidden z-20" aria-hidden="true"></div>
+
+  <div class="overflow-x-auto no-scrollbar pb-4 -mx-6 px-6 md:mx-0 md:px-0 relative z-10">
+    <ul class="flex flex-nowrap md:flex-wrap gap-3 min-w-max">
+      <li>
+        <a
+          href="{% if search_query %}?q={{ search_query|urlencode }}{% else %}{% pageurl page %}{% endif %}"
+          aria-pressed="{% if not selected_category %}true{% else %}false{% endif %}"
+          aria-describedby="filter-desc"
+          class="filter-btn group inline-flex items-center gap-2 text-xs uppercase tracking-widest px-6 py-4 rounded-full focus-visible-ring transition-all shadow-sm {% if not selected_category %}bg-sage-terra text-white border border-sage-terra{% else %}text-sage-footer-primary border border-sage-footer-primary/20 hover:border-sage-terra/50 hover:text-white hover:bg-white/5{% endif %}"
+        >
+          <svg class="w-4 h-4 check-icon{% if selected_category %} hidden{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+          <span class="font-bold">All Entries</span>
+          <span class="opacity-70 font-normal ml-1">({{ total_posts_count }})</span>
+        </a>
+      </li>
+      {% for category in categories %}
+        <li>
+          <a
+            href="?{% if search_query %}q={{ search_query|urlencode }}&amp;{% endif %}category={{ category.slug }}"
+            aria-pressed="{% if selected_category and selected_category.slug == category.slug %}true{% else %}false{% endif %}"
+            aria-describedby="filter-desc"
+            class="filter-btn group inline-flex items-center gap-2 text-xs uppercase tracking-widest px-6 py-4 rounded-full focus-visible-ring transition-all {% if selected_category and selected_category.slug == category.slug %}bg-sage-terra text-white border border-sage-terra{% else %}text-sage-footer-primary border border-sage-footer-primary/20 hover:border-sage-terra/50 hover:text-white hover:bg-white/5{% endif %}"
+          >
+            <svg class="w-4 h-4 check-icon{% if not selected_category or selected_category.slug != category.slug %} hidden{% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            <span class="font-normal group-[.active]:font-bold">{{ category.name }}</span>
+            <span class="opacity-50 ml-1">({{ category.post_count|default:0 }})</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</nav>

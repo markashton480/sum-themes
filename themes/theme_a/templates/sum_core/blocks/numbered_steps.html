@@ -1,0 +1,33 @@
+{% if is_blog_article %}
+  <ol class="list-none pl-0 space-y-6 my-10 border-y border-sage-black/10 py-10">
+    {% for step in self.steps %}
+      <li class="flex gap-4">
+        <span class="flex-shrink-0 w-8 h-8 rounded-full border border-sage-terra text-sage-terra flex items-center justify-center font-display font-bold">
+          {{ forloop.counter }}
+        </span>
+        <div>
+          <strong class="block font-display text-lg text-sage-black">{{ step.title }}</strong>
+          <span class="text-base opacity-80">{{ step.description }}</span>
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+{% else %}
+  <section class="section">
+    <div class="container max-w-6xl mx-auto px-6">
+      <ol class="space-y-6">
+        {% for step in self.steps %}
+          <li class="flex gap-4">
+            <span class="flex-shrink-0 w-8 h-8 rounded-full border border-sage-terra text-sage-terra flex items-center justify-center font-display font-bold">
+              {{ forloop.counter }}
+            </span>
+            <div>
+              <strong class="block font-display text-lg text-sage-black">{{ step.title }}</strong>
+              <span class="text-base text-sage-black/70">{{ step.description }}</span>
+            </div>
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </section>
+{% endif %}

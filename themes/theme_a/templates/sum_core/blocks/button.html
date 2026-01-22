@@ -1,0 +1,13 @@
+{% load wagtailcore_tags %}
+{% with cta=cta|default:self %}
+  {% if cta.page %}
+    {% pageurl cta.page as button_url %}
+    <a href="{{ button_url }}" class="btn {{ cta.style|default:'btn-primary' }}">
+      {{ cta.label }}
+    </a>
+  {% else %}
+    <a href="{{ cta.link|default:'#' }}" class="btn {{ cta.style|default:'btn-primary' }}">
+      {{ cta.label }}
+    </a>
+  {% endif %}
+{% endwith %}

@@ -1,0 +1,46 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section class="py-24 bg-sage-linen relative">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+      <div class="lg:col-span-5 order-2 lg:order-1 relative group reveal">
+        <div class="aspect-[4/5] overflow-hidden relative bg-sage-oat border border-sage-black/5">
+          {% image self.image fill-1000x1250 class="w-full h-full object-cover transition-transform duration-1000" alt=self.alt_text %}
+
+          <div class="absolute bottom-6 left-6 bg-sage-linen/95 backdrop-blur-md px-6 py-4 border-l-2 border-sage-terra shadow-lg">
+            <span class="block font-display text-xl text-sage-black">{{ self.image_name }}</span>
+            <span class="block font-mono text-sm uppercase tracking-widest text-sage-label mt-1">{{ self.image_role }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 order-1 lg:order-2 reveal delay-100">
+        <svg class="w-10 h-10 text-sage-terra mb-8 opacity-80" fill="currentColor" viewBox="0 0 24 24" role="img" aria-label="Quote icon">
+          <path d="M14.017 21L14.017 18C14.017 16.0547 15.192 15.125 16.643 15.125C17.653 15.125 18.257 15.4687 18.257 16.5C18.257 17.5 17.519 18.5 16.643 18.5C15.936 18.5 15.463 18.0625 15.463 18.0625L15.362 19.5312C15.362 19.5312 16.299 21 18.29 21C20.682 21 22 18.6562 22 16.0312C22 13.0625 19.66 11 16.744 11C13.896 11 12 13.0937 12 16.375C12 18.8437 12.876 21 14.017 21ZM5.01699 21L5.01699 18C5.01699 16.0547 6.19199 15.125 7.64299 15.125C8.65299 15.125 9.25699 15.4687 9.25699 16.5C9.25699 17.5 8.51899 18.5 7.64299 18.5C6.93599 18.5 6.46299 18.0625 6.46299 18.0625L6.36199 19.5312C6.36199 19.5312 7.29899 21 9.28999 21C11.682 21 13 18.6562 13 16.0312C13 13.0625 10.66 11 7.74399 11C4.89599 11 2.99999 13.0937 2.99999 16.375C2.99999 18.8437 3.87599 21 5.01699 21Z"/>
+        </svg>
+
+        <div class="font-display text-4xl lg:text-5xl text-sage-black mb-8 leading-tight">
+          {{ self.quote_heading|richtext }}
+        </div>
+
+        <div class="prose prose-lg text-sage-black font-light leading-relaxed mb-8">
+          {{ self.body|richtext }}
+        </div>
+
+        {% if self.signature_name or self.signature_label %}
+          <div class="flex items-center gap-4">
+            <div>
+              {% if self.signature_name %}
+                <span class="block font-accent italic text-2xl text-sage-terra">{{ self.signature_name }}</span>
+              {% endif %}
+              {% if self.signature_label %}
+                <span class="block text-xs uppercase tracking-widest text-sage-label mt-1">{{ self.signature_label }}</span>
+              {% endif %}
+            </div>
+            <div class="h-px w-24 bg-sage-black/40"></div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

@@ -20,11 +20,19 @@
           rel="noopener noreferrer"
           class="group inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-inset transition"
         >
-          {% image item.logo fill-240x120 class="h-10 md:h-12 w-auto object-contain transition duration-300 ease-out" alt=item.alt_text %}
+          {% if item.logo %}
+            {% image item.logo fill-240x120 class="h-10 md:h-12 w-auto object-contain transition duration-300 ease-out" alt=item.alt_text %}
+          {% else %}
+            <span class="font-display text-2xl text-sage-black">{{ item.text_label }}</span>
+          {% endif %}
         </a>
         {% else %}
         <div>
-          {% image item.logo fill-240x120 class="h-10 md:h-12 w-auto object-contain" alt=item.alt_text %}
+          {% if item.logo %}
+            {% image item.logo fill-240x120 class="h-10 md:h-12 w-auto object-contain" alt=item.alt_text %}
+          {% else %}
+            <span class="font-display text-2xl text-sage-black">{{ item.text_label }}</span>
+          {% endif %}
         </div>
         {% endif %}
       </div>

@@ -1,27 +1,48 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<section class="py-24 bg-sage-linen" aria-label="{{ self.heading|striptags|default:self.eyebrow|default:'Team' }}">
+<section id="team" class="py-24 bg-sage-linen" aria-label="{{ self.heading|striptags|default:self.eyebrow|default:'Team' }}">
   <div class="max-w-7xl mx-auto px-6">
-    {% if self.eyebrow or self.heading %}
-    <header class="mb-12 max-w-3xl reveal" data-team-heading>
-      {% if self.eyebrow %}
-        <span class="block text-xs font-bold uppercase tracking-widest text-sage-moss mb-4">
-          {{ self.eyebrow }}
-        </span>
-      {% endif %}
-      {% if self.heading %}
-        <div class="font-display text-4xl md:text-5xl text-sage-black">
-          {{ self.heading|richtext }}
-        </div>
-      {% endif %}
-    </header>
+    {% if self.eyebrow or self.heading or self.badge_label or self.badge_value %}
+      <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+        <header class="reveal" data-team-heading>
+          {% if self.eyebrow %}
+            <span class="block text-xs font-bold uppercase tracking-widest text-sage-moss mb-4">
+              {{ self.eyebrow }}
+            </span>
+          {% endif %}
+          {% if self.heading %}
+            <div class="font-display text-4xl md:text-5xl text-sage-black">
+              {{ self.heading|richtext }}
+            </div>
+          {% endif %}
+        </header>
+
+        {% if self.badge_label or self.badge_value %}
+          <div class="reveal delay-100 mt-4 md:mt-0">
+            <span class="text-sage-black font-mono text-sm uppercase tracking-widest bg-sage-oat/50 px-4 py-2 rounded-sm">
+              {% if self.badge_label and self.badge_value %}
+                {{ self.badge_label }}: {{ self.badge_value }}
+              {% elif self.badge_label %}
+                {{ self.badge_label }}
+              {% else %}
+                {{ self.badge_value }}
+              {% endif %}
+            </span>
+          </div>
+        {% endif %}
+      </div>
     {% endif %}
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-team-grid>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12" data-team-grid>
       {% for member in self.members %}
-      <article class="bg-white border border-sage-black/10 p-8 flex flex-col gap-6 shadow-sm reveal {% if forloop.counter == 2 %}delay-100{% elif forloop.counter == 3 %}delay-200{% endif %}" data-team-member>
-        <div class="aspect-square overflow-hidden bg-sage-oat">
+      <article class="bg-white border border-sage-black/10 p-8 flex flex-col gap-6 shadow-sm reveal {% if forloop.counter == 2 %}delay-100{% elif forloop.counter == 3 %}delay-200{% elif forloop.counter == 4 %}delay-300{% endif %}" data-team-member>
+        <div class="aspect-[4/5] overflow-hidden bg-sage-oat relative shadow-sm">
           {% image member.photo fill-600x600 class="w-full h-full object-cover" alt=member.alt_text %}
+          {% if member.overlay_quote %}
+            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-sage-black/90 to-transparent p-4">
+              <span class="text-white text-sm font-light italic">{{ member.overlay_quote }}</span>
+            </div>
+          {% endif %}
         </div>
 
         <div>

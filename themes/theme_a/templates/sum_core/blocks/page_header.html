@@ -1,9 +1,9 @@
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags chrome_tags %}
 <section class="py-24 md:py-32 bg-sage-linen">
   <div class="max-w-6xl mx-auto px-6">
     <div class="max-w-4xl mx-auto text-center space-y-4 md:space-y-6">
       {% if page and page.get_breadcrumbs %}
-        {% with breadcrumbs=page.get_breadcrumbs %}
+        {% breadcrumbs_for_display page as breadcrumbs %}
           {% if breadcrumbs %}
             <nav class="reveal" aria-label="Breadcrumb">
               <ol class="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-sage-black/60">
@@ -24,7 +24,6 @@
               </ol>
             </nav>
           {% endif %}
-        {% endwith %}
       {% endif %}
 
       {% if self.eyebrow %}

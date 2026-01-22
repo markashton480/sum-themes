@@ -1,71 +1,11 @@
 {% extends "theme/base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags chrome_tags %}
 
 {% block main_class %}pt-0{% endblock %}
 
 {% block content %}
-  <section class="bg-sage-black text-sage-linen pt-32 pb-20 lg:pt-40 lg:pb-24 relative overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/30 pointer-events-none"></div>
-    <div class="max-w-7xl mx-auto px-6 relative z-10">
-      {% if page.get_breadcrumbs %}
-        {% with breadcrumbs=page.get_breadcrumbs %}
-          {% if breadcrumbs %}
-            <nav aria-label="Breadcrumb" class="mb-8 text-sm text-sage-linen/60 font-mono tracking-wider uppercase">
-              <ol class="flex items-center gap-2">
-                {% for crumb in breadcrumbs %}
-                  <li>
-                    {% if crumb.is_current %}
-                      <span aria-current="page" class="text-sage-linen">{{ crumb.title }}</span>
-                    {% elif crumb.url %}
-                      <a href="{{ crumb.url }}" class="hover:text-sage-terra transition-colors focus:text-sage-terra rounded-sm">
-                        {{ crumb.title }}
-                      </a>
-                    {% else %}
-                      <span>{{ crumb.title }}</span>
-                    {% endif %}
-                  </li>
-                  {% if not forloop.last %}
-                    <li aria-hidden="true">/</li>
-                  {% endif %}
-                {% endfor %}
-              </ol>
-            </nav>
-          {% endif %}
-        {% endwith %}
-      {% endif %}
-
-      <div class="max-w-3xl">
-        <h1 class="font-display text-5xl md:text-6xl text-sage-linen mb-8 leading-tight">
-          {{ page.title }}
-        </h1>
-        {% if page.search_description %}
-          <p class="font-light text-lg md:text-xl leading-relaxed text-sage-linen/80">
-            {{ page.search_description }}
-          </p>
-        {% endif %}
-
-        <div class="mt-10 flex flex-wrap gap-6 items-center">
-          {% if page.last_updated %}
-            <span class="text-xs font-bold uppercase tracking-widest text-sage-linen/60">
-              Last Updated:
-              <time datetime="{{ page.last_updated|date:'Y-m-d' }}">{{ page.last_updated|date:"F Y" }}</time>
-            </span>
-          {% endif %}
-          <button
-            type="button"
-            onclick="window.print()"
-            class="group flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-sage-terra hover:text-white transition-colors border-b border-transparent hover:border-white pb-0.5 rounded-sm"
-            aria-label="Print this document"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 00-2 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 00-2 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
-            </svg>
-            Print Document
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
+  {% hero_context page headline=page.title subheadline=page.hero_intro extra_template="sum_core/includes/hero_extras/legal_meta.html" as hero %}
+  {% include "sum_core/blocks/hero_gradient.html" with hero=hero %}
 
   {% if page.sections %}
     <div class="lg:hidden sticky top-0 z-40 bg-sage-linen border-b border-sage-black/10 shadow-sm print:hidden">
@@ -127,8 +67,16 @@
                 <h2 class="font-display text-3xl md:text-4xl text-sage-black leading-tight mb-6">
                   {{ section.value.heading }}
                 </h2>
-                <div class="prose prose-lg max-w-none text-sage-label font-light leading-relaxed prose-headings:font-display prose-headings:text-2xl prose-a:text-sage-terra prose-strong:text-sage-black prose-li:mb-2">
-                  {{ section.value.body|richtext }}
+                <div class="space-y-10">
+                  {% for item in section.value.content %}
+                    {% if item.block_type == "rich_text" %}
+                      <div class="prose prose-lg max-w-none text-sage-label font-light leading-relaxed prose-headings:font-display prose-headings:text-2xl prose-a:text-sage-terra prose-strong:text-sage-black prose-li:mb-2">
+                        {{ item.value.body|richtext }}
+                      </div>
+                    {% else %}
+                      {% include_block item %}
+                    {% endif %}
+                  {% endfor %}
                 </div>
               </article>
               {% if not forloop.last %}
