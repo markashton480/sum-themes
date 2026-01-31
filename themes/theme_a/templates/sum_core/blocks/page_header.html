@@ -32,14 +32,17 @@
         </span>
       {% endif %}
 
+      {# SEO H1 - visible eyebrow heading #}
+      {% include "sum_core/includes/seo_h1.html" %}
+
       {% if self.heading %}
-        <div class="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight text-sage-black reveal delay-100">
+        <h2 class="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight text-sage-black reveal delay-100">
           {{ self.heading|richtext }}
-        </div>
+        </h2>
       {% elif page %}
-        <h1 class="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight text-sage-black reveal delay-100">
+        <h2 class="font-display text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight text-sage-black reveal delay-100">
           {{ page.title }}
-        </h1>
+        </h2>
       {% endif %}
 
       {% if self.intro %}

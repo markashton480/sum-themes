@@ -38,10 +38,14 @@
                 {{ hero.status }}
             </span>
         {% endif %}
+        {# SEO H1 - visible eyebrow heading (light variant for dark bg) #}
+        <h1 class="text-xs font-bold uppercase tracking-widest text-sage-linen/80 mb-4 reveal">
+            {{ page.get_seo_h1 }}
+        </h1>
         <div class="reveal delay-100">
-            <div class="font-display text-5xl md:text-7xl lg:text-8xl text-sage-linen leading-[0.9] mb-8">
+            <h2 class="font-display text-5xl md:text-7xl lg:text-8xl text-sage-linen leading-[0.9] mb-8">
                 {{ hero.headline|richtext }}
-            </div>
+            </h2>
         </div>
             </div>
             <div class="lg:col-span-4 lg:pb-4 reveal delay-200">
