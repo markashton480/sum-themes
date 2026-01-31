@@ -35,10 +35,15 @@
             </p>
         {% endif %}
 
-        {# Headline #}
-        <h1 class="font-display text-5xl md:text-7xl lg:text-8xl text-sage-linen mb-6">
-            {{ self.headline|richtext }}
+        {# SEO H1 - visible eyebrow heading (light variant for dark bg) #}
+        <h1 class="text-xs font-bold uppercase tracking-widest text-sage-linen/80 mb-4">
+            {{ page.get_seo_h1 }}
         </h1>
+
+        {# Headline #}
+        <h2 class="font-display text-5xl md:text-7xl lg:text-8xl text-sage-linen mb-6">
+            {{ self.headline|richtext }}
+        </h2>
 
         {# Subheadline #}
         {% if self.subheadline %}

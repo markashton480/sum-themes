@@ -1,0 +1,15 @@
+{# SEO H1 Heading - Renders the semantic <h1> for the page.
+
+Styled as visible eyebrow text (small, uppercase, accented).
+This is the version for LIGHT backgrounds (uses text-sage-terra).
+
+For dark backgrounds, use inline H1 with class:
+  text-xs font-bold uppercase tracking-widest text-sage-linen/80 mb-4
+
+Usage: {% include "sum_core/includes/seo_h1.html" %}
+
+Assumes `page` is in context and has `get_seo_h1` method.
+#}
+<h1 class="text-xs font-bold uppercase tracking-widest text-sage-terra mb-4 reveal">
+  {{ page.get_seo_h1 }}
+</h1>
