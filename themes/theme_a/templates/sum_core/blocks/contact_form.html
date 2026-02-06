@@ -18,18 +18,14 @@
               {{ self.intro|richtext }}
             </div>
           {% endif %}
-          {% if self.phone_label or self.phone_link %}
+          {% if self.phone_label and self.phone_link.href and self.phone_link.href != "#" %}
             <div class="py-8 border-t border-sage-linen/10">
-              {% if self.phone_label %}
-                <p class="font-mono text-xs uppercase tracking-widest text-sage-terra mb-2">
-                  {{ self.phone_label }}
-                </p>
-              {% endif %}
-              {% if self.phone_link %}
-                <a href="{{ self.phone_link.href }}" {{ self.phone_link.attrs_str }} class="font-display text-2xl hover:text-sage-terra transition-colors focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 focus:ring-offset-sage-black rounded-sm">
-                  {{ self.phone_link.text }}
-                </a>
-              {% endif %}
+              <p class="font-mono text-xs uppercase tracking-widest text-sage-terra mb-2">
+                {{ self.phone_label }}
+              </p>
+              <a href="{{ self.phone_link.href }}" {{ self.phone_link.attrs_str }} class="font-display text-2xl hover:text-sage-terra transition-colors focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 focus:ring-offset-sage-black rounded-sm">
+                {{ self.phone_link.text }}
+              </a>
             </div>
           {% endif %}
         </header>
@@ -43,6 +39,7 @@
         {% with form=form|default:generated_form %}
         <form action="/forms/submit/" method="post" novalidate class="space-y-8 md:space-y-12" data-dynamic-form data-form-type="{% if form_definition %}{{ form_definition.slug }}{% else %}contact{% endif %}" id="contact-form{% if block_id %}-{{ block_id }}{% endif %}"
               data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:"Thanks, we'll be in touch shortly."|escapejs }}{% else %}{{ self.success_message|default:"Thanks, we'll be in touch shortly."|escapejs }}{% endif %}"
+              data-success-redirect="{{ self.success_redirect.href|default:""|escapejs }}"
               data-error-message="Something went wrong. Please try again.">
           {% csrf_token %}
 

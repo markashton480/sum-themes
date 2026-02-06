@@ -5,7 +5,7 @@ Premium theme for SUM Platform featuring reveal animations, mega menu, and elega
 ## Quick Reference
 
 - **Name**: Theme A
-- **Version**: 0.5.0
+- **Version**: 1.0.3
 - **Tailwind**: v3.4.x (authoring only)
 
 ## File Structure
