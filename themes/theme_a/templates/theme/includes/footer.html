@@ -1,4 +1,4 @@
-{% load branding_tags wagtailcore_tags navigation_tags %}
+{% load branding_tags wagtailcore_tags wagtailimages_tags navigation_tags %}
 {% get_site_settings as site_settings %}
 {% wagtail_site as current_site %}
 {% firstof site_settings.company_name current_site.site_name WAGTAIL_SITE_NAME as site_name %}
@@ -10,9 +10,16 @@
         <div class="footer__grid">
             <!-- Brand -->
             <div class="footer__brand">
-                <div class="footer__brand-name uppercase">
-                    {{ site_name }}
-                </div>
+                {% if site_settings.footer_logo %}
+                    {% image site_settings.footer_logo max-200x80 as footer_logo_img %}
+                    <a href="/" class="footer__logo-link block mb-6">
+                        <img src="{{ footer_logo_img.url }}" alt="{{ site_name }}" class="h-12 w-auto" />
+                    </a>
+                {% else %}
+                    <div class="footer__brand-name uppercase">
+                        {{ site_name }}
+                    </div>
+                {% endif %}
                 {% if footer.tagline %}
                     <p class="footer__tagline">
                         {{ footer.tagline }}

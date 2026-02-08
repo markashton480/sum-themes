@@ -89,6 +89,8 @@ git commit -m "feature:theme_a - update styles"
 
 Confirm templates and static files resolve to Theme A:
 
+> Run these commands from the repository root with `.venv` active.
+
 ```bash
 python manage.py shell -c "from django.template.loader import get_template; t=get_template('theme/base.html'); print(t.origin.name)"
 python manage.py shell -c "from django.template.loader import get_template; t=get_template('sum_core/blocks/portfolio.html'); print(t.origin.name)"
@@ -107,6 +109,9 @@ to keep class coverage aligned with the prototype:
 
 - `themes/theme_a/templates/**/*.html`
 - `docs/dev/design/wireframes/sage-and-stone/compiled/*.html`
+
+> **Note:** The theme depends on wireframe HTML files in `docs/dev/design/wireframes/`.
+> If these files are moved or deleted, CSS builds may miss utility classes.
 
 This is intentional: scanning all compiled reference pages preserves the full
 class universe for template copy/paste. If you add new reference HTML files,
@@ -261,4 +266,4 @@ See `docs/dev/JS-API-CONTRACT.md` for the full core/theme JS contract.
 
 ---
 
-**Theme Toolchain v1 Contract** | M6-A-001 | SUM v0.6
+**Theme Toolchain v1 Contract** | SUM Platform v0.7.3
