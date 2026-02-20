@@ -1,19 +1,19 @@
 {% load wagtailcore_tags richtext_tags %}
 {% if is_blog_article %}
-  <div class="mt-20 relative rounded-sm overflow-hidden isolate">
-    <div class="absolute inset-0 bg-sage-black"></div>
+  <div class="mt-20 relative rounded-sm overflow-hidden isolate section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
+    <div class="absolute inset-0 {% if self.tone == 'light' %}bg-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat{% else %}bg-sage-black{% endif %}"></div>
     <div class="absolute right-0 top-0 -mt-10 -mr-10 w-64 h-64 bg-sage-terra/20 rounded-full blur-3xl"></div>
     <div class="absolute left-0 bottom-0 -mb-10 -ml-10 w-64 h-64 bg-sage-moss/10 rounded-full blur-3xl"></div>
 
-    <div class="relative z-10 p-10 md:p-12 flex flex-col md:flex-row gap-8 items-start md:items-center justify-between">
+    <div class="relative z-10 {% if self.density == 'compact' %}p-8 md:p-10 gap-6{% elif self.density == 'spacious' %}p-12 md:p-14 gap-10{% else %}p-10 md:p-12 gap-8{% endif %} flex flex-col md:flex-row items-start md:items-center justify-between">
       <div class="max-w-md">
         {% if self.eyebrow %}
           <span class="text-sage-terra font-bold tracking-widest uppercase text-xs mb-3 block">{{ self.eyebrow }}</span>
         {% endif %}
-        <h2 class="font-display text-3xl md:text-4xl text-sage-linen leading-tight mb-4">
+        <h2 class="font-display text-3xl md:text-4xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} leading-tight mb-4">
           {{ self.heading|richtext_inline }}
         </h2>
-        <div class="font-accent text-sage-linen/70 text-sm leading-relaxed">
+        <div class="font-accent {% if self.tone == 'dark' %}text-sage-linen/70{% else %}text-sage-black/70{% endif %} text-sm leading-relaxed">
           {{ self.body|richtext }}
         </div>
       </div>
@@ -21,7 +21,7 @@
       {% if self.buttons %}
         <div class="flex flex-wrap gap-3 w-full md:w-auto">
           {% for button in self.buttons %}
-            <a href="{{ button.link.href }}" {{ button.link.attrs_str }} class="flex-shrink-0 inline-flex items-center justify-center px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-sm w-full md:w-auto transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-sage-black focus-visible:ring-white {% if button.style == 'primary' %}bg-sage-terra text-white hover:bg-white hover:text-sage-black{% else %}border border-sage-linen/40 text-sage-linen hover:border-white hover:text-white{% endif %}">
+            <a href="{{ button.link.href }}" {{ button.link.attrs_str }} class="flex-shrink-0 inline-flex items-center justify-center px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-sm w-full md:w-auto transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 {% if self.tone == 'dark' %}focus-visible:ring-offset-sage-black focus-visible:ring-white{% else %}focus-visible:ring-offset-sage-linen focus-visible:ring-sage-black{% endif %} {% if button.style == 'primary' %}bg-sage-terra text-white hover:bg-white hover:text-sage-black{% else %}{% if self.tone == 'dark' %}border border-sage-linen/40 text-sage-linen hover:border-white hover:text-white{% else %}border border-sage-black/30 text-sage-black hover:border-sage-black hover:text-sage-black{% endif %}{% endif %}">
               {{ button.label }}
             </a>
           {% endfor %}
@@ -30,9 +30,9 @@
     </div>
   </div>
 {% else %}
-  <section class="section">
+  <section class="section {% if self.density == 'compact' %}py-12{% elif self.density == 'spacious' %}py-24{% else %}py-16{% endif %} section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
     <div class="container max-w-6xl mx-auto px-6">
-      <div class="bg-sage-black text-sage-linen p-10 md:p-12 rounded-sm flex flex-col md:flex-row gap-8 items-start md:items-center justify-between">
+      <div class="{% if self.tone == 'light' %}bg-sage-linen text-sage-black{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-black text-sage-linen{% endif %} {% if self.density == 'compact' %}p-8 md:p-10 gap-6{% elif self.density == 'spacious' %}p-12 md:p-14 gap-10{% else %}p-10 md:p-12 gap-8{% endif %} rounded-sm flex flex-col md:flex-row items-start md:items-center justify-between">
         <div class="max-w-md">
           {% if self.eyebrow %}
             <span class="text-sage-terra font-bold tracking-widest uppercase text-xs mb-3 block">{{ self.eyebrow }}</span>
@@ -40,14 +40,14 @@
           <h2 class="font-display text-3xl md:text-4xl leading-tight mb-4">
             {{ self.heading|richtext_inline }}
           </h2>
-          <div class="font-accent text-sage-linen/70 text-sm leading-relaxed">
+          <div class="font-accent {% if self.tone == 'dark' %}text-sage-linen/70{% else %}text-sage-black/70{% endif %} text-sm leading-relaxed">
             {{ self.body|richtext }}
           </div>
         </div>
         {% if self.buttons %}
           <div class="flex flex-wrap gap-3 w-full md:w-auto">
             {% for button in self.buttons %}
-              <a href="{{ button.link.href }}" {{ button.link.attrs_str }} class="flex-shrink-0 inline-flex items-center justify-center px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-sm w-full md:w-auto transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-sage-black focus-visible:ring-white {% if button.style == 'primary' %}bg-sage-terra text-white hover:bg-white hover:text-sage-black{% else %}border border-sage-linen/40 text-sage-linen hover:border-white hover:text-white{% endif %}">
+              <a href="{{ button.link.href }}" {{ button.link.attrs_str }} class="flex-shrink-0 inline-flex items-center justify-center px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-sm w-full md:w-auto transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 {% if self.tone == 'dark' %}focus-visible:ring-offset-sage-black focus-visible:ring-white{% else %}focus-visible:ring-offset-sage-linen focus-visible:ring-sage-black{% endif %} {% if button.style == 'primary' %}bg-sage-terra text-white hover:bg-white hover:text-sage-black{% else %}{% if self.tone == 'dark' %}border border-sage-linen/40 text-sage-linen hover:border-white hover:text-white{% else %}border border-sage-black/30 text-sage-black hover:border-sage-black hover:text-sage-black{% endif %}{% endif %}">
                 {{ button.label }}
               </a>
             {% endfor %}

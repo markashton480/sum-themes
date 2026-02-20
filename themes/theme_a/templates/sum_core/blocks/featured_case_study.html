@@ -1,10 +1,10 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<section class="py-24 bg-sage-oat/20 border-y border-sage-black/5">
+<section class="{% if self.density == 'compact' %}py-16{% elif self.density == 'spacious' %}py-32{% else %}py-24{% endif %} {% if self.tone == 'dark' %}bg-sage-black border-y border-sage-linen/10{% elif self.tone == 'light' %}bg-sage-linen border-y border-sage-black/5{% else %}bg-sage-oat/20 border-y border-sage-black/5{% endif %} section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <div class="grid grid-cols-1 lg:grid-cols-2 {% if self.density == 'compact' %}gap-10{% elif self.density == 'spacious' %}gap-20{% else %}gap-16{% endif %} items-center">
 
-      <div class="relative reveal group cursor-pointer">
+      <div class="relative reveal group{% if self.cta_url %} cursor-pointer{% endif %}">
         {% if self.stats_label or self.stats_value %}
           <div class="stats-card bg-sage-terra text-white p-6 absolute top-8 right-8 z-20 shadow-lg min-w-[140px]">
             {% if self.stats_value %}
@@ -16,13 +16,18 @@
           </div>
         {% endif %}
 
+        {% if self.cta_url %}
+        <a href="{{ self.cta_url }}" class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra" aria-label="{{ self.cta_text|default:'View case study' }}">
+        {% endif %}
         <div class="aspect-[4/5] overflow-hidden bg-sage-black/5 relative shadow-xl">
           {% image self.image original as img %}
           <img src="{{ img.url }}" alt="{{ self.alt_text }}" class="object-cover w-full h-full transition-transform duration-1000">
 
+          {% if self.cta_url %}
           <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
             <span class="text-white border border-white px-6 py-3 uppercase tracking-widest text-sm font-heading">Inspect Artifact</span>
           </div>
+          {% endif %}
 
           {% if self.project_label or self.project_title %}
             <div class="absolute bottom-0 left-0 bg-white/95 backdrop-blur-md px-6 py-4 border-t border-r border-sage-black/10">
@@ -35,21 +40,24 @@
             </div>
           {% endif %}
         </div>
+        {% if self.cta_url %}
+        </a>
+        {% endif %}
       </div>
 
-      <div class="reveal delay-100 pl-0 lg:pl-10">
+      <div class="reveal delay-100 pl-0 lg:pl-10 {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">
         {% if self.eyebrow %}
           <div class="text-sage-terra font-heading uppercase tracking-widest text-sm mb-6">{{ self.eyebrow }}</div>
         {% endif %}
 
         {% if self.heading %}
-          <div class="font-display text-4xl lg:text-5xl text-sage-black mb-6 leading-tight">
+          <div class="font-display text-4xl lg:text-5xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-6 leading-tight">
             {{ self.heading|richtext }}
           </div>
         {% endif %}
 
         {% if self.intro %}
-          <div class="text-lg text-sage-label mb-10 leading-relaxed font-light">
+          <div class="text-lg {% if self.tone == 'dark' %}text-sage-linen/80{% else %}text-sage-label{% endif %} mb-10 leading-relaxed font-light">
             {{ self.intro|richtext }}
           </div>
         {% endif %}
@@ -57,7 +65,7 @@
         {% if self.quote %}
           <svg class="w-12 h-12 text-sage-terra/40 mb-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.017 21L14.017 18C14.017 16.0547 15.192 15.125 16.643 15.125C17.653 15.125 18.257 15.4687 18.257 16.5C18.257 17.5 17.519 18.5 16.643 18.5C15.936 18.5 15.463 18.0625 15.463 18.0625L15.362 19.5312C15.362 19.5312 16.299 21 18.29 21C20.682 21 22 18.6562 22 16.0312C22 13.0625 19.66 11 16.744 11C13.896 11 12 13.0937 12 16.375C12 18.8437 12.876 21 14.017 21ZM5.01699 21L5.01699 18C5.01699 16.0547 6.19199 15.125 7.64299 15.125C8.65299 15.125 9.25699 15.4687 9.25699 16.5C9.25699 17.5 8.51899 18.5 7.64299 18.5C6.93599 18.5 6.46299 18.0625 6.46299 18.0625L6.36199 19.5312C6.36199 19.5312 7.29899 21 9.28999 21C11.682 21 13 18.6562 13 16.0312C13 13.0625 10.66 11 7.74399 11C4.89599 11 2.99999 13.0937 2.99999 16.375C2.99999 18.8437 3.87599 21 5.01699 21Z"></path></svg>
 
-          <blockquote class="font-display text-3xl md:text-4xl text-sage-black leading-tight mb-10">
+          <blockquote class="font-display text-3xl md:text-4xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} leading-tight mb-10">
             "{{ self.quote }}"
           </blockquote>
         {% endif %}
@@ -67,7 +75,7 @@
             {% if self.challenge_body %}
               <div>
                 <strong class="block text-sage-terra text-xs uppercase tracking-widest mb-1">The Challenge</strong>
-                <div class="text-sage-label leading-relaxed font-light">
+                <div class="{% if self.tone == 'dark' %}text-sage-linen/80{% else %}text-sage-label{% endif %} leading-relaxed font-light">
                   {{ self.challenge_body|richtext }}
                 </div>
               </div>
@@ -75,14 +83,14 @@
             {% if self.outcome_body %}
               <div>
                 <strong class="block text-sage-terra text-xs uppercase tracking-widest mb-1">The Outcome</strong>
-                <div class="text-sage-label leading-relaxed font-light">
+                <div class="{% if self.tone == 'dark' %}text-sage-linen/80{% else %}text-sage-label{% endif %} leading-relaxed font-light">
                   {{ self.outcome_body|richtext }}
                 </div>
               </div>
             {% endif %}
           </div>
         {% elif self.points %}
-          <ol class="space-y-6 mb-12 list-decimal list-outside pl-5 font-heading text-lg text-sage-black marker:text-sage-terra marker:font-bold">
+          <ol class="space-y-6 mb-12 list-decimal list-outside pl-5 font-heading text-lg {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} marker:text-sage-terra marker:font-bold">
             {% for point in self.points %}
               <li class="pl-2">{{ point }}</li>
             {% endfor %}
@@ -94,16 +102,16 @@
             {% if self.citation_name or self.citation_location %}
               <div>
                 {% if self.citation_name %}
-                  <cite class="not-italic block font-bold text-sm text-sage-black">{{ self.citation_name }}</cite>
+                  <cite class="not-italic block font-bold text-sm {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">{{ self.citation_name }}</cite>
                 {% endif %}
                 {% if self.citation_location %}
-                  <span class="block text-xs text-sage-meta mt-1">{{ self.citation_location }}</span>
+                  <span class="block text-xs {% if self.tone == 'dark' %}text-sage-linen/60{% else %}text-sage-meta{% endif %} mt-1">{{ self.citation_location }}</span>
                 {% endif %}
               </div>
             {% endif %}
 
             {% if self.cta_text and self.cta_url %}
-              <a href="{{ self.cta_url }}" class="group inline-flex items-center text-xs font-bold uppercase tracking-widest border-b-2 border-sage-black pb-2 hover:text-sage-terra hover:border-sage-terra transition-colors">
+              <a href="{{ self.cta_url }}" class="group inline-flex items-center text-xs font-bold uppercase tracking-widest border-b-2 {% if self.tone == 'dark' %}border-sage-linen text-sage-linen{% else %}border-sage-black{% endif %} pb-2 hover:text-sage-terra hover:border-sage-terra transition-colors">
                 {{ self.cta_text }}
                 <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
               </a>
@@ -111,7 +119,7 @@
           </div>
         {% elif self.cta_text and self.cta_url %}
           <div>
-            <a href="{{ self.cta_url }}" class="inline-block text-sage-terra font-heading uppercase tracking-widest text-sm border-b-2 border-sage-terra pb-2 hover:text-sage-black hover:border-sage-black transition-colors">
+            <a href="{{ self.cta_url }}" class="inline-block text-sage-terra font-heading uppercase tracking-widest text-sm border-b-2 border-sage-terra pb-2 {% if self.tone == 'dark' %}hover:text-sage-linen hover:border-sage-linen{% else %}hover:text-sage-black hover:border-sage-black{% endif %} transition-colors">
               {{ self.cta_text }}
             </a>
           </div>

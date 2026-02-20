@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<section class="py-24 md:py-32 bg-sage-linen relative" data-faq-block data-allow-multiple="{{ self.allow_multiple_open|yesno:'true,false' }}" data-faq-allow-multiple="{{ self.allow_multiple_open|yesno:'true,false' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+<section class="py-24 md:py-32 bg-sage-linen relative" data-faq-block data-faq-allow-multiple="{{ self.allow_multiple_open|yesno:'true,false' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
     <div class="max-w-4xl mx-auto px-6">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b-2 border-sage-black/10 pb-6 reveal">
             <div>
