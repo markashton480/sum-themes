@@ -1,6 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<section class="{% if self.variant == 'proof_grid' %}py-24 bg-sage-linen{% else %}py-20 bg-sage-oat/30{% endif %}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+<section class="{% if self.density == 'compact' %}py-16{% elif self.density == 'spacious' %}py-28{% elif self.variant == 'proof_grid' %}py-24{% else %}py-20{% endif %} {% if self.tone == 'dark' %}bg-sage-black{% elif self.tone == 'light' %}bg-sage-linen{% elif self.variant == 'proof_grid' %}bg-sage-linen{% else %}bg-sage-oat/30{% endif %} section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %} data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
     <div class="max-w-7xl mx-auto px-6">
         {% if self.variant == "proof_grid" %}
             <div class="mb-12">
@@ -8,7 +8,7 @@
                     <span class="text-sage-terra font-accent italic text-xl block mb-2">{{ self.eyebrow }}</span>
                 {% endif %}
                 {% if self.heading %}
-                    <h2 class="font-display text-4xl md:text-5xl text-sage-black">{{ self.heading|striptags }}</h2>
+                    <h2 class="font-display text-4xl md:text-5xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">{{ self.heading|striptags }}</h2>
                 {% endif %}
             </div>
         {% else %}
@@ -20,22 +20,22 @@
                 {% endif %}
 
                 {% if self.heading %}
-                    <div class="font-display text-4xl md:text-5xl text-sage-black mb-6 leading-tight">
+                    <div class="font-display text-4xl md:text-5xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-6 leading-tight">
                         {{ self.heading|richtext }}
                     </div>
                 {% endif %}
 
                 {% if self.intro %}
-                    <p class="text-sage-black font-light leading-relaxed text-lg">{{ self.intro }}</p>
+                    <p class="{% if self.tone == 'dark' %}text-sage-linen/80{% else %}text-sage-black{% endif %} font-light leading-relaxed text-lg">{{ self.intro }}</p>
                 {% endif %}
             </div>
             {% endif %}
         {% endif %}
 
         {% if self.variant == "default" %}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 {% if self.layout_style == 'tight' %}gap-6{% else %}gap-8{% endif %}">
                 {% for card in self.cards %}
-                    <div class="group relative border border-sage-black/10 bg-white/80 flex flex-col justify-between p-10 hover:bg-white transition-colors duration-500 reveal min-h-[320px]">
+                    <div class="group relative border border-sage-black/10 bg-white/80 flex flex-col justify-between {% if self.layout_style == 'tight' %}p-8 min-h-[280px]{% else %}p-10 min-h-[320px]{% endif %} hover:bg-white transition-colors duration-500 reveal">
                         <div class="mb-6">
                             {% if card.kicker %}
                                 <span class="block text-xs font-bold uppercase tracking-widest text-sage-meta mb-4">
@@ -76,7 +76,7 @@
                 {% endfor %}
             </div>
         {% elif self.variant == "proof_grid" %}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 {% if self.layout_style == 'tight' %}gap-6{% else %}gap-8{% endif %}">
                 {% for card in self.cards %}
                     {% with link=card.link_url %}
                         {% if link %}
@@ -94,9 +94,9 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            <h3 class="font-display text-xl text-sage-black mb-2 group-hover:text-sage-terra transition-colors">{{ card.title }}</h3>
+                            <h3 class="font-display text-xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-2 group-hover:text-sage-terra transition-colors">{{ card.title }}</h3>
                             {% if card.description %}
-                                <p class="text-base text-sage-label">{{ card.description|striptags }}</p>
+                                <p class="text-base {% if self.tone == 'dark' %}text-sage-linen/75{% else %}text-sage-label{% endif %}">{{ card.description|striptags }}</p>
                             {% endif %}
                         {% if link %}
                             </a>
@@ -111,7 +111,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-0 border border-sage-black/10">
                 {% for card in self.cards %}
                     {% if card.is_featured or forloop.first %}
-                        <div class="md:col-span-2 group relative border-b md:border-b-0 md:border-r border-sage-black/10 flex flex-col justify-between p-12 hover:bg-white transition-colors duration-500 reveal min-h-[400px]">
+                        <div class="md:col-span-2 group relative border-b md:border-b-0 md:border-r border-sage-black/10 flex flex-col justify-between {% if self.layout_style == 'tight' %}p-10 min-h-[340px]{% else %}p-12 min-h-[400px]{% endif %} hover:bg-white transition-colors duration-500 reveal">
                             <div class="mb-8">
                                 <span class="block text-xs font-bold uppercase tracking-widest text-sage-moss mb-4">
                                     {% if card.icon %}{{ card.icon }} {% endif %}
@@ -154,7 +154,7 @@
                             </div>
                         </div>
                     {% else %}
-                        <div class="group relative border-b md:border-b-0 border-sage-black/10 flex flex-col justify-between p-12 hover:bg-white transition-colors duration-500 reveal min-h-[400px] {% if forloop.last %}md:border-r{% endif %}">
+                        <div class="group relative border-b md:border-b-0 border-sage-black/10 flex flex-col justify-between {% if self.layout_style == 'tight' %}p-10 min-h-[340px]{% else %}p-12 min-h-[400px]{% endif %} hover:bg-white transition-colors duration-500 reveal {% if forloop.last %}md:border-r{% endif %}">
                             <div class="mb-8">
                                 <span class="block text-xs font-bold uppercase tracking-widest text-sage-meta mb-4">
                                     {% if card.kicker %}

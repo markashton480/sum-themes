@@ -1,7 +1,7 @@
 {% load static wagtailcore_tags %}
 {% with hero=hero|default:self %}
 <section
-    class="bg-sage-black text-sage-linen pt-40 pb-24 border-b border-sage-linen/10 relative overflow-hidden hero"
+    class="bg-sage-black text-sage-linen pt-40 pb-24 border-b border-sage-linen/10 relative overflow-hidden hero hero--gradient hero--gradient-{{ hero.gradient_style|default:'primary' }}"
     {% if hero.section_id %}data-section-id="{{ hero.section_id }}"{% endif %}
 >
     <div class="absolute inset-0 opacity-10 mix-blend-overlay pointer-events-none"
