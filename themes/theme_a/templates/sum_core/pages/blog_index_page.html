@@ -1,5 +1,5 @@
 {% extends "theme/base.html" %}
-{% load wagtailcore_tags wagtailimages_tags chrome_tags %}
+{% load wagtailcore_tags image_delivery_tags chrome_tags %}
 
 {% block content %}
   {% hero_context page status=page.intro|striptags headline=page.title extra_template="sum_core/includes/hero_extras/blog_index_filters.html" as hero %}
@@ -10,13 +10,7 @@
       <article class="bg-white shadow-xl overflow-hidden group border border-sage-black/5 rounded-sm flex flex-col lg:flex-row h-full">
         <div class="lg:w-2/3 relative h-[300px] md:h-[400px] lg:h-auto overflow-hidden">
           {% if featured_post.featured_image %}
-            {% image featured_post.featured_image fill-1200x900 format-webp as featured_img %}
-            <img
-              src="{{ featured_img.url }}"
-              class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000"
-              alt="{{ featured_post.title }}"
-              loading="eager"
-            >
+            {% responsive_picture featured_post.featured_image "hero_block" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000" alt=featured_post.title loading="eager" %}
           {% else %}
             <div class="absolute inset-0 bg-sage-oat flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-black/50">
               No image
@@ -78,13 +72,7 @@
                     </div>
                   {% endif %}
                   {% if post.featured_image %}
-                    {% image post.featured_image fill-960x720 format-webp as archive_img %}
-                    <img
-                      src="{{ archive_img.url }}"
-                      class="absolute inset-0 w-full h-full object-cover transition-transform duration-700"
-                      alt="{{ post.title }}"
-                      loading="lazy"
-                    >
+                    {% responsive_picture post.featured_image "card_landscape" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700" alt=post.title loading="lazy" %}
                   {% else %}
                     <div class="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-linen/60">
                       No image
@@ -131,13 +119,7 @@
                     </div>
                   {% endif %}
                   {% if post.featured_image %}
-                    {% image post.featured_image fill-720x540 format-webp as archive_img %}
-                    <img
-                      src="{{ archive_img.url }}"
-                      class="w-full h-full object-cover transition-transform duration-700"
-                      alt="{{ post.title }}"
-                      loading="lazy"
-                    >
+                    {% responsive_picture post.featured_image "card_landscape" class="w-full h-full object-cover transition-transform duration-700" alt=post.title loading="lazy" %}
                   {% else %}
                     <div class="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-black/50">
                       No image

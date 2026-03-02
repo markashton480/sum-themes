@@ -1,11 +1,11 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags image_delivery_tags %}
 
 <section class="py-24 bg-sage-linen relative">
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
       <div class="lg:col-span-5 order-2 lg:order-1 relative group reveal">
         <div class="aspect-[4/5] overflow-hidden relative bg-sage-oat border border-sage-black/5">
-          {% image self.image fill-1000x1250 class="w-full h-full object-cover transition-transform duration-1000" alt=self.alt_text %}
+          {% responsive_picture self.image "hero_block" class="w-full h-full object-cover transition-transform duration-1000" alt=self.alt_text %}
 
           <div class="absolute bottom-6 left-6 bg-sage-linen/95 backdrop-blur-md px-6 py-4 border-l-2 border-sage-terra shadow-lg">
             <span class="block font-display text-xl text-sage-black">{{ self.image_name }}</span>

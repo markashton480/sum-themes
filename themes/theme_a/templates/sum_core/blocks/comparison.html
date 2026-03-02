@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags image_delivery_tags %}
 
 <section class="py-24 md:py-32 bg-sage-linen">
   <div class="max-w-7xl mx-auto px-6">
@@ -15,11 +15,11 @@
 
       <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6 reveal delay-100">
         <div class="relative aspect-[4/3] overflow-hidden bg-sage-black/5">
-          {% image self.image_before fill-900x675 class="w-full h-full object-cover" alt=self.image_before.title|default:self.title %}
+          {% responsive_picture self.image_before "card_landscape" class="w-full h-full object-cover" alt=self.image_before.title|default:self.title %}
           <span class="absolute top-4 left-4 bg-sage-black/70 text-sage-linen text-xs uppercase tracking-widest px-3 py-1">Before</span>
         </div>
         <div class="relative aspect-[4/3] overflow-hidden bg-sage-black/5">
-          {% image self.image_after fill-900x675 class="w-full h-full object-cover" alt=self.image_after.title|default:self.title %}
+          {% responsive_picture self.image_after "card_landscape" class="w-full h-full object-cover" alt=self.image_after.title|default:self.title %}
           <span class="absolute top-4 left-4 bg-sage-terra text-white text-xs uppercase tracking-widest px-3 py-1">After</span>
         </div>
       </div>

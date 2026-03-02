@@ -1,4 +1,4 @@
-{% load wagtailimages_tags %}
+{% load image_delivery_tags %}
 
 <section class="py-16 md:py-24 bg-sage-oat/30">
   <div class="container max-w-5xl mx-auto px-6">
@@ -12,7 +12,7 @@
         {% if self.logo %}
         {% with logo_alt=self.company|default:self.author|default:"Company logo" %}
         <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border border-sage-moss/20 bg-white/90 flex items-center justify-center reveal delay-100">
-          {% image self.logo fill-160x160 class="w-12 h-12 md:w-14 md:h-14 object-contain" alt=logo_alt %}
+          {% responsive_picture self.logo "logo" class="w-12 h-12 md:w-14 md:h-14 object-contain" alt=logo_alt %}
         </div>
         {% endwith %}
         {% endif %}

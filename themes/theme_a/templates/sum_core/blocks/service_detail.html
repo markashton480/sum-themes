@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags image_delivery_tags %}
 
 {% with has_image=self.image %}
 <section class="bg-sage-black text-sage-linen py-24"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
@@ -45,7 +45,7 @@
 
                 <div class="relative {% if self.layout == 'image_right' %}lg:order-2{% else %}lg:order-1{% endif %}">
                     <div class="aspect-[4/3] md:aspect-[5/4] overflow-hidden rounded-3xl shadow-xl bg-sage-black/20 border border-sage-moss/30">
-                        {% image self.image fill-1200x900 class="w-full h-full object-cover" alt=self.alt_text|default:self.heading|striptags %}
+                        {% responsive_picture self.image "card_landscape" class="w-full h-full object-cover" alt=self.alt_text|default:self.heading|striptags %}
                     </div>
                     <div class="absolute -left-6 -bottom-6 hidden lg:block w-32 h-32 bg-sage-terra/10 blur-3xl pointer-events-none"></div>
                 </div>

@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags image_delivery_tags %}
 
 <section class="{% if self.density == 'compact' %}py-16{% elif self.density == 'spacious' %}py-32{% else %}py-24{% endif %} {% if self.tone == 'light' %}bg-sage-linen text-sage-black{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-black text-sage-linen{% endif %} overflow-hidden section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
@@ -41,7 +41,7 @@
           <div class="mt-auto flex items-center gap-4 pt-6 {% if self.tone == 'dark' %}border-t border-sage-linen/10{% else %}border-t border-sage-black/10{% endif %}">
             {% if item.photo %}
               <div class="w-12 h-12 rounded-full overflow-hidden {% if self.tone == 'dark' %}border border-sage-linen/20{% else %}border border-sage-black/20{% endif %}">
-                {% image item.photo fill-96x96 class="w-full h-full object-cover" %}
+                {% responsive_picture item.photo "avatar" class="w-full h-full object-cover" alt=item.author_name %}
               </div>
             {% else %}
               {% with initials=item.author_name|slice:":2"|upper %}

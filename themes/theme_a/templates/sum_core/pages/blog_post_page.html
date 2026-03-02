@@ -1,5 +1,5 @@
 {% extends "theme/base.html" %}
-{% load wagtailcore_tags wagtailimages_tags navigation_tags chrome_tags static %}
+{% load wagtailcore_tags image_delivery_tags navigation_tags chrome_tags static %}
 
 {% block main_class %}pt-0{% endblock %}
 
@@ -91,15 +91,7 @@
           <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-sage-black to-transparent z-20 hidden lg:block"></div>
 
           {% if page.featured_image %}
-            {% image page.featured_image fill-1600x900 format-webp as hero_img %}
-            <img
-              src="{{ hero_img.url }}"
-              class="absolute inset-0 w-full h-full object-cover"
-              alt="{{ hero_img.alt|default:page.title }}"
-              width="{{ hero_img.width }}"
-              height="{{ hero_img.height }}"
-              decoding="async"
-            >
+            {% responsive_picture page.featured_image "hero_full" class="absolute inset-0 w-full h-full object-cover" alt=page.title decoding="async" loading="eager" %}
           {% else %}
             <div class="absolute inset-0 bg-sage-oat/20 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-linen/40">
               No image
@@ -205,8 +197,7 @@
             <a href="{% pageurl post %}" class="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-offset-2 rounded-sm">
               <div class="aspect-[4/3] bg-sage-white mb-4 overflow-hidden relative">
                 {% if post.featured_image %}
-                  {% image post.featured_image fill-600x450 format-webp as next_img %}
-                  <img src="{{ next_img.url }}" class="w-full h-full object-cover transition-transform duration-700 motion-reduce:transition-none" alt="{{ post.title }}" loading="lazy" decoding="async">
+                  {% responsive_picture post.featured_image "card_landscape" class="w-full h-full object-cover transition-transform duration-700 motion-reduce:transition-none" alt=post.title loading="lazy" decoding="async" %}
                 {% else %}
                   <div class="absolute inset-0 flex items-center justify-center text-xs font-bold uppercase tracking-widest text-sage-black/50">
                     No image

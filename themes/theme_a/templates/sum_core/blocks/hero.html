@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags image_delivery_tags %}
 
 <section class="py-24 md:py-32 bg-sage-linen">
   <div class="max-w-7xl mx-auto px-6">
@@ -31,7 +31,7 @@
       <div class="lg:col-span-6">
         <div class="relative">
           <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-sage-black/5 border border-sage-black/5 shadow-xl">
-            {% image self.image fill-1200x1500 class="w-full h-full object-cover" alt=self.image.title|default:self.title|striptags %}
+            {% responsive_picture self.image "hero_block" class="w-full h-full object-cover" alt=self.image.title|default:self.title|striptags %}
           </div>
 
           {% if self.float_card_label and self.float_card_value %}
