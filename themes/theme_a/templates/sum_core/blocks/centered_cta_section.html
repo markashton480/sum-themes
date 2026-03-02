@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<section class="bg-sage-black text-sage-linen py-24 border-t border-sage-linen/10"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} border-t {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %} section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %} data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
     <div class="max-w-4xl mx-auto px-6 text-center">
         {% if self.eyebrow %}
             <span class="block text-sage-terra font-accent italic text-xl mb-4">
@@ -8,7 +8,7 @@
             </span>
         {% endif %}
 
-        <div class="font-display text-3xl md:text-5xl text-sage-linen mb-10">
+        <div class="font-display text-3xl md:text-5xl {% if self.tone|default:'dark' == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-10">
             {{ self.heading|richtext }}
         </div>
 

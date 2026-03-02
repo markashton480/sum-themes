@@ -1,4 +1,4 @@
-<section class="py-24 bg-sage-black text-sage-linen border-y border-sage-moss/20">
+<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} border-y {% if self.tone == 'dark' %}border-sage-moss/20{% else %}border-sage-black/10{% endif %} section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
     {% if self.heading or self.intro %}
       <div class="text-center max-w-3xl mx-auto mb-16 reveal">
@@ -6,7 +6,7 @@
           <h2 class="font-display text-3xl md:text-5xl mb-6">{{ self.heading }}</h2>
         {% endif %}
         {% if self.intro %}
-          <p class="text-sage-linen/90 font-light text-lg leading-relaxed">
+          <p class="{% if self.tone == 'dark' %}text-sage-linen/90{% else %}text-sage-black/70{% endif %} font-light text-lg leading-relaxed">
             {{ self.intro }}
           </p>
         {% endif %}
@@ -15,7 +15,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
       {% for feature in self.features %}
-        <div class="text-center px-4 reveal{% if not forloop.last %} border-b md:border-b-0 md:border-r border-sage-linen/10 pb-12 md:pb-0{% endif %}">
+        <div class="text-center px-4 reveal{% if not forloop.last %} border-b md:border-b-0 md:border-r {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %} pb-12 md:pb-0{% endif %}">
           {% if feature.icon %}
             <span class="block font-mono text-3xl text-sage-terra mb-6">{{ feature.icon }}</span>
           {% else %}
@@ -24,7 +24,7 @@
             </span>
           {% endif %}
           <h3 class="font-display text-2xl mb-4">{{ feature.title }}</h3>
-          <p class="text-sage-linen/90 font-light leading-relaxed text-base">
+          <p class="{% if self.tone == 'dark' %}text-sage-linen/90{% else %}text-sage-black/70{% endif %} font-light leading-relaxed text-base">
             {{ feature.description }}
           </p>
         </div>

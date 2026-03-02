@@ -1,14 +1,14 @@
 {% load wagtailcore_tags image_delivery_tags %}
 
-<section class="py-24 md:py-32 bg-sage-linen">
+<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
       <div class="lg:col-span-5 reveal">
         {% if self.accent_text %}
           <span class="block text-sage-terra font-accent italic text-xl mb-4">{{ self.accent_text }}</span>
         {% endif %}
-        <h2 class="font-display text-4xl md:text-5xl text-sage-black mb-6">{{ self.title }}</h2>
-        <p class="text-sage-label font-light text-lg leading-relaxed">
+        <h2 class="font-display text-4xl md:text-5xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-6">{{ self.title }}</h2>
+        <p class="{% if self.tone == 'dark' %}text-sage-linen/70{% else %}text-sage-label{% endif %} font-light text-lg leading-relaxed">
           {{ self.description }}
         </p>
       </div>

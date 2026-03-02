@@ -1,6 +1,6 @@
 {% load wagtailcore_tags image_delivery_tags %}
 
-<section class="py-24 bg-sage-linen">
+<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
 
     {% if self.heading or self.eyebrow or self.intro %}
@@ -12,12 +12,12 @@
           </span>
         {% endif %}
         {% if self.heading %}
-          <div class="font-display text-4xl md:text-5xl text-sage-black">
+          <div class="font-display text-4xl md:text-5xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">
             {{ self.heading|richtext }}
           </div>
         {% endif %}
         {% if self.intro %}
-          <p class="mt-4 text-lg text-sage-black/70 leading-relaxed font-body">
+          <p class="mt-4 text-lg {% if self.tone == 'dark' %}text-sage-linen/70{% else %}text-sage-black/70{% endif %} leading-relaxed font-body">
             {{ self.intro }}
           </p>
         {% endif %}
@@ -34,7 +34,7 @@
           <div class="absolute inset-0 bg-sage-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         </div>
         {% if item.caption %}
-        <figcaption class="mt-4 text-[11px] font-bold uppercase tracking-widest text-sage-black/60 border-l border-sage-black/20 pl-3">
+        <figcaption class="mt-4 text-[11px] font-bold uppercase tracking-widest {% if self.tone == 'dark' %}text-sage-linen/60 border-sage-linen/20{% else %}text-sage-black/60 border-sage-black/20{% endif %} border-l pl-3">
           {{ item.caption }}
         </figcaption>
         {% endif %}

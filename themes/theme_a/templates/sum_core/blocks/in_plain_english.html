@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<section class="plain-english-box bg-sage-oat p-8 border-l-4 border-sage-terra rounded-sm shadow-sm">
+<section class="plain-english-box {% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}p-6{% elif self.density == 'spacious' %}p-10{% else %}p-8{% endif %} border-l-4 border-sage-terra rounded-sm shadow-sm section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="flex items-center gap-3 mb-3">
     {% if self.icon != 'none' %}
       {% if self.icon == 'quote' %}
@@ -17,10 +17,10 @@
   </div>
 
   {% if self.heading %}
-    <h3 class="font-display text-2xl text-sage-black mb-3">{{ self.heading }}</h3>
+    <h3 class="font-display text-2xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-3">{{ self.heading }}</h3>
   {% endif %}
 
-  <div class="prose prose-lg text-sage-black max-w-none font-medium">
+  <div class="prose prose-lg {% if self.tone == 'dark' %}text-sage-linen/90{% else %}text-sage-black{% endif %} max-w-none font-medium">
     {{ self.body|richtext }}
   </div>
 </section>

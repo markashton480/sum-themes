@@ -1,6 +1,6 @@
 {% load wagtailcore_tags image_delivery_tags %}
 
-<section id="team" class="py-24 bg-sage-linen" aria-label="{{ self.heading|striptags|default:self.eyebrow|default:'Team' }}">
+<section id="team" class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}" aria-label="{{ self.heading|striptags|default:self.eyebrow|default:'Team' }}" data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
     {% if self.eyebrow or self.heading or self.badge_label or self.badge_value %}
       <div class="flex flex-col md:flex-row justify-between items-end mb-12">
@@ -11,7 +11,7 @@
             </span>
           {% endif %}
           {% if self.heading %}
-            <div class="font-display text-4xl md:text-5xl text-sage-black">
+            <div class="font-display text-4xl md:text-5xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">
               {{ self.heading|richtext }}
             </div>
           {% endif %}
@@ -19,7 +19,7 @@
 
         {% if self.badge_label or self.badge_value %}
           <div class="reveal delay-100 mt-4 md:mt-0">
-            <span class="text-sage-black font-mono text-sm uppercase tracking-widest bg-sage-oat/50 px-4 py-2 rounded-sm">
+            <span class="{% if self.tone == 'dark' %}text-sage-linen bg-sage-linen/10{% else %}text-sage-black bg-sage-oat/50{% endif %} font-mono text-sm uppercase tracking-widest px-4 py-2 rounded-sm">
               {% if self.badge_label and self.badge_value %}
                 {{ self.badge_label }}: {{ self.badge_value }}
               {% elif self.badge_label %}
