@@ -1,5 +1,5 @@
 {% load wagtailcore_tags form_tags %}
-<section class="section bg-sage-oat quote-form-block py-20 md:py-28 {% if self.show_compact_meta %}section--compact{% endif %}">
+<section class="section quote-form-block {% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-20 md:py-28{% endif %} {% if self.show_compact_meta %}section--compact{% endif %} section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-5xl mx-auto px-6">
     <header class="text-center max-w-3xl mx-auto reveal">
       {% if self.eyebrow %}
@@ -7,11 +7,11 @@
           {{ self.eyebrow }}
         </span>
       {% endif %}
-      <div class="font-display text-4xl md:text-5xl text-sage-black mb-6 leading-tight">
+      <div class="font-display text-4xl md:text-5xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-6 leading-tight">
         {{ self.heading|richtext }}
       </div>
       {% if self.intro %}
-        <div class="text-lg text-sage-label font-light leading-relaxed">
+        <div class="text-lg {% if self.tone == 'dark' %}text-sage-linen/70{% else %}text-sage-label{% endif %} font-light leading-relaxed">
           {{ self.intro|richtext }}
         </div>
       {% endif %}

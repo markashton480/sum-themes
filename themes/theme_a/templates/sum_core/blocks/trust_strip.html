@@ -1,8 +1,8 @@
-<section class="bg-sage-linen border-b border-sage-black/5 py-12">
+<section class="{% if self.tone == 'dark' %}bg-sage-black{% elif self.tone == 'muted' %}bg-sage-oat{% else %}bg-sage-linen{% endif %} {% if self.density == 'compact' %}py-8 md:py-12{% elif self.density == 'spacious' %}py-16 md:py-24{% else %}py-12 md:py-16{% endif %} border-b {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/5{% endif %} section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center sm:text-left">
       {% for item in self.items %}
-        <div class="flex items-center justify-center sm:justify-start gap-3 text-xs font-bold uppercase tracking-widest text-sage-meta">
+        <div class="flex items-center justify-center sm:justify-start gap-3 text-xs font-bold uppercase tracking-widest {% if self.tone == 'dark' %}text-sage-linen/70{% else %}text-sage-meta{% endif %}">
           <span class="text-sage-terra" aria-hidden="true">•</span>
           <span>{{ item.text }}</span>
         </div>

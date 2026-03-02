@@ -1,6 +1,6 @@
 {% load wagtailcore_tags image_delivery_tags %}
 
-<section class="py-16 border-t border-sage-black/10"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-12 md:py-16{% elif self.density == 'spacious' %}py-24 md:py-32{% else %}py-16 md:py-24{% endif %} border-t border-sage-black/10 section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %} data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6 text-center">
     {% if self.eyebrow %}
       <span class="text-xs font-bold uppercase tracking-widest text-sage-meta mb-8 block">
@@ -16,14 +16,14 @@
               {% if item.logo %}
                 {% responsive_picture item.logo "logo" class="h-10 md:h-12 w-auto object-contain" alt=item.alt_text %}
               {% else %}
-                <span class="font-display text-2xl text-sage-black">{{ item.text_label }}</span>
+                <span class="font-display text-2xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">{{ item.text_label }}</span>
               {% endif %}
             </a>
           {% else %}
             {% if item.logo %}
               {% responsive_picture item.logo "logo" class="h-10 md:h-12 w-auto object-contain" alt=item.alt_text %}
             {% else %}
-              <span class="font-display text-2xl text-sage-black">{{ item.text_label }}</span>
+              <span class="font-display text-2xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">{{ item.text_label }}</span>
             {% endif %}
           {% endif %}
         </div>

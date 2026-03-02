@@ -1,5 +1,5 @@
 {% load wagtailcore_tags form_tags %}
-<section id="contact" class="contact-form-block py-24 md:py-32 bg-sage-black text-sage-linen relative overflow-hidden">
+<section id="contact" class="contact-form-block {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} {% if self.tone|default:'dark' == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} relative overflow-hidden section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="container mx-auto px-6 relative z-10">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
       <!-- Header Column -->
@@ -10,16 +10,16 @@
               {{ self.eyebrow }}
             </span>
           {% endif %}
-          <div class="font-display text-5xl md:text-6xl lg:text-7xl text-sage-linen mb-8 leading-none">
+          <div class="font-display text-5xl md:text-6xl lg:text-7xl {% if self.tone|default:'dark' == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-8 leading-none">
             {{ self.heading|richtext }}
           </div>
           {% if self.intro %}
-            <div class="font-accent text-xl md:text-2xl text-sage-oat/70 leading-relaxed max-w-md">
+            <div class="font-accent text-xl md:text-2xl {% if self.tone|default:'dark' == 'dark' %}text-sage-oat/70{% else %}text-sage-label{% endif %} leading-relaxed max-w-md">
               {{ self.intro|richtext }}
             </div>
           {% endif %}
           {% if self.phone_label and self.phone_link.href and self.phone_link.href != "#" %}
-            <div class="py-8 border-t border-sage-linen/10">
+            <div class="py-8 border-t {% if self.tone|default:'dark' == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %}">
               <p class="font-mono text-xs uppercase tracking-widest text-sage-terra mb-2">
                 {{ self.phone_label }}
               </p>

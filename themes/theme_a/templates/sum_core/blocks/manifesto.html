@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<section id="manifesto" class="py-24 md:py-32 bg-sage-linen">
+<section id="manifesto" class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-3xl mx-auto px-6 text-center">
     {% if self.eyebrow %}
       <span class="block text-sage-terra font-accent italic text-2xl mb-6 reveal">
@@ -9,19 +9,19 @@
     {% endif %}
 
     {% if self.heading %}
-      <h2 class="font-display text-4xl md:text-5xl text-sage-black mb-10 leading-tight reveal">
+      <h2 class="font-display text-4xl md:text-5xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-10 leading-tight reveal">
         {{ self.heading|richtext }}
       </h2>
     {% endif %}
 
     {% if self.body or self.quote %}
-      <div class="prose prose-lg text-sage-black mx-auto font-light leading-relaxed reveal">
+      <div class="prose prose-lg {% if self.tone == 'dark' %}text-sage-linen/90{% else %}text-sage-black{% endif %} mx-auto font-light leading-relaxed reveal">
         {% if self.body %}
           {{ self.body|richtext }}
         {% endif %}
 
         {% if self.quote %}
-          <div class="border-t border-sage-black/10 pt-8 mt-8">
+          <div class="border-t {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %} pt-8 mt-8">
             <p class="font-accent italic text-xl text-sage-darkmoss">
               {{ self.quote }}
             </p>

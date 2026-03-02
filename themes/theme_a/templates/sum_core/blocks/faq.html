@@ -1,24 +1,24 @@
 {% load wagtailcore_tags %}
 
-<section class="py-24 md:py-32 bg-sage-linen relative" data-faq-block data-faq-allow-multiple="{{ self.allow_multiple_open|yesno:'true,false' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %}>
+<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} relative section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}" data-faq-block data-faq-allow-multiple="{{ self.allow_multiple_open|yesno:'true,false' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %} data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
     <div class="max-w-4xl mx-auto px-6">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b-2 border-sage-black/10 pb-6 reveal">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 border-b-2 {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %} pb-6 reveal">
             <div>
                 {% if self.eyebrow %}
                     <span class="font-accent italic text-2xl text-sage-terra mb-2 block">{{ self.eyebrow }}</span>
                 {% endif %}
-                <div class="font-display text-4xl md:text-5xl text-sage-black">
+                <div class="font-display text-4xl md:text-5xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">
                     {{ self.heading|richtext }}
                 </div>
             </div>
             {% if self.intro %}
-                <div class="mt-4 md:mt-0 md:text-right text-sage-black/40 font-mono text-xs uppercase tracking-widest max-w-xs">
+                <div class="mt-4 md:mt-0 md:text-right {% if self.tone == 'dark' %}text-sage-linen/40{% else %}text-sage-black/40{% endif %} font-mono text-xs uppercase tracking-widest max-w-xs">
                     {{ self.intro|richtext }}
                 </div>
             {% endif %}
         </div>
 
-        <div class="divide-y divide-sage-black/10 border-b border-sage-black/10">
+        <div class="divide-y {% if self.tone == 'dark' %}divide-sage-linen/10{% else %}divide-sage-black/10{% endif %} border-b {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %}">
             {% for item in self.items %}
                 <div class="group reveal accordion-item" data-faq-item>
                     <button class="w-full text-left flex items-start justify-between py-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-inset"
@@ -29,9 +29,9 @@
                             data-faq-trigger>
                         <div class="flex items-baseline gap-6 md:gap-10">
                             <span class="font-mono text-xs text-sage-terra font-bold shrink-0">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}.</span>
-                            <span class="font-display text-2xl md:text-3xl text-sage-black group-hover:text-sage-terra transition-colors pr-4">{{ item.question }}</span>
+                            <span class="font-display text-2xl md:text-3xl {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} group-hover:text-sage-terra transition-colors pr-4">{{ item.question }}</span>
                         </div>
-                        <span class="accordion-icon font-display text-3xl font-light text-sage-black/30 transition-all duration-500 shrink-0 origin-center"
+                        <span class="accordion-icon font-display text-3xl font-light {% if self.tone == 'dark' %}text-sage-linen/30{% else %}text-sage-black/30{% endif %} transition-all duration-500 shrink-0 origin-center"
                               aria-hidden="true"
                               data-faq-icon>+</span>
                     </button>
@@ -43,7 +43,7 @@
                          aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
                          data-faq-content>
                         <div class="accordion-inner pl-0 md:pl-[4.5rem]">
-                            <div class="pb-8 font-accent text-xl text-sage-label leading-relaxed italic max-w-2xl">
+                            <div class="pb-8 font-accent text-xl {% if self.tone == 'dark' %}text-sage-linen/70{% else %}text-sage-label{% endif %} leading-relaxed italic max-w-2xl">
                                 {{ item.answer|richtext }}
                             </div>
                         </div>
