@@ -22,7 +22,7 @@
             novalidate
             class="space-y-6 relative z-10"
             data-dynamic-form
-            data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:'Thank you for subscribing.'|escapejs }}{% else %}{{ self.success_message|default:'Thank you for subscribing.'|escapejs }}{% endif %}"
+            data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:'Thank you for subscribing.' }}{% else %}{{ self.success_message|default:'Thank you for subscribing.' }}{% endif %}"
             data-error-message="Something went wrong. Please try again.">
             {% csrf_token %}
 
@@ -103,7 +103,7 @@
             novalidate
             class="{% if form %}space-y-4 max-w-lg mx-auto{% else %}flex flex-col sm:flex-row gap-4 max-w-lg mx-auto{% endif %}"
             data-dynamic-form
-            data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:'Thank you for subscribing.'|escapejs }}{% else %}{{ self.success_message|default:'Thank you for subscribing.'|escapejs }}{% endif %}"
+            data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:'Thank you for subscribing.' }}{% else %}{{ self.success_message|default:'Thank you for subscribing.' }}{% endif %}"
             data-error-message="Something went wrong. Please try again.">
             {% csrf_token %}
 

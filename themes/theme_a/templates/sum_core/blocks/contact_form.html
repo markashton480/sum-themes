@@ -38,8 +38,8 @@
         {% with generated_form=form_definition|generate_dynamic_form %}
         {% with form=form|default:generated_form %}
         <form action="/forms/submit/" method="post" novalidate class="space-y-8 md:space-y-12" data-dynamic-form data-form-type="{% if form_definition %}{{ form_definition.slug }}{% else %}contact{% endif %}" id="contact-form{% if block_id %}-{{ block_id }}{% endif %}"
-              data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:"Thanks, we'll be in touch shortly."|escapejs }}{% else %}{{ self.success_message|default:"Thanks, we'll be in touch shortly."|escapejs }}{% endif %}"
-              data-success-redirect="{{ self.success_redirect.href|default:""|escapejs }}"
+              data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:"Thanks, we'll be in touch shortly." }}{% else %}{{ self.success_message|default:"Thanks, we'll be in touch shortly." }}{% endif %}"
+              {% if self.success_redirect.href and self.success_redirect.href != "#" %}data-success-redirect="{{ self.success_redirect.href }}"{% endif %}
               data-error-message="Something went wrong. Please try again.">
           {% csrf_token %}
 

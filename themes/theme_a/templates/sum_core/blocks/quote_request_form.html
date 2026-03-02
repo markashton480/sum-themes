@@ -35,7 +35,7 @@
       <form action="/forms/submit/" method="post" novalidate
             class="quote-form premium-form bg-sage-linen/70 border border-sage-black/10 rounded-2xl p-8 md:p-12 space-y-8 js-async-form"
             data-form-type="quote_request" id="quote-form{% if block_id %}-{{ block_id }}{% endif %}"
-            data-success-message="{{ self.success_message|default:"Thanks, we'll prepare your quote."|escapejs }}"
+            data-success-message="{{ self.success_message|default:"Thanks, we'll prepare your quote." }}"
             data-error-message="Something went wrong. Please try again.">
         {% csrf_token %}
 
