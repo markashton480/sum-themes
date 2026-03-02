@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags image_delivery_tags %}
 
 <section class="{% if self.density == 'compact' %}py-16{% elif self.density == 'spacious' %}py-32{% else %}py-24{% endif %} {% if self.tone == 'dark' %}bg-sage-black border-y border-sage-linen/10{% elif self.tone == 'light' %}bg-sage-linen border-y border-sage-black/5{% else %}bg-sage-oat/20 border-y border-sage-black/5{% endif %} section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
@@ -20,8 +20,7 @@
         <a href="{{ self.cta_url }}" class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra" aria-label="{{ self.cta_text|default:'View case study' }}">
         {% endif %}
         <div class="aspect-[4/5] overflow-hidden bg-sage-black/5 relative shadow-xl">
-          {% image self.image original as img %}
-          <img src="{{ img.url }}" alt="{{ self.alt_text }}" class="object-cover w-full h-full transition-transform duration-1000">
+          {% responsive_picture self.image "hero_block" alt=self.alt_text class="object-cover w-full h-full transition-transform duration-1000" %}
 
           {% if self.cta_url %}
           <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">

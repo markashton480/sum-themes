@@ -1,4 +1,4 @@
-{% load wagtailimages_tags %}
+{% load image_delivery_tags %}
 
 <section class="bg-sage-linen border-y border-sage-black/5 py-12 md:py-16 lg:py-20">
   <div class="max-w-7xl mx-auto px-6">
@@ -21,7 +21,7 @@
           class="group inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-inset transition"
         >
           {% if item.logo %}
-            {% image item.logo fill-240x120 class="h-10 md:h-12 w-auto object-contain transition duration-300 ease-out" alt=item.alt_text %}
+            {% responsive_picture item.logo "logo" class="h-10 md:h-12 w-auto object-contain transition duration-300 ease-out" alt=item.alt_text %}
           {% else %}
             <span class="font-display text-2xl text-sage-black">{{ item.text_label }}</span>
           {% endif %}
@@ -29,7 +29,7 @@
         {% else %}
         <div>
           {% if item.logo %}
-            {% image item.logo fill-240x120 class="h-10 md:h-12 w-auto object-contain" alt=item.alt_text %}
+            {% responsive_picture item.logo "logo" class="h-10 md:h-12 w-auto object-contain" alt=item.alt_text %}
           {% else %}
             <span class="font-display text-2xl text-sage-black">{{ item.text_label }}</span>
           {% endif %}

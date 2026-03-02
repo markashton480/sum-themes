@@ -5,7 +5,7 @@ Premium theme for SUM Platform featuring reveal animations, mega menu, and elega
 ## Quick Reference
 
 - **Name**: Theme A
-- **Version**: 1.0.5
+- **Version**: 1.0.6
 - **Tailwind**: v3.4.x (authoring only)
 
 ## File Structure
@@ -266,4 +266,4 @@ See `docs/dev/JS-API-CONTRACT.md` for the full core/theme JS contract.
 
 ---
 
-**Theme Toolchain v1 Contract** | SUM Platform v0.7.5
+**Theme Toolchain v1 Contract** | SUM Platform v0.7.6

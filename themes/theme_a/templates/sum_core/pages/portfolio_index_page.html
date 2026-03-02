@@ -1,5 +1,5 @@
 {% extends "theme/base.html" %}
-{% load wagtailcore_tags wagtailimages_tags richtext_tags chrome_tags %}
+{% load wagtailcore_tags image_delivery_tags richtext_tags chrome_tags %}
 
 {% block main_class %}pt-0{% endblock %}
 
@@ -16,15 +16,7 @@
             <div class="relative aspect-[16/9] md:aspect-[21/9] lg:aspect-[2.4/1] w-full overflow-hidden mb-10 img-zoom-container bg-sage-oat">
               {% for block in featured_case_study.body %}
                 {% if block.block_type == "image_block" %}
-                  {% image block.value.image fill-1600x900 as featured_img %}
-                  <img
-                    src="{{ featured_img.url }}"
-                    alt="{{ block.value.alt_text|default:featured_case_study.title }}"
-                    width="{{ featured_img.width }}"
-                    height="{{ featured_img.height }}"
-                    decoding="async"
-                    class="w-full h-full object-cover"
-                  />
+                  {% responsive_picture block.value.image "hero_full" alt=block.value.alt_text|default:featured_case_study.title class="w-full h-full object-cover" decoding="async" loading="eager" %}
                 {% endif %}
               {% endfor %}
 
@@ -91,15 +83,7 @@
                 <div class="aspect-[4/3] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
                   {% for block in case_study.body %}
                     {% if block.block_type == "image_block" %}
-                      {% image block.value.image fill-1200x900 as card_img %}
-                      <img
-                        src="{{ card_img.url }}"
-                        alt="{{ block.value.alt_text|default:case_study.title }}"
-                        width="{{ card_img.width }}"
-                        height="{{ card_img.height }}"
-                        decoding="async"
-                        class="w-full h-full object-cover"
-                      />
+                      {% responsive_picture block.value.image "card_landscape" alt=block.value.alt_text|default:case_study.title class="w-full h-full object-cover" decoding="async" %}
                     {% endif %}
                   {% endfor %}
                 </div>
@@ -130,15 +114,7 @@
                 <div class="aspect-square lg:aspect-[3/4] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
                   {% for block in case_study.body %}
                     {% if block.block_type == "image_block" %}
-                      {% image block.value.image fill-900x900 as card_img %}
-                      <img
-                        src="{{ card_img.url }}"
-                        alt="{{ block.value.alt_text|default:case_study.title }}"
-                        width="{{ card_img.width }}"
-                        height="{{ card_img.height }}"
-                        decoding="async"
-                        class="w-full h-full object-cover"
-                      />
+                      {% responsive_picture block.value.image "card_square" alt=block.value.alt_text|default:case_study.title class="w-full h-full object-cover" decoding="async" %}
                     {% endif %}
                   {% endfor %}
                 </div>
@@ -179,15 +155,7 @@
                 <div class="aspect-[16/10] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
                   {% for block in case_study.body %}
                     {% if block.block_type == "image_block" %}
-                      {% image block.value.image fill-1200x900 as card_img %}
-                      <img
-                        src="{{ card_img.url }}"
-                        alt="{{ block.value.alt_text|default:case_study.title }}"
-                        width="{{ card_img.width }}"
-                        height="{{ card_img.height }}"
-                        decoding="async"
-                        class="w-full h-full object-cover"
-                      />
+                      {% responsive_picture block.value.image "card_landscape" alt=block.value.alt_text|default:case_study.title class="w-full h-full object-cover" decoding="async" %}
                     {% endif %}
                   {% endfor %}
                 </div>
@@ -220,15 +188,7 @@
                 <div class="aspect-square lg:aspect-[2/3] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
                   {% for block in case_study.body %}
                     {% if block.block_type == "image_block" %}
-                      {% image block.value.image fill-900x1200 as card_img %}
-                      <img
-                        src="{{ card_img.url }}"
-                        alt="{{ block.value.alt_text|default:case_study.title }}"
-                        width="{{ card_img.width }}"
-                        height="{{ card_img.height }}"
-                        decoding="async"
-                        class="w-full h-full object-cover"
-                      />
+                      {% responsive_picture block.value.image "hero_block" alt=block.value.alt_text|default:case_study.title class="w-full h-full object-cover" decoding="async" %}
                     {% endif %}
                   {% endfor %}
                 </div>
@@ -255,15 +215,7 @@
                 <div class="aspect-[4/3] overflow-hidden mb-10 img-zoom-container relative bg-sage-oat">
                   {% for block in case_study.body %}
                     {% if block.block_type == "image_block" %}
-                      {% image block.value.image fill-1200x900 as card_img %}
-                      <img
-                        src="{{ card_img.url }}"
-                        alt="{{ block.value.alt_text|default:case_study.title }}"
-                        width="{{ card_img.width }}"
-                        height="{{ card_img.height }}"
-                        decoding="async"
-                        class="w-full h-full object-cover"
-                      />
+                      {% responsive_picture block.value.image "card_landscape" alt=block.value.alt_text|default:case_study.title class="w-full h-full object-cover" decoding="async" %}
                     {% endif %}
                   {% endfor %}
                 </div>

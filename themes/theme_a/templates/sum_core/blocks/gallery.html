@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags image_delivery_tags %}
 
 <section class="py-24 bg-sage-linen">
   <div class="max-w-7xl mx-auto px-6">
@@ -30,15 +30,7 @@
       {% for item in self.images %}
       <figure class="group reveal delay-{{ forloop.counter0|add:1 }}00">
         <div class="relative overflow-hidden bg-sage-oat aspect-[4/3]">
-          {% image item.image fill-1200x900 as rendition %}
-          <img
-            src="{{ rendition.url }}"
-            width="{{ rendition.width }}"
-            height="{{ rendition.height }}"
-            alt="{{ item.alt_text|default:item.image.title }}"
-            class="w-full h-full object-cover transition-transform duration-1000 ease-out"
-            loading="lazy"
-          />
+          {% responsive_picture item.image "card_landscape" alt=item.alt_text|default:item.image.title class="w-full h-full object-cover transition-transform duration-1000 ease-out" loading="lazy" %}
           <div class="absolute inset-0 bg-sage-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         </div>
         {% if item.caption %}

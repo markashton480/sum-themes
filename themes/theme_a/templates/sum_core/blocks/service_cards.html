@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags image_delivery_tags %}
 
 <section class="{% if self.density == 'compact' %}py-16{% elif self.density == 'spacious' %}py-28{% elif self.variant == 'proof_grid' %}py-24{% else %}py-20{% endif %} {% if self.tone == 'dark' %}bg-sage-black{% elif self.tone == 'light' %}bg-sage-linen{% elif self.variant == 'proof_grid' %}bg-sage-linen{% else %}bg-sage-oat/30{% endif %} section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %} data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
     <div class="max-w-7xl mx-auto px-6">
@@ -49,7 +49,7 @@
 
                             {% if card.image %}
                                 <div class="mb-6 w-full aspect-[4/3] overflow-hidden bg-sage-black/5">
-                                    {% image card.image fill-400x300 class="w-full h-full object-cover transition-transform duration-700" %}
+                                    {% responsive_picture card.image "card_landscape" class="w-full h-full object-cover transition-transform duration-700" alt=card.title %}
                                 </div>
                             {% elif card.icon %}
                                 <div class="mb-4 text-3xl text-sage-terra">
@@ -86,7 +86,7 @@
                         {% endif %}
                             <div class="aspect-square bg-sage-oat overflow-hidden mb-4 relative">
                                 {% if card.image %}
-                                    {% image card.image fill-600x600 class="w-full h-full object-cover transition-transform duration-700" %}
+                                    {% responsive_picture card.image "card_square" class="w-full h-full object-cover transition-transform duration-700" alt=card.title %}
                                 {% endif %}
                                 {% if card.kicker %}
                                     <div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1 text-xs font-bold uppercase tracking-widest text-sage-black group-hover:text-sage-terra transition-colors">
@@ -128,7 +128,7 @@
 
                                 {% if card.image %}
                                     <div class="mb-6 w-full aspect-video overflow-hidden bg-sage-black/5">
-                                        {% image card.image fill-800x450 class="w-full h-full object-cover transition-transform duration-700" %}
+                                        {% responsive_picture card.image "card_landscape" class="w-full h-full object-cover transition-transform duration-700" alt=card.title %}
                                     </div>
                                 {% endif %}
 
@@ -174,7 +174,7 @@
 
                                 {% if card.image %}
                                     <div class="mb-6 w-full aspect-[4/3] overflow-hidden bg-sage-black/5">
-                                        {% image card.image fill-400x300 class="w-full h-full object-cover transition-transform duration-700" %}
+                                        {% responsive_picture card.image "card_landscape" class="w-full h-full object-cover transition-transform duration-700" alt=card.title %}
                                     </div>
                                 {% elif card.icon %}
                                     <div class="mb-4 text-3xl text-sage-terra">
@@ -203,7 +203,7 @@
 
                 {% if self.supporting_image %}
                     <div class="md:col-span-2 relative overflow-hidden min-h-[400px] reveal">
-                        {% image self.supporting_image fill-1200x900 class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000" alt=self.alt_text|default:self.heading|striptags %}
+                        {% responsive_picture self.supporting_image "hero_block" class="absolute inset-0 w-full h-full object-cover transition-transform duration-1000" alt=self.alt_text|default:self.heading|striptags %}
                     </div>
                 {% endif %}
             </div>
