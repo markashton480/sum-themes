@@ -5,7 +5,7 @@
     <div class="absolute right-0 top-0 -mt-10 -mr-10 w-64 h-64 bg-sage-terra/20 rounded-full blur-3xl"></div>
     <div class="absolute left-0 bottom-0 -mb-10 -ml-10 w-64 h-64 bg-sage-moss/10 rounded-full blur-3xl"></div>
 
-    <div class="relative z-10 {% if self.density == 'compact' %}p-8 md:p-10 gap-6{% elif self.density == 'spacious' %}p-12 md:p-14 gap-10{% else %}p-10 md:p-12 gap-8{% endif %} flex flex-col md:flex-row items-start md:items-center justify-between">
+    <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between {% if self.density == 'compact' %}p-8 gap-6{% elif self.density == 'spacious' %}p-12 md:p-16 gap-10{% else %}p-10 md:p-12 gap-8{% endif %}">
       <div class="max-w-md">
         {% if self.eyebrow %}
           <span class="text-sage-terra font-bold tracking-widest uppercase text-xs mb-3 block">{{ self.eyebrow }}</span>
@@ -30,9 +30,9 @@
     </div>
   </div>
 {% else %}
-  <section class="section {% if self.density == 'compact' %}py-12{% elif self.density == 'spacious' %}py-24{% else %}py-16{% endif %} section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
+  <section class="section section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
     <div class="container max-w-6xl mx-auto px-6">
-      <div class="{% if self.tone == 'light' %}bg-sage-linen text-sage-black{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-black text-sage-linen{% endif %} {% if self.density == 'compact' %}p-8 md:p-10 gap-6{% elif self.density == 'spacious' %}p-12 md:p-14 gap-10{% else %}p-10 md:p-12 gap-8{% endif %} rounded-sm flex flex-col md:flex-row items-start md:items-center justify-between">
+      <div class="{% if self.tone == 'light' %}bg-sage-linen text-sage-black{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-black text-sage-linen{% endif %} rounded-sm flex flex-col md:flex-row items-start md:items-center justify-between {% if self.density == 'compact' %}p-8 gap-6{% elif self.density == 'spacious' %}p-12 md:p-16 gap-10{% else %}p-10 md:p-12 gap-8{% endif %}">
         <div class="max-w-md">
           {% if self.eyebrow %}
             <span class="text-sage-terra font-bold tracking-widest uppercase text-xs mb-3 block">{{ self.eyebrow }}</span>

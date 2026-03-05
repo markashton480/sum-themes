@@ -1,0 +1,15 @@
+{% load wagtailcore_tags %}
+<section
+    class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat/30 text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}"
+    data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 items-{{ self.valign|default:'start' }} reveal">
+            <div class="prose prose-sage max-w-none {% if self.tone == 'dark' %}prose-invert{% endif %}">
+                {% include_block self.column_one %}
+            </div>
+            <div class="prose prose-sage max-w-none {% if self.tone == 'dark' %}prose-invert{% endif %} delay-100">
+                {% include_block self.column_two %}
+            </div>
+        </div>
+    </div>
+</section>

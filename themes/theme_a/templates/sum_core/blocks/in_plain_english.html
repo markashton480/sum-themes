@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<section class="plain-english-box {% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}p-6{% elif self.density == 'spacious' %}p-10{% else %}p-8{% endif %} border-l-4 border-sage-terra rounded-sm shadow-sm section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
+<section class="plain-english-box {% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} border-l-4 border-sage-terra rounded-sm shadow-sm p-6 md:p-8 lg:p-10 section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="flex items-center gap-3 mb-3">
     {% if self.icon != 'none' %}
       {% if self.icon == 'quote' %}

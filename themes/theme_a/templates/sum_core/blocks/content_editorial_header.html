@@ -1,24 +1,26 @@
 {% load wagtailcore_tags richtext_tags %}
 {% with heading_text=self.heading|striptags %}
-  {% with anchor=self.anchor|default:heading_text|slugify %}
-    {% if is_blog_article %}
-      {% if self.eyebrow %}
-        <span class="text-xs font-bold uppercase tracking-widest text-sage-terra mb-3 block">{{ self.eyebrow }}</span>
-      {% endif %}
-      <h2 class="scroll-mt-32 text-4xl mb-6 font-display text-sage-black"{% if anchor %} id="{{ anchor }}"{% endif %}>
-        {{ self.heading|richtext_inline }}
-      </h2>
-    {% else %}
-      <header class="mb-6">
-        <div class="space-y-4{% if self.align == 'center' %} text-center mx-auto max-w-3xl{% else %} text-left max-w-4xl{% endif %}">
-          {% if self.eyebrow %}
-            <span class="text-xs font-bold uppercase tracking-widest text-sage-terra">{{ self.eyebrow }}</span>
-          {% endif %}
-          <h2 class="scroll-mt-32 text-4xl mb-6 font-display text-sage-black"{% if anchor %} id="{{ anchor }}"{% endif %}>
-            {{ self.heading|richtext_inline }}
-          </h2>
-        </div>
-      </header>
+{% with anchor=self.anchor|default:heading_text|slugify %}
+{% if is_blog_article %}
+<div class="reveal">
+  {% if self.eyebrow %}
+  <span class="text-xs font-bold uppercase tracking-widest text-sage-terra mb-4 block">{{ self.eyebrow }}</span>
+  {% endif %}
+  <h2 class="scroll-mt-32 text-5xl lg:text-7xl mb-12 pb-8 border-b-2 border-sage-terra font-display text-sage-black"{% if anchor %} id="{{ anchor }}"{% endif %}>
+    {{ self.heading|richtext_inline }}
+  </h2>
+</div>
+{% else %}
+<header class="mb-12 reveal">
+  <div class="space-y-4{% if self.align == 'center' %} text-center mx-auto max-w-3xl{% else %} text-left max-w-4xl{% endif %} pb-8 border-b-2 border-sage-terra">
+    {% if self.eyebrow %}
+    <span class="text-xs font-bold uppercase tracking-widest text-sage-terra">{{ self.eyebrow }}</span>
     {% endif %}
-  {% endwith %}
+    <h2 class="scroll-mt-32 text-5xl lg:text-7xl font-display text-sage-black leading-tight"{% if anchor %} id="{{ anchor }}"{% endif %}>
+      {{ self.heading|richtext_inline }}
+    </h2>
+  </div>
+</header>
+{% endif %}
+{% endwith %}
 {% endwith %}

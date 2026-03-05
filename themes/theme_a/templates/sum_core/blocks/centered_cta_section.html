@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} border-t {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %} section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %} data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
+<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} border-t {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %} section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %} data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
     <div class="max-w-4xl mx-auto px-6 text-center">
         {% if self.eyebrow %}
             <span class="block text-sage-terra font-accent italic text-xl mb-4">

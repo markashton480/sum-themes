@@ -1,6 +1,6 @@
 {% load wagtailcore_tags image_delivery_tags %}
 
-<section class="{% if self.density == 'compact' %}py-16{% elif self.density == 'spacious' %}py-32{% else %}py-24{% endif %} {% if self.tone == 'dark' %}bg-sage-black border-y border-sage-linen/10{% elif self.tone == 'light' %}bg-sage-linen border-y border-sage-black/5{% else %}bg-sage-oat/20 border-y border-sage-black/5{% endif %} section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
+<section class="{% if self.tone == 'dark' %}bg-sage-black border-y border-sage-linen/10{% elif self.tone == 'light' %}bg-sage-linen border-y border-sage-black/5{% else %}bg-sage-oat/20 border-y border-sage-black/5{% endif %} section-tone-{{ self.tone|default:'muted' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'muted' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
     <div class="grid grid-cols-1 lg:grid-cols-2 {% if self.density == 'compact' %}gap-10{% elif self.density == 'spacious' %}gap-20{% else %}gap-16{% endif %} items-center">
 
