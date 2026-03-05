@@ -1,0 +1,45 @@
+{% load wagtailcore_tags %}
+<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat/30 text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
+    <div class="max-w-4xl mx-auto px-6">
+        <div class="reveal">
+            {% if self.eyebrow %}
+                <span class="text-sage-terra font-accent italic text-xl block mb-3">
+                    {{ self.eyebrow }}
+                </span>
+            {% endif %}
+
+            {% if self.heading %}
+            <div class="font-display text-4xl mb-6 {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">
+                {{ self.heading|richtext }}
+            </div>
+            {% endif %}
+
+            {% if self.intro %}
+            <div class="prose prose-sage max-w-none font-light text-lg mb-8 {% if self.tone == 'dark' %}text-sage-linen/70{% else %}text-sage-label{% endif %}">
+                {{ self.intro|richtext }}
+            </div>
+            {% endif %}
+
+            <ul class="space-y-6">
+                {% for item in self.items %}
+                <li class="flex items-start gap-4 reveal{% if not forloop.first %} delay-{% if forloop.counter0 > 5 %}500{% else %}{{ forloop.counter0 }}00{% endif %}{% endif %}">
+                    <span class="flex-shrink-0 mt-1 inline-flex items-center justify-center w-6 h-6 rounded-full {% if self.tone == 'dark' %}bg-sage-terra/20 text-sage-terra{% else %}bg-sage-terra/10 text-sage-terra{% endif %}">
+                        {% if item.icon == 'check' %}
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        {% elif item.icon == 'arrow' %}
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        {% elif item.icon == 'dot' %}
+                        <svg class="w-2 h-2" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"></circle></svg>
+                        {% elif item.icon == 'star' %}
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        {% endif %}
+                    </span>
+                    <div class="prose prose-sage max-w-none {% if self.tone == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %}">
+                        {{ item.text|richtext }}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>

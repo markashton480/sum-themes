@@ -1,32 +1,38 @@
 {% load wagtailcore_tags form_tags %}
-<section id="contact" class="contact-form-block {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} {% if self.tone|default:'dark' == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} relative overflow-hidden section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
+<section id="contact"
+  class="contact-form-block {% if self.tone|default:'dark' == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} relative overflow-hidden section-tone-{{ self.tone|default:'dark' }} section-density-{{ self.density|default:'regular' }}"
+  data-tone="{{ self.tone|default:'dark' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="container mx-auto px-6 relative z-10">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
       <!-- Header Column -->
       <div class="reveal pt-6 lg:pt-8 lg:sticky lg:top-32 lg:self-start">
         <header class="max-w-md">
           {% if self.eyebrow %}
-            <span class="text-sage-terra font-mono text-xs uppercase tracking-widest mb-6 block">
-              {{ self.eyebrow }}
-            </span>
+          <span class="text-sage-terra font-mono text-xs uppercase tracking-widest mb-6 block">
+            {{ self.eyebrow }}
+          </span>
           {% endif %}
-          <div class="font-display text-5xl md:text-6xl lg:text-7xl {% if self.tone|default:'dark' == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-8 leading-none">
+          <div
+            class="font-display text-5xl md:text-6xl lg:text-7xl {% if self.tone|default:'dark' == 'dark' %}text-sage-linen{% else %}text-sage-black{% endif %} mb-8 leading-none">
             {{ self.heading|richtext }}
           </div>
           {% if self.intro %}
-            <div class="font-accent text-xl md:text-2xl {% if self.tone|default:'dark' == 'dark' %}text-sage-oat/70{% else %}text-sage-label{% endif %} leading-relaxed max-w-md">
-              {{ self.intro|richtext }}
-            </div>
+          <div
+            class="font-accent text-xl md:text-2xl {% if self.tone|default:'dark' == 'dark' %}text-sage-oat/70{% else %}text-sage-label{% endif %} leading-relaxed max-w-md">
+            {{ self.intro|richtext }}
+          </div>
           {% endif %}
           {% if self.phone_label and self.phone_link.href and self.phone_link.href != "#" %}
-            <div class="py-8 border-t {% if self.tone|default:'dark' == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %}">
-              <p class="font-mono text-xs uppercase tracking-widest text-sage-terra mb-2">
-                {{ self.phone_label }}
-              </p>
-              <a href="{{ self.phone_link.href }}" {{ self.phone_link.attrs_str }} class="font-display text-2xl hover:text-sage-terra transition-colors focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 focus:ring-offset-sage-black rounded-sm">
-                {{ self.phone_link.text }}
-              </a>
-            </div>
+          <div
+            class="py-8 border-t {% if self.tone|default:'dark' == 'dark' %}border-sage-linen/10{% else %}border-sage-black/10{% endif %}">
+            <p class="font-mono text-xs uppercase tracking-widest text-sage-terra mb-2">
+              {{ self.phone_label }}
+            </p>
+            <a href="{{ self.phone_link.href }}" {{ self.phone_link.attrs_str }}
+              class="font-display text-2xl hover:text-sage-terra transition-colors focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 focus:ring-offset-sage-black rounded-sm">
+              {{ self.phone_link.text }}
+            </a>
+          </div>
           {% endif %}
         </header>
       </div>
@@ -37,98 +43,108 @@
         {% with form_definition=self.form_definition %}
         {% with generated_form=form_definition|generate_dynamic_form %}
         {% with form=form|default:generated_form %}
-        <form action="/forms/submit/" method="post" novalidate class="space-y-8 md:space-y-12" data-dynamic-form data-form-type="{% if form_definition %}{{ form_definition.slug }}{% else %}contact{% endif %}" id="contact-form{% if block_id %}-{{ block_id }}{% endif %}"
-              data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:"Thanks, we'll be in touch shortly." }}{% else %}{{ self.success_message|default:"Thanks, we'll be in touch shortly." }}{% endif %}"
-              {% if self.success_redirect.href and self.success_redirect.href != "#" %}data-success-redirect="{{ self.success_redirect.href }}"{% endif %}
-              data-error-message="Something went wrong. Please try again.">
+        <form action="/forms/submit/" method="post" novalidate class="space-y-8 md:space-y-12" data-dynamic-form
+          data-form-type="{% if form_definition %}{{ form_definition.slug }}{% else %}contact{% endif %}"
+          id="contact-form{% if block_id %}-{{ block_id }}{% endif %}"
+          data-success-message="{% if form_definition %}{{ self.success_message|default:form_definition.success_message|default:"Thanks, we'll be in touch shortly." }}{% else %}{{ self.success_message|default:"Thanks, we'll be in touch shortly." }}{% endif %}" {% if self.success_redirect.href and self.success_redirect.href != "#" %}data-success-redirect="{{ self.success_redirect.href }}" {% endif %}
+          data-error-message="Something went wrong. Please try again.">
           {% csrf_token %}
 
           <!-- Hidden fields for attribution and spam protection -->
           {% if form_definition %}
-            {% form_hidden_fields form_type=form_definition.slug %}
-            <input type="hidden" name="form_definition_id" value="{{ form_definition.pk }}">
-            <input type="hidden" name="_rendered_at" class="js-dynamic-form-timestamp" value="">
+          {% form_hidden_fields form_type=form_definition.slug %}
+          <input type="hidden" name="form_definition_id" value="{{ form_definition.pk }}">
+          <input type="hidden" name="_rendered_at" class="js-dynamic-form-timestamp" value="">
 
-            <!-- Honeypot field (visually hidden) -->
-            <div class="sr-only" aria-hidden="true">
-              <label for="form-website-field{% if block_id %}-{{ block_id }}{% endif %}">Website</label>
-              <input type="text" name="website" id="form-website-field{% if block_id %}-{{ block_id }}{% endif %}" tabindex="-1" autocomplete="off">
-            </div>
+          <!-- Honeypot field (visually hidden) -->
+          <div class="sr-only" aria-hidden="true">
+            <label for="form-website-field{% if block_id %}-{{ block_id }}{% endif %}">Website</label>
+            <input type="text" name="website" id="form-website-field{% if block_id %}-{{ block_id }}{% endif %}"
+              tabindex="-1" autocomplete="off">
+          </div>
           {% else %}
-            {% form_hidden_fields form_type="contact" %}
+          {% form_hidden_fields form_type="contact" %}
 
-            <!-- Honeypot field (visually hidden) -->
-            <div class="sr-only" aria-hidden="true">
-              <label for="form-company-field{% if block_id %}-{{ block_id }}{% endif %}">Company</label>
-              <input type="text" name="company" id="form-company-field{% if block_id %}-{{ block_id }}{% endif %}" tabindex="-1" autocomplete="off">
-            </div>
+          <!-- Honeypot field (visually hidden) -->
+          <div class="sr-only" aria-hidden="true">
+            <label for="form-company-field{% if block_id %}-{{ block_id }}{% endif %}">Company</label>
+            <input type="text" name="company" id="form-company-field{% if block_id %}-{{ block_id }}{% endif %}"
+              tabindex="-1" autocomplete="off">
+          </div>
           {% endif %}
 
           {% if form %}
-            {% for field in form %}
-              <div class="relative group z-0 {% if field.errors %}has-error{% endif %}">
-                <label for="{{ field.id_for_label }}" class="block text-xs uppercase tracking-widest text-sage-linen/40 mb-2">
-                  {{ field.label }}
-                </label>
-                <div>
-                    {{ field }}
-                </div>
-                {% if field.help_text %}
-                  <span class="text-xs text-sage-linen/50 mt-2 block">{{ field.help_text }}</span>
-                {% endif %}
-                {% if field.errors %}
-                  <span class="text-sage-terra text-xs mt-2 block font-mono uppercase tracking-widest" id="{{ field.auto_id }}_errors">
-                    {{ field.errors.0 }}
-                  </span>
-                {% endif %}
-              </div>
-            {% endfor %}
-
-            {% if form.non_field_errors %}
-              <div class="p-4 bg-sage-terra/20 rounded-sm border border-sage-terra/30">
-                {% for error in form.non_field_errors %}
-                  <p class="text-xs uppercase tracking-widest text-sage-terra font-mono">{{ error }}</p>
-                {% endfor %}
-              </div>
+          {% for field in form %}
+          <div class="relative group z-0 {% if field.errors %}has-error{% endif %}">
+            <label for="{{ field.id_for_label }}"
+              class="block text-xs uppercase tracking-widest {% if self.tone|default:'dark' == 'dark' %}text-sage-linen/40{% else %}text-sage-black/40{% endif %} mb-2">
+              {{ field.label }}
+            </label>
+            <div>
+              {{ field }}
+            </div>
+            {% if field.help_text %}
+            <span
+              class="text-xs {% if self.tone|default:'dark' == 'dark' %}text-sage-linen/50{% else %}text-sage-black/50{% endif %} mt-2 block">{{
+              field.help_text }}</span>
             {% endif %}
+            {% if field.errors %}
+            <span class="text-sage-terra text-xs mt-2 block font-mono uppercase tracking-widest"
+              id="{{ field.auto_id }}_errors">
+              {{ field.errors.0 }}
+            </span>
+            {% endif %}
+          </div>
+          {% endfor %}
+
+          {% if form.non_field_errors %}
+          <div class="p-4 bg-sage-terra/20 rounded-sm border border-sage-terra/30">
+            {% for error in form.non_field_errors %}
+            <p class="text-xs uppercase tracking-widest text-sage-terra font-mono">{{ error }}</p>
+            {% endfor %}
+          </div>
+          {% endif %}
 
           {% else %}
-            <!-- Working form fields for frontend use -->
-            <div class="relative group z-0">
-              <input type="text" id="contact-name{% if block_id %}-{{ block_id }}{% endif %}" name="name" required placeholder=" "
-                     class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent">
-              <label for="contact-name{% if block_id %}-{{ block_id }}{% endif %}"
-                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
-                Full Name
-              </label>
-            </div>
+          <!-- Working form fields for frontend use -->
+          <div class="relative group z-0">
+            <input type="text" id="contact-name{% if block_id %}-{{ block_id }}{% endif %}" name="name" required
+              placeholder=" "
+              class="peer block w-full bg-transparent border-0 border-b-2 {% if self.tone|default:'dark' == 'dark' %}border-sage-linen/20 text-sage-linen{% else %}border-sage-black/20 text-sage-black{% endif %} py-4 text-2xl font-body font-light focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent">
+            <label for="contact-name{% if block_id %}-{{ block_id }}{% endif %}"
+              class="absolute {% if self.tone|default:'dark' == 'dark' %}text-sage-linen/40{% else %}text-sage-black/40{% endif %} text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+              Full Name
+            </label>
+          </div>
 
-            <div class="relative group z-0">
-              <input type="email" id="contact-email{% if block_id %}-{{ block_id }}{% endif %}" name="email" required placeholder=" "
-                     class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent">
-              <label for="contact-email{% if block_id %}-{{ block_id }}{% endif %}"
-                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
-                Email Address
-              </label>
-            </div>
+          <div class="relative group z-0">
+            <input type="email" id="contact-email{% if block_id %}-{{ block_id }}{% endif %}" name="email" required
+              placeholder=" "
+              class="peer block w-full bg-transparent border-0 border-b-2 {% if self.tone|default:'dark' == 'dark' %}border-sage-linen/20 text-sage-linen{% else %}border-sage-black/20 text-sage-black{% endif %} py-4 text-2xl font-body font-light focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent">
+            <label for="contact-email{% if block_id %}-{{ block_id }}{% endif %}"
+              class="absolute {% if self.tone|default:'dark' == 'dark' %}text-sage-linen/40{% else %}text-sage-black/40{% endif %} text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+              Email Address
+            </label>
+          </div>
 
-            <div class="relative group z-0">
-              <input type="tel" id="contact-phone{% if block_id %}-{{ block_id }}{% endif %}" name="phone" placeholder=" "
-                     class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-2xl font-display text-sage-linen focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent">
-              <label for="contact-phone{% if block_id %}-{{ block_id }}{% endif %}"
-                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
-                Phone (Optional)
-              </label>
-            </div>
+          <div class="relative group z-0">
+            <input type="tel" id="contact-phone{% if block_id %}-{{ block_id }}{% endif %}" name="phone" placeholder=" "
+              class="peer block w-full bg-transparent border-0 border-b-2 {% if self.tone|default:'dark' == 'dark' %}border-sage-linen/20 text-sage-linen{% else %}border-sage-black/20 text-sage-black{% endif %} py-4 text-2xl font-body font-light focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent">
+            <label for="contact-phone{% if block_id %}-{{ block_id }}{% endif %}"
+              class="absolute {% if self.tone|default:'dark' == 'dark' %}text-sage-linen/40{% else %}text-sage-black/40{% endif %} text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+              Phone (Optional)
+            </label>
+          </div>
 
-            <div class="relative group z-0">
-              <textarea id="contact-message{% if block_id %}-{{ block_id }}{% endif %}" name="message" rows="3" required placeholder=" "
-                        class="peer block w-full bg-transparent border-0 border-b-2 border-sage-linen/20 py-4 text-xl font-body font-light text-sage-linen focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent resize-none"></textarea>
-              <label for="contact-message{% if block_id %}-{{ block_id }}{% endif %}"
-                     class="absolute text-sage-linen/40 text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
-                How can we help?
-              </label>
-            </div>
+          <div class="relative group z-0">
+            <textarea id="contact-message{% if block_id %}-{{ block_id }}{% endif %}" name="message" rows="3" required
+              placeholder=" "
+              class="peer block w-full bg-transparent border-0 border-b-2 {% if self.tone|default:'dark' == 'dark' %}border-sage-linen/20 text-sage-linen{% else %}border-sage-black/20 text-sage-black{% endif %} py-4 text-xl font-body font-light focus:outline-none focus:border-sage-terra focus:ring-0 focus-visible:outline-none focus-visible:outline-offset-0 transition-colors placeholder-transparent resize-none"></textarea>
+            <label for="contact-message{% if block_id %}-{{ block_id }}{% endif %}"
+              class="absolute {% if self.tone|default:'dark' == 'dark' %}text-sage-linen/40{% else %}text-sage-black/40{% endif %} text-sm uppercase tracking-widest duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-sage-terra peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 cursor-text">
+              How can we help?
+            </label>
+          </div>
           {% endif %}
 
           <!-- Form messages -->
@@ -136,8 +152,9 @@
 
           <div class="pt-8">
             <button type="submit"
-                    class="btn btn-primary btn-submit w-full md:w-auto group relative inline-flex items-center justify-center px-10 py-5 overflow-hidden font-bold text-sage-black transition-all duration-300 bg-sage-linen hover:bg-white focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 focus:ring-offset-sage-black">
-              <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-80 group-hover:h-80 opacity-20"></span>
+              class="btn btn-primary btn-submit w-full md:w-auto group relative inline-flex items-center justify-center px-10 py-5 overflow-hidden font-bold {% if self.tone|default:'dark' == 'dark' %}text-sage-black bg-sage-linen{% else %}text-white bg-sage-black{% endif %} transition-all duration-300 hover:bg-sage-terra focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2">
+              <span
+                class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-80 group-hover:h-80 opacity-20"></span>
               <span class="relative uppercase tracking-[0.2em] text-xs">
                 {{ self.submit_label|default:"Send enquiry" }}
               </span>

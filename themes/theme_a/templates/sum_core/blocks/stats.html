@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 
-<section class="{% if self.tone == 'dark' %}bg-sage-black{% elif self.tone == 'muted' %}bg-sage-oat{% else %}bg-sage-linen{% endif %} {% if self.density == 'compact' %}py-8 md:py-12{% elif self.density == 'spacious' %}py-16 md:py-24{% else %}py-12 md:py-16{% endif %} border-b {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/5{% endif %} relative z-10 section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
+<section class="{% if self.tone == 'dark' %}bg-sage-black{% elif self.tone == 'muted' %}bg-sage-oat{% else %}bg-sage-linen{% endif %} border-b {% if self.tone == 'dark' %}border-sage-linen/10{% else %}border-sage-black/5{% endif %} {% if self.density == 'compact' %}py-8 md:py-12{% elif self.density == 'spacious' %}py-16 md:py-20{% else %}py-12 md:py-16{% endif %} relative z-10 section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}" data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
   <div class="max-w-7xl mx-auto px-6">
     {% if self.eyebrow or self.intro %}
     <div class="text-center mb-12">

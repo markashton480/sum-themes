@@ -1,6 +1,6 @@
 {% load wagtailcore_tags image_delivery_tags %}
 
-<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} {% if self.density == 'compact' %}py-14 md:py-20{% elif self.density == 'spacious' %}py-28 md:py-40{% else %}py-24 md:py-32{% endif %} relative overflow-hidden section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %} data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
+<section class="{% if self.tone == 'dark' %}bg-sage-black text-sage-linen{% elif self.tone == 'muted' %}bg-sage-oat text-sage-black{% else %}bg-sage-linen text-sage-black{% endif %} relative overflow-hidden section-tone-{{ self.tone|default:'light' }} section-density-{{ self.density|default:'regular' }}"{% if section_id %} data-section-id="{{ section_id }}"{% endif %} data-tone="{{ self.tone|default:'light' }}" data-density="{{ self.density|default:'regular' }}">
     <div class="max-w-7xl mx-auto px-6">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="reveal">
