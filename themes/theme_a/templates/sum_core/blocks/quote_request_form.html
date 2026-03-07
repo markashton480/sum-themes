@@ -176,7 +176,7 @@
         <div class="form-messages" role="alert" aria-live="polite"></div>
 
         <div class="pt-2">
-          <button type="submit" class="btn btn-primary btn-submit w-full md:w-auto">
+          <button type="submit" class="btn btn-submit w-full md:w-auto {% if self.submit_style == 'secondary' or self.submit_style == 'outline' %}{% if self.tone|default:'muted' == 'dark' %}btn-outline-inverse{% elif self.submit_style == 'secondary' %}btn-secondary{% else %}btn-outline{% endif %}{% else %}btn-primary{% endif %}">
             {{ self.submit_label|default:"Request a quote" }}
           </button>
         </div>

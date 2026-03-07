@@ -264,12 +264,32 @@
     @apply focus:outline-none;
   }
 
+  .btn:focus-visible {
+    @apply outline-none ring-2 ring-offset-2 ring-sage-terra ring-offset-sage-linen;
+  }
+
   .btn-primary {
     @apply bg-sage-terra text-white border-sage-terra px-12 py-5 text-base shadow-lg;
   }
 
   .btn-primary:hover {
     @apply bg-sage-black border-sage-black text-white;
+  }
+
+  .btn-primary-inverse {
+    @apply bg-sage-linen text-sage-black border-sage-linen px-12 py-5 text-base shadow-lg;
+  }
+
+  .btn-primary-inverse:hover {
+    @apply bg-sage-terra border-sage-terra text-white;
+  }
+
+  .btn-dark {
+    @apply bg-sage-black text-white border-sage-black;
+  }
+
+  .btn-dark:hover {
+    @apply bg-sage-terra border-sage-terra text-white;
   }
 
   .btn-outline,
@@ -307,6 +327,10 @@
     @apply px-5 py-3 text-xs;
   }
 
+  .btn-compact {
+    @apply px-6 py-3 text-xs min-h-[44px];
+  }
+
   #main-header.scrolled .btn-header {
     @apply text-sage-black border-sage-black/30 bg-transparent;
   }
@@ -319,6 +343,10 @@
     @apply inline-flex items-center gap-3 p-0 border-0 bg-transparent rounded-none;
     @apply font-body font-bold text-[11px] uppercase tracking-[0.2em] text-sage-moss;
     @apply transition-all duration-300 ease-expo-out;
+  }
+
+  .btn--link:focus-visible {
+    @apply outline-none ring-2 ring-offset-2 ring-sage-terra ring-offset-sage-linen;
   }
 
   .btn--link:hover {

@@ -1,6 +1,6 @@
 <div class="dynamic-form-modal">
   <button type="button"
-          class="btn btn-primary"
+          class="btn {% if self.cta_button_style == 'secondary' %}btn-secondary{% elif self.cta_button_style == 'outline' %}btn-outline{% else %}btn-primary{% endif %}"
           data-dynamic-form-modal-open
           aria-haspopup="dialog">
     {{ self.cta_button_text|default:"Open form" }}

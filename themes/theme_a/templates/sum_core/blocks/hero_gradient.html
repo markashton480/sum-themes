@@ -55,10 +55,10 @@
                 </p>
             {% endif %}
             {% if hero.ctas %}
-                <div class="flex flex-wrap gap-5">
+                    <div class="flex flex-wrap gap-5">
                     {% for cta in hero.ctas %}
                         <a href="{{ cta.url }}"
-                               class="{% if cta.style == 'primary' %}inline-flex justify-center items-center bg-sage-terra text-white border border-sage-terra px-10 py-5 text-xs font-bold uppercase tracking-widest hover:bg-sage-black hover:border-sage-black{% else %}inline-flex justify-center items-center border border-sage-linen/50 text-sage-linen px-10 py-5 text-xs font-bold uppercase tracking-widest hover:bg-sage-linen hover:text-sage-black{% endif %} transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-offset-2 focus-visible:ring-offset-sage-black"
+                               class="btn {% if cta.style == 'primary' %}btn-primary{% else %}btn-outline-inverse{% endif %}"
                                {% if cta.open_in_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}>
                                 {{ cta.label }}
                             </a>

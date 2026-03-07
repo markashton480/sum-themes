@@ -257,12 +257,12 @@
         {% endif %}
         <div class="flex flex-col sm:flex-row gap-8 justify-center items-center">
           {% if page.cta_primary_label and page.cta_primary_link %}
-            <a href="{{ page.cta_primary_link }}" class="bg-sage-terra text-white px-12 py-5 text-sm uppercase tracking-[0.2em] font-bold hover:bg-white hover:text-sage-black transition-colors duration-300 shadow-xl focus:outline-none focus:ring-4 focus:ring-white/50">
+            <a href="{{ page.cta_primary_link }}" class="btn btn-primary">
               {{ page.cta_primary_label }}
             </a>
           {% endif %}
           {% if page.cta_secondary_label and page.cta_secondary_link %}
-            <a href="{{ page.cta_secondary_link }}" class="inline-block text-sage-linen text-sm uppercase tracking-widest font-semibold border border-sage-linen/30 hover:bg-sage-linen hover:text-sage-black transition-colors duration-300 px-6 py-4 rounded-sm">
+            <a href="{{ page.cta_secondary_link }}" class="btn btn-outline-inverse">
               {{ page.cta_secondary_label }}
             </a>
           {% endif %}

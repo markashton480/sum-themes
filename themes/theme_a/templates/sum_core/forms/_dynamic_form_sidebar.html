@@ -1,6 +1,6 @@
 <div class="dynamic-form-sidebar" data-dynamic-form-sidebar data-sidebar-key="{{ form_definition.slug }}">
   <button type="button"
-          class="btn btn-secondary"
+          class="btn {% if self.cta_button_style == 'primary' %}btn-primary{% elif self.cta_button_style == 'outline' %}btn-outline{% else %}btn-secondary{% endif %}"
           data-dynamic-form-sidebar-open
           aria-haspopup="dialog">
     {{ self.cta_button_text|default:"Open sidebar form" }}

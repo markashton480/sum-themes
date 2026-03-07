@@ -16,14 +16,14 @@
                         <div class="flex flex-col sm:flex-row gap-5">
                             {% if self.primary_cta %}
                                 {% with link=self.primary_cta.link %}
-                                    <a href="{{ link.href }}" {{ link.attrs_str }} class="inline-flex justify-center items-center bg-sage-terra text-white border border-sage-terra px-8 py-5 text-xs font-bold uppercase tracking-widest hover:bg-sage-black hover:border-sage-black transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2 shadow-lg">
+                                    <a href="{{ link.href }}" {{ link.attrs_str }} class="btn btn-primary">
                                         {{ self.primary_cta.label }}
                                     </a>
                                 {% endwith %}
                             {% endif %}
                             {% if self.secondary_cta %}
                                 {% with link=self.secondary_cta.link %}
-                                    <a href="{{ link.href }}" {{ link.attrs_str }} class="inline-flex justify-center items-center bg-transparent {% if self.tone == 'dark' %}text-sage-linen border-sage-linen/30 hover:bg-sage-linen/10{% else %}text-sage-black border-sage-black/30 hover:bg-white hover:border-sage-black{% endif %} border px-8 py-5 text-xs font-bold uppercase tracking-widest transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2">
+                                    <a href="{{ link.href }}" {{ link.attrs_str }} class="btn {% if self.tone == 'dark' %}btn-outline-inverse{% else %}btn-secondary{% endif %}">
                                         {{ self.secondary_cta.label }}
                                     </a>
                                 {% endwith %}

@@ -8,7 +8,7 @@
     <div class="max-w-7xl mx-auto flex items-center justify-between">
         <span class="text-sm font-bold uppercase tracking-widest hidden md:inline">{{ cta.label }}</span>
         <span class="text-sm font-bold uppercase tracking-widest md:hidden">{{ cta.label }}</span>
-        <a href="{{ cta.button_href }}" class="bg-sage-terra text-white px-6 py-3 text-xs uppercase tracking-widest font-bold hover:bg-white hover:text-sage-black transition-colors focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-sage-black" {% for k, v in cta.button_attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
+        <a href="{{ cta.button_href }}" class="btn btn-primary btn-compact" {% for k, v in cta.button_attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
             {{ cta.button_text }}
         </a>
     </div>

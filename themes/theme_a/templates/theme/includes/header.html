@@ -178,7 +178,7 @@
 
                     {% if nav.header_cta.enabled %}
                         <a href="{{ nav.header_cta.href }}"
-                           class="px-6 desktop:px-8 py-3 desktop:py-4 text-sm font-bold uppercase tracking-widest transition-colors duration-300 text-sage-linen border border-sage-linen/30 backdrop-blur-sm hover:bg-sage-linen hover:text-sage-black hover:border-sage-linen group-[.scrolled]/header:border-sage-black group-[.scrolled]/header:text-sage-black group-[.scrolled]/header:bg-transparent group-[.scrolled]/header:backdrop-blur-none group-[.scrolled]/header:hover:bg-sage-black group-[.scrolled]/header:hover:text-sage-linen group-[.scrolled]/header:hover:border-sage-black"
+                           class="btn btn-outline-inverse btn-header"
                            {% for k, v in nav.header_cta.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
                             {{ nav.header_cta.text }}
                         </a>

@@ -152,12 +152,8 @@
 
           <div class="pt-8">
             <button type="submit"
-              class="btn btn-primary btn-submit w-full md:w-auto group relative inline-flex items-center justify-center px-10 py-5 overflow-hidden font-bold {% if self.tone|default:'dark' == 'dark' %}text-sage-black bg-sage-linen{% else %}text-white bg-sage-black{% endif %} transition-all duration-300 hover:bg-sage-terra focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2">
-              <span
-                class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-80 group-hover:h-80 opacity-20"></span>
-              <span class="relative uppercase tracking-[0.2em] text-xs">
-                {{ self.submit_label|default:"Send enquiry" }}
-              </span>
+              class="btn btn-submit w-full md:w-auto {% if not self.submit_style %}{% if self.tone|default:'dark' == 'dark' %}btn-primary-inverse{% else %}btn-dark{% endif %}{% elif self.submit_style == 'secondary' or self.submit_style == 'outline' %}{% if self.tone|default:'dark' == 'dark' %}btn-outline-inverse{% elif self.submit_style == 'secondary' %}btn-secondary{% else %}btn-outline{% endif %}{% else %}btn-primary{% endif %}">
+              {{ self.submit_label|default:"Send enquiry" }}
             </button>
           </div>
         </form>

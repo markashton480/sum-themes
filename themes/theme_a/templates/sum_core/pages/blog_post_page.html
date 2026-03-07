@@ -74,7 +74,7 @@
         {# CTA Button #}
         {% if nav.header_cta.enabled %}
           <div>
-            <a href="{{ nav.header_cta.href }}" class="inline-flex items-center justify-center px-8 py-4 bg-sage-terra text-white text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-sage-black transition-colors rounded-sm min-h-[44px]" {% for k, v in nav.header_cta.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
+            <a href="{{ nav.header_cta.href }}" class="btn btn-primary btn-compact" {% for k, v in nav.header_cta.attrs.items %} {{ k }}="{{ v|escape }}"{% endfor %}>
               {{ nav.header_cta.text }}
             </a>
           </div>
