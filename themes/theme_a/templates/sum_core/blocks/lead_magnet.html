@@ -78,7 +78,7 @@
 
             <div class="form-messages text-sm" role="alert" aria-live="polite"></div>
 
-            <button type="submit" class="w-full bg-sage-terra text-white text-xs font-bold uppercase tracking-widest py-4 hover:bg-white hover:text-sage-black transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-sage-black focus-visible:ring-white min-h-[44px]" data-dynamic-form-submit>
+            <button type="submit" class="btn btn-compact w-full {% if not self.submit_style %}{% if self.variant == 'sidebar' %}btn-dark{% else %}btn-primary{% endif %}{% elif self.submit_style == 'secondary' or self.submit_style == 'outline' %}{% if self.variant == 'sidebar' %}btn-outline-inverse{% elif self.submit_style == 'secondary' %}btn-secondary{% else %}btn-outline{% endif %}{% else %}btn-primary{% endif %}" data-dynamic-form-submit>
               {{ self.submit_label|default:"Subscribe" }}
             </button>
           </form>
@@ -145,7 +145,7 @@
 
             <div class="form-messages text-sm w-full" role="alert" aria-live="polite"></div>
 
-            <button type="submit" class="bg-sage-black text-white px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-sage-terra transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-sage-terra focus:ring-offset-2" data-dynamic-form-submit>
+            <button type="submit" class="btn btn-compact {% if not self.submit_style %}{% if self.variant == 'sidebar' %}btn-dark{% else %}btn-primary{% endif %}{% elif self.submit_style == 'secondary' or self.submit_style == 'outline' %}{% if self.variant == 'sidebar' %}btn-outline-inverse{% elif self.submit_style == 'secondary' %}btn-secondary{% else %}btn-outline{% endif %}{% else %}btn-primary{% endif %}" data-dynamic-form-submit>
               {{ self.submit_label|default:"Download" }}
             </button>
           </form>

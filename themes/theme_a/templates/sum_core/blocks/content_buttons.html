@@ -4,7 +4,7 @@
     {% for btn in self.buttons %}
       <a
         href="{{ btn.url }}"
-        class="inline-flex items-center justify-center px-8 py-4 text-xs font-bold uppercase tracking-widest rounded-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage-terra focus-visible:ring-offset-2 {% if btn.style == 'primary' %}bg-sage-terra text-white hover:bg-sage-black{% else %}border border-sage-black/30 text-sage-black hover:border-sage-black hover:bg-sage-black hover:text-sage-linen{% endif %}"
+        class="btn {% if btn.style == 'primary' %}btn-primary{% else %}btn-outline{% endif %}"
       >
         {{ btn.label }}
       </a>
