@@ -25,6 +25,11 @@ module.exports = {
     'bg-primary',
     'bg-secondary',
     'bg-accent',
+    // Dynamic density classes rendered via {{ self.density }} interpolation in templates.
+    // Must be safelisted so Tailwind JIT doesn't purge them.
+    'section-density-compact',
+    'section-density-regular',
+    'section-density-spacious',
   ],
   theme: {
     extend: {
